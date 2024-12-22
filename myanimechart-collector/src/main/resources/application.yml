@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: myanimechart-collector
+  config:
+    import: file:./myanimechart-common/src/main/resources/application.yml,file:./myanimechart-database/src/main/resources/application.yml
