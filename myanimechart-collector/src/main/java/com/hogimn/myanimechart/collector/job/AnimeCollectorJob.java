@@ -16,7 +16,6 @@ public class AnimeCollectorJob {
     }
 
     @Scheduled(cron = "0 0 * * * ?")
-    @Transactional
     public void collect() {
         log.info("start of collecting anime statistics");
         animeCollectService.collectAnimeStatistics();

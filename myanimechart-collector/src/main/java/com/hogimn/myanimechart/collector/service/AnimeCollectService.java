@@ -6,6 +6,7 @@ import com.hogimn.myanimechart.database.dao.AnimeStatDao;
 import com.hogimn.myanimechart.database.domain.Anime;
 import com.hogimn.myanimechart.database.repository.AnimeRepository;
 import com.hogimn.myanimechart.database.repository.AnimeStatRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -164,6 +165,7 @@ public class AnimeCollectService {
         return anime;
     }
 
+    @Transactional
     public void collectAnimeStatistics() {
         List<Anime> animeList = getAnime(DateUtil.currentYear(), DateUtil.currentSeason());
         animeList.forEach(this::saveAnimeStatistics);
