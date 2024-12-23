@@ -39,8 +39,8 @@ public class AnimeCollectService {
         List<Anime> animeList = new ArrayList<>();
         while (animePaginatedIterator.hasNext()) {
             try {
-                dev.katsute.mal4j.anime.Anime katsuneAnime = animePaginatedIterator.next();
-                Anime anime = Anime.from(katsuneAnime);
+                dev.katsute.mal4j.anime.Anime katsuteAnime = animePaginatedIterator.next();
+                Anime anime = Anime.from(katsuteAnime);
                 animeList.add(anime);
                 log.info("{}", anime);
             } catch (Exception e) {

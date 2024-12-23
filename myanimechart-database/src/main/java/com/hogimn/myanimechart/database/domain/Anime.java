@@ -43,19 +43,19 @@ public class Anime {
         return anime;
     }
 
-    public static Anime from(dev.katsute.mal4j.anime.Anime katsuneAnime) {
+    public static Anime from(dev.katsute.mal4j.anime.Anime katsuteAnime) {
         Anime anime = new Anime();
-        anime.setId(katsuneAnime.getID());
-        anime.setTitle(katsuneAnime.getTitle());
-        anime.setSeason(katsuneAnime.getStartSeason().getSeason().field());
-        anime.setImage(katsuneAnime.getMainPicture().getMediumURL());
-        anime.setLink("https://myanimelist.net/anime/" + katsuneAnime.getID());
-        anime.setScore(katsuneAnime.getMeanRating() != null ? katsuneAnime.getMeanRating().doubleValue() : 0.0);
-        anime.setMembers(katsuneAnime.getUserListingCount());
-        anime.setYear(katsuneAnime.getStartSeason().getYear());
-        anime.setSource(katsuneAnime.getSource().field());
-        anime.setGenre(Arrays.stream(katsuneAnime.getGenres()).map(Genre::getName).toList());
-        anime.setStudios(Arrays.stream(katsuneAnime.getStudios()).map(IDN::getName).toList());
+        anime.setId(katsuteAnime.getID());
+        anime.setTitle(katsuteAnime.getTitle());
+        anime.setSeason(katsuteAnime.getStartSeason().getSeason().field());
+        anime.setImage(katsuteAnime.getMainPicture().getMediumURL());
+        anime.setLink("https://myanimelist.net/anime/" + katsuteAnime.getID());
+        anime.setScore(katsuteAnime.getMeanRating() != null ? katsuteAnime.getMeanRating().doubleValue() : 0.0);
+        anime.setMembers(katsuteAnime.getUserListingCount());
+        anime.setYear(katsuteAnime.getStartSeason().getYear());
+        anime.setSource(katsuteAnime.getSource().field());
+        anime.setGenre(Arrays.stream(katsuteAnime.getGenres()).map(Genre::getName).toList());
+        anime.setStudios(Arrays.stream(katsuteAnime.getStudios()).map(IDN::getName).toList());
         return anime;
     }
 
