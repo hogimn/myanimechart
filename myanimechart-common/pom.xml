@@ -16,6 +16,16 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.katsute</groupId>
+            <artifactId>mal4j</artifactId>
+            <version>3.4.3</version>
+        </dependency>
     </dependencies>
 
     <build>

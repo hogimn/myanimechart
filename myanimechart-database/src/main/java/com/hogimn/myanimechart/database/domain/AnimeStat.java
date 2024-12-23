@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnimeStat {
-    private Long id;
+    private Long animeId;
     private Double score;
     private Integer members;
 
     public static AnimeStat from(AnimeStatDao animeStatDao) {
         AnimeStat animeStat = new AnimeStat();
-        animeStat.setId(animeStatDao.getId());
+        animeStat.setAnimeId(animeStatDao.getAnime().getId());
         animeStat.setScore(animeStatDao.getScore());
         animeStat.setMembers(animeStatDao.getMembers());
         return animeStat;

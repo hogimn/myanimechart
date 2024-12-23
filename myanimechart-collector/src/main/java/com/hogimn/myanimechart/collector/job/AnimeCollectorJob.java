@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.collector.job;
 
 import com.hogimn.myanimechart.collector.service.AnimeCollectService;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
