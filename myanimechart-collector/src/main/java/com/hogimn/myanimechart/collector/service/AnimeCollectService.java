@@ -38,10 +38,14 @@ public class AnimeCollectService {
 
         List<Anime> animeList = new ArrayList<>();
         while (animePaginatedIterator.hasNext()) {
-            dev.katsute.mal4j.anime.Anime katsuneAnime = animePaginatedIterator.next();
-            Anime anime = Anime.from(katsuneAnime);
-            animeList.add(anime);
-            log.info("{}", anime);
+            try {
+                dev.katsute.mal4j.anime.Anime katsuneAnime = animePaginatedIterator.next();
+                Anime anime = Anime.from(katsuneAnime);
+                animeList.add(anime);
+                log.info("{}", anime);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
         return animeList;
