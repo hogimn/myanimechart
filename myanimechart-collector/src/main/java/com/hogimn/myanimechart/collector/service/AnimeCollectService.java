@@ -3,9 +3,12 @@ package com.hogimn.myanimechart.collector.service;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.dao.AnimeDao;
 import com.hogimn.myanimechart.database.dao.AnimeStatDao;
+import com.hogimn.myanimechart.database.dao.BatchHistoryDao;
 import com.hogimn.myanimechart.database.domain.Anime;
+import com.hogimn.myanimechart.database.domain.BatchHistory;
 import com.hogimn.myanimechart.database.repository.AnimeRepository;
 import com.hogimn.myanimechart.database.repository.AnimeStatRepository;
+import com.hogimn.myanimechart.database.repository.BatchHistoryRepository;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.property.time.Season;
@@ -22,13 +25,15 @@ import java.util.Optional;
 public class AnimeCollectService {
     private final AnimeRepository animeRepository;
     private final AnimeStatRepository animeStatRepository;
+    private final BatchHistoryRepository batchHistoryRepository;
     private final MyAnimeList myAnimeList;
 
     public AnimeCollectService(
             AnimeRepository animeRepository,
-            AnimeStatRepository animeStatRepository, MyAnimeList myAnimeList) {
+            AnimeStatRepository animeStatRepository, BatchHistoryRepository batchHistoryRepository, MyAnimeList myAnimeList) {
         this.animeRepository = animeRepository;
         this.animeStatRepository = animeStatRepository;
+        this.batchHistoryRepository = batchHistoryRepository;
         this.myAnimeList = myAnimeList;
     }
 
@@ -109,5 +114,10 @@ public class AnimeCollectService {
             log.error(anime.toString());
             return null;
         }
+    }
+
+    public void saveBatchHistory(String name) {
+        batchHistoryRepository.save(
+                BatchHistoryDao.from(new BatchHistory(name, DateUtil.now())));
     }
 }

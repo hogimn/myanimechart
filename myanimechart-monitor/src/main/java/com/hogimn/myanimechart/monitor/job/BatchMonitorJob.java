@@ -15,10 +15,9 @@ public class AnimeCollectorJob {
     }
 
     @Scheduled(cron = "0 0 * * * ?")
-    public void collectAnimeAndAnimeStat() {
+    public void collect() {
         log.info("start of collecting anime statistics");
         animeCollectService.collectAnimeStatistics();
-        animeCollectService.saveBatchHistory("collectAnimeAndAnimeStat");
         log.info("end of collecting anime statistics");
     }
 }

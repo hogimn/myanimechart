@@ -16,6 +16,7 @@
 
     <modules>
         <module>myanimechart-collector</module>
+        <module>myanimechart-monitor</module>
         <module>myanimechart-query</module>
         <module>myanimechart-common</module>
         <module>myanimechart-database</module>
