@@ -6,7 +6,6 @@ import com.hogimn.myanimechart.database.dao.AnimeDao;
 import com.hogimn.myanimechart.database.domain.Anime;
 import com.hogimn.myanimechart.database.service.AnimeService;
 import com.hogimn.myanimechart.database.service.AnimeStatService;
-import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.property.time.Season;
@@ -22,17 +21,14 @@ import java.util.List;
 public class AnimeCollectService {
     private final AnimeService animeService;
     private final AnimeStatService animeStatService;
-    private final BatchHistoryService batchService;
     private final MyAnimeList myAnimeList;
 
     public AnimeCollectService(
             AnimeService animeService,
             AnimeStatService animeStatService,
-            BatchHistoryService batchService,
             MyAnimeList myAnimeList) {
         this.animeService = animeService;
         this.animeStatService = animeStatService;
-        this.batchService = batchService;
         this.myAnimeList = myAnimeList;
     }
 
@@ -66,8 +62,8 @@ public class AnimeCollectService {
     }
 
     @Transactional
-    @SaveBatchHistory
-    public void collectAnimeStatistics() {
+    @SaveBatchHistory("#batchJobName")
+    public void collectAnimeStatistics(String batchJobName) {
         List<Anime> animeList = getAnime(DateUtil.currentYear(), DateUtil.currentSeason());
         animeList.forEach(this::saveAnimeStatistics);
 

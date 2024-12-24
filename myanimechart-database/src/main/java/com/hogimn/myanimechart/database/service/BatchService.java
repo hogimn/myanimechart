@@ -17,7 +17,7 @@ public class BatchService {
         this.batchRepository = batchRepository;
     }
 
-    public Batch getBatch(String name) {
+    public Batch getBatchByName(String name) {
         Optional<BatchDao> optional = batchRepository.findById(name);
         if (optional.isPresent()) {
             return Batch.from(optional.get());

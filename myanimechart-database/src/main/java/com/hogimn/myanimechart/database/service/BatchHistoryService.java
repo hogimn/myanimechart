@@ -18,7 +18,7 @@ public class BatchHistoryService {
     }
 
     public void saveBatchHistory(String name) {
-        Batch batch = batchService.getBatch(name);
+        Batch batch = batchService.getBatchByName(name);
         batchHistoryRepository.save(BatchHistoryDao.from(batch));
     }
 }
