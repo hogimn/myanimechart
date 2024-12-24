@@ -12,3 +12,6 @@ CREATE TABLE batch_history
     PRIMARY KEY (name, recorded_at),
     FOREIGN KEY (name) REFERENCES batch (name)
 );
+
+insert into batch (name, cron)
+values ("AnimeCollectorJob", "0 0 * * * ?");
