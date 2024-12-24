@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/query/anime-stat")
+@RequestMapping("/query/animeStat")
 @Slf4j
 public class AnimeStatController {
     private final AnimeStatService animeStatService;
