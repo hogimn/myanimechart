@@ -1,8 +1,7 @@
 package com.hogimn.myanimechart.database.service;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.dao.BatchHistoryDao;
-import com.hogimn.myanimechart.database.domain.BatchHistory;
+import com.hogimn.myanimechart.database.domain.Batch;
 import com.hogimn.myanimechart.database.repository.BatchHistoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,13 +10,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BatchHistoryService {
     private final BatchHistoryRepository batchHistoryRepository;
+    private final BatchService batchService;
 
-    public BatchHistoryService(BatchHistoryRepository batchHistoryRepository) {
+    public BatchHistoryService(BatchHistoryRepository batchHistoryRepository, BatchService batchService) {
         this.batchHistoryRepository = batchHistoryRepository;
+        this.batchService = batchService;
     }
 
     public void saveBatchHistory(String name) {
-        batchHistoryRepository.save(
-                BatchHistoryDao.from(new BatchHistory(name, DateUtil.now())));
+        Batch batch = batchService.getBatch(name);
+        batchHistoryRepository.save(BatchHistoryDao.from(batch));
     }
 }
