@@ -27,21 +27,15 @@ public class AnimeService {
         AnimeDao animeDao = AnimeDao.from(anime);
         Optional<AnimeDao> optional = animeRepository.findByTitle(anime.getTitle());
 
-        try {
-            if (optional.isPresent()) {
-                AnimeDao foundAnime = optional.get();
-                foundAnime.setFrom(anime);
-                animeRepository.save(foundAnime);
-                return foundAnime;
-            } else {
-                animeRepository.save(animeDao);
-                return animeDao;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            log.error(anime.toString());
-            return null;
+        if (optional.isPresent()) {
+            AnimeDao foundAnime = optional.get();
+            foundAnime.setFrom(anime);
+            animeRepository.save(foundAnime);
+            return foundAnime;
         }
+
+        animeRepository.save(animeDao);
+        return animeDao;
     }
 
     public Anime getAnimeByTitle(String title) {
@@ -50,7 +44,7 @@ public class AnimeService {
             AnimeDao animeDao = optional.get();
             return Anime.from(animeDao);
         }
-        return null;
+        throw new IllegalArgumentException("Anime not found");
     }
 
     public Anime getAnimeById(Long id) {
@@ -59,7 +53,7 @@ public class AnimeService {
             AnimeDao animeDao = optional.get();
             return Anime.from(animeDao);
         }
-        return null;
+        throw new IllegalArgumentException("Anime not found");
     }
 
     public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {

@@ -43,9 +43,8 @@ public class AnimeStatService {
         if (animeDao.isPresent()) {
             List<AnimeStatDao> animeStatDaos = animeStatRepository.findByAnime(animeDao.get());
             return animeStatDaos.stream().map(AnimeStat::from).toList();
-        } else {
-            return null;
         }
+        throw new IllegalArgumentException("Anime not found");
     }
 
     public List<Anime> getAnimeStats(Integer year, String season) {
@@ -66,7 +65,7 @@ public class AnimeStatService {
             anime.setAnimeStats(animeStat);
             return anime;
         }
-        return null;
+        throw new IllegalArgumentException("Anime not found");
     }
 
     public Anime getAnimeStatsById(Long id) {
@@ -78,6 +77,6 @@ public class AnimeStatService {
             anime.setAnimeStats(animeStat);
             return anime;
         }
-        return null;
+        throw new IllegalArgumentException("Anime not found");
     }
 }
