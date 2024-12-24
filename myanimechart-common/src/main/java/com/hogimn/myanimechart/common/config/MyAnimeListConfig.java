@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MyAnimeConfig {
+public class MyAnimeListConfig {
     private final String clientId;
 
-    public MyAnimeConfig(@Value("${myanimelist.clientId}") String clientId) {
+    public MyAnimeListConfig(@Value("${myanimelist.clientId}") String clientId) {
         this.clientId = clientId;
     }
 
