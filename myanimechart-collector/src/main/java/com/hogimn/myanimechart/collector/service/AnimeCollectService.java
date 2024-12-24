@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
+import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
 import com.hogimn.myanimechart.database.dao.AnimeDao;
 import com.hogimn.myanimechart.database.domain.Anime;
 import com.hogimn.myanimechart.database.service.AnimeService;
@@ -65,6 +66,7 @@ public class AnimeCollectService {
     }
 
     @Transactional
+    @SaveBatchHistory
     public void collectAnimeStatistics() {
         List<Anime> animeList = getAnime(DateUtil.currentYear(), DateUtil.currentSeason());
         animeList.forEach(this::saveAnimeStatistics);
@@ -73,8 +75,6 @@ public class AnimeCollectService {
             animeList = getAnime(DateUtil.nextMonthYear(), DateUtil.nextMonthSeason());
             animeList.forEach(this::saveAnimeStatistics);
         }
-
-        batchService.saveBatchHistory("collectAnimeAndAnimeStat");
     }
 
     public void saveAnimeStatistics(Anime anime) {
