@@ -18,7 +18,6 @@ public class AnimeCollectorJob {
     public void collectAnimeAndAnimeStat() {
         log.info("start of collecting anime statistics");
         animeCollectService.collectAnimeStatistics();
-        animeCollectService.saveBatchHistory("collectAnimeAndAnimeStat");
         log.info("end of collecting anime statistics");
     }
 }

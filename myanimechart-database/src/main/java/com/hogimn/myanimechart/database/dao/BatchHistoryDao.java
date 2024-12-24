@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 @IdClass(BatchHistoryId.class)
 public class BatchHistoryDao {
     @Id
-    @Column(name = "name")
     private String name;
 
     @Id
-    @Column(name = "recorded_at")
     private LocalDateTime recordedAt;
 
     public static BatchHistoryDao from(BatchHistory batchHistory) {

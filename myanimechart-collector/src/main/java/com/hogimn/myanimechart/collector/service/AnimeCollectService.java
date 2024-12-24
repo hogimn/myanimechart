@@ -2,13 +2,10 @@ package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.dao.AnimeDao;
-import com.hogimn.myanimechart.database.dao.AnimeStatDao;
-import com.hogimn.myanimechart.database.dao.BatchHistoryDao;
 import com.hogimn.myanimechart.database.domain.Anime;
-import com.hogimn.myanimechart.database.domain.BatchHistory;
-import com.hogimn.myanimechart.database.repository.AnimeRepository;
-import com.hogimn.myanimechart.database.repository.AnimeStatRepository;
-import com.hogimn.myanimechart.database.repository.BatchHistoryRepository;
+import com.hogimn.myanimechart.database.service.AnimeService;
+import com.hogimn.myanimechart.database.service.AnimeStatService;
+import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.property.time.Season;
@@ -18,22 +15,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class AnimeCollectService {
-    private final AnimeRepository animeRepository;
-    private final AnimeStatRepository animeStatRepository;
-    private final BatchHistoryRepository batchHistoryRepository;
+    private final AnimeService animeService;
+    private final AnimeStatService animeStatService;
+    private final BatchHistoryService batchService;
     private final MyAnimeList myAnimeList;
 
     public AnimeCollectService(
-            AnimeRepository animeRepository,
-            AnimeStatRepository animeStatRepository, BatchHistoryRepository batchHistoryRepository, MyAnimeList myAnimeList) {
-        this.animeRepository = animeRepository;
-        this.animeStatRepository = animeStatRepository;
-        this.batchHistoryRepository = batchHistoryRepository;
+            AnimeService animeService,
+            AnimeStatService animeStatService,
+            BatchHistoryService batchService,
+            MyAnimeList myAnimeList) {
+        this.animeService = animeService;
+        this.animeStatService = animeStatService;
+        this.batchService = batchService;
         this.myAnimeList = myAnimeList;
     }
 
@@ -75,49 +73,12 @@ public class AnimeCollectService {
             animeList = getAnime(DateUtil.nextMonthYear(), DateUtil.nextMonthSeason());
             animeList.forEach(this::saveAnimeStatistics);
         }
+
+        batchService.saveBatchHistory("collectAnimeAndAnimeStat");
     }
 
     public void saveAnimeStatistics(Anime anime) {
-        AnimeDao animeDao = upsertAnime(anime);
-        saveAnimeStat(animeDao);
-    }
-
-    private void saveAnimeStat(AnimeDao anime) {
-        if (anime == null) {
-            return;
-        }
-
-        AnimeStatDao animeStatDao = AnimeStatDao.from(anime);
-        animeStatRepository.save(animeStatDao);
-    }
-
-    private AnimeDao upsertAnime(Anime anime) {
-        if (anime == null) {
-            return null;
-        }
-
-        AnimeDao animeDao = AnimeDao.from(anime);
-        Optional<AnimeDao> optional = animeRepository.findByTitle(anime.getTitle());
-
-        try {
-            if (optional.isPresent()) {
-                AnimeDao foundAnime = optional.get();
-                foundAnime.setFrom(anime);
-                animeRepository.save(foundAnime);
-                return foundAnime;
-            } else {
-                animeRepository.save(animeDao);
-                return animeDao;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            log.error(anime.toString());
-            return null;
-        }
-    }
-
-    public void saveBatchHistory(String name) {
-        batchHistoryRepository.save(
-                BatchHistoryDao.from(new BatchHistory(name, DateUtil.now())));
+        AnimeDao animeDao = animeService.upsertAnime(anime);
+        animeStatService.saveAnimeStat(animeDao);
     }
 }

@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.query.controller;
 
 import com.hogimn.myanimechart.database.domain.Anime;
-import com.hogimn.myanimechart.query.service.AnimeStatService;
+import com.hogimn.myanimechart.database.service.AnimeStatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.query.service;
+package com.hogimn.myanimechart.database.service;
 
 import com.hogimn.myanimechart.database.dao.AnimeDao;
 import com.hogimn.myanimechart.database.dao.AnimeStatDao;
@@ -6,20 +6,32 @@ import com.hogimn.myanimechart.database.domain.Anime;
 import com.hogimn.myanimechart.database.domain.AnimeStat;
 import com.hogimn.myanimechart.database.repository.AnimeRepository;
 import com.hogimn.myanimechart.database.repository.AnimeStatRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AnimeStatService {
-    private final AnimeRepository animeRepository;
     private final AnimeStatRepository animeStatRepository;
+    private final AnimeRepository animeRepository;
 
-    public AnimeStatService(AnimeRepository animeRepository, AnimeStatRepository animeStatRepository) {
-        this.animeRepository = animeRepository;
+    public AnimeStatService(AnimeStatRepository animeStatRepository, AnimeRepository animeRepository) {
         this.animeStatRepository = animeStatRepository;
+        this.animeRepository = animeRepository;
     }
+
+    public void saveAnimeStat(AnimeDao anime) {
+        if (anime == null) {
+            return;
+        }
+
+        AnimeStatDao animeStatDao = AnimeStatDao.from(anime);
+        animeStatRepository.save(animeStatDao);
+    }
+
 
     public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {
         List<AnimeDao> animeDaos = animeRepository.findByYearAndSeason(year, season);
