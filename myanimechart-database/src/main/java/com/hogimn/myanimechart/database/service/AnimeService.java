@@ -44,7 +44,7 @@ public class AnimeService {
             AnimeDao animeDao = optional.get();
             return Anime.from(animeDao);
         }
-        throw new IllegalArgumentException("Anime not found");
+        throw new IllegalArgumentException("Anime not found (" + title + ")");
     }
 
     public Anime getAnimeById(Long id) {
@@ -53,7 +53,7 @@ public class AnimeService {
             AnimeDao animeDao = optional.get();
             return Anime.from(animeDao);
         }
-        throw new IllegalArgumentException("Anime not found");
+        throw new IllegalArgumentException("Anime not found (" + id + ")");
     }
 
     public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {

@@ -22,6 +22,6 @@ public class BatchService {
         if (optional.isPresent()) {
             return Batch.from(optional.get());
         }
-        throw new IllegalArgumentException("Batch not found");
+        throw new IllegalArgumentException("Batch not found (" + name + ")");
     }
 }
