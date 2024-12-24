@@ -6,7 +6,9 @@ import com.hogimn.myanimechart.database.repository.AnimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -40,5 +42,28 @@ public class AnimeService {
             log.error(anime.toString());
             return null;
         }
+    }
+
+    public Anime getAnimeByTitle(String title) {
+        Optional<AnimeDao> optional = animeRepository.findByTitle(title);
+        if (optional.isPresent()) {
+            AnimeDao animeDao = optional.get();
+            return Anime.from(animeDao);
+        }
+        return null;
+    }
+
+    public Anime getAnimeById(Long id) {
+        Optional<AnimeDao> optional = animeRepository.findById(id);
+        if (optional.isPresent()) {
+            AnimeDao animeDao = optional.get();
+            return Anime.from(animeDao);
+        }
+        return null;
+    }
+
+    public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {
+        List<AnimeDao> animeDaos = animeRepository.findByYearAndSeason(year, season);
+        return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
     }
 }

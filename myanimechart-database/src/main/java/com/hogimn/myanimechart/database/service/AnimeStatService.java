@@ -65,8 +65,19 @@ public class AnimeStatService {
             List<AnimeStat> animeStat = getAnimeStatByAnime(Anime.from(animeDao));
             anime.setAnimeStats(animeStat);
             return anime;
-        } else {
-            return null;
         }
+        return null;
+    }
+
+    public Anime getAnimeStatsById(Long id) {
+        Optional<AnimeDao> optional = animeRepository.findById(id);
+        if (optional.isPresent()) {
+            AnimeDao animeDao = optional.get();
+            Anime anime = Anime.from(animeDao);
+            List<AnimeStat> animeStat = getAnimeStatByAnime(Anime.from(animeDao));
+            anime.setAnimeStats(animeStat);
+            return anime;
+        }
+        return null;
     }
 }

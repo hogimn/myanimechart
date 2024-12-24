@@ -17,8 +17,13 @@ public class AnimeStatController {
         this.animeStatService = animeStatService;
     }
 
-    @GetMapping("/")
-    public Anime getAnimeStat(@RequestParam("title") String title) {
+    @GetMapping("/getAnimeStatsById")
+    public Anime getAnimeStatsById(@RequestParam("id") Long id) {
+        return animeStatService.getAnimeStatsById(id);
+    }
+
+    @GetMapping("/getAnimeStatsByTitle")
+    public Anime getAnimeStatsByTitle(@RequestParam("title") String title) {
         return animeStatService.getAnimeStatsByTitle(title);
     }
 
