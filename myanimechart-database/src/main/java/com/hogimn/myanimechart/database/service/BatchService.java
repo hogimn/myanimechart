@@ -6,7 +6,9 @@ import com.hogimn.myanimechart.database.repository.BatchRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,5 +25,9 @@ public class BatchService {
             return Batch.from(optional.get());
         }
         throw new IllegalArgumentException("Batch not found (" + name + ")");
+    }
+
+    public List<Batch> getAll() {
+        return batchRepository.findAll().stream().map(Batch::from).collect(Collectors.toList());
     }
 }

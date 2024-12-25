@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.collector.config;
+package com.hogimn.myanimechart.common.config;
 
 import org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;

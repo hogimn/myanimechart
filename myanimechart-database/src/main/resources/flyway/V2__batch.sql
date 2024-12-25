@@ -15,3 +15,5 @@ CREATE TABLE batch_history
 
 insert into batch (name, cron)
 values ("AnimeCollectorJob", "0 0 * * * ?");
+insert into batch (name, cron)
+values ("BatchMonitorJob", "0 * * * * ?");

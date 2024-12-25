@@ -1,6 +1,7 @@
-package com.hogimn.myanimechart.collector.job;
+package com.hogimn.myanimechart.collector.batchjob;
 
 import com.hogimn.myanimechart.collector.service.AnimeCollectService;
+import com.hogimn.myanimechart.database.domain.Batch;
 import com.hogimn.myanimechart.database.service.BatchService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +27,12 @@ public class AnimeCollectorJob {
 
     @PostConstruct
     public void scheduleAnimeCollectionTask() {
-        String batchJobName = AnimeCollectorJob.class.getSimpleName();
-        String cronExpression = batchService
-                .getBatchByName(batchJobName)
-                .getCron();
+        Batch batch = batchService
+                .getBatchByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectAnimeAndAnimeStat(batchJobName), new CronTrigger(cronExpression));
+                () -> collectAnimeAndAnimeStat(batch.getName()),
+                new CronTrigger(batch.getCron()));
     }
 
     public void collectAnimeAndAnimeStat(String batchJobName) {
