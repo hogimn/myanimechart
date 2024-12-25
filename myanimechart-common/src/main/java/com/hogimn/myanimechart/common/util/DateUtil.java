@@ -12,7 +12,7 @@ public class DateUtil {
         return now().getYear();
     }
 
-    public static int nextYear() {
+    private static int nextYear() {
         return currentYear() + 1;
     }
 

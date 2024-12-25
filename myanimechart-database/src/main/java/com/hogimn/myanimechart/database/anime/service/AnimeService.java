@@ -1,10 +1,12 @@
 package com.hogimn.myanimechart.database.anime.service;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,5 +61,13 @@ public class AnimeService {
     public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {
         List<AnimeDao> animeDaos = animeRepository.findByYearAndSeason(year, season);
         return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
+    }
+
+    public List<Anime> getAiringAnimeExcludingCurrentAndNextSeason(Integer year, String season) {
+        Integer nextYear = DateUtil.nextMonthYear();
+        String nextSeason = DateUtil.nextMonthSeason();
+        return animeRepository.findAiringAnimeExcludingCurrentAndNextSeason(
+                year, season, nextYear, nextSeason, "airing")
+                .stream().map(Anime::from).collect(Collectors.toList());
     }
 }

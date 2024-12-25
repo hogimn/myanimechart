@@ -14,6 +14,9 @@ public class AnimeStat {
     private Long animeId;
     private Double score;
     private Integer members;
+    private Integer popularity;
+    private Integer scoringCount;
+    private Integer episodes;
     private LocalDateTime recordedAt;
 
     public static AnimeStat from(AnimeStatDao animeStatDao) {
@@ -22,6 +25,9 @@ public class AnimeStat {
         animeStat.setScore(animeStatDao.getScore());
         animeStat.setMembers(animeStatDao.getMembers());
         animeStat.setRecordedAt(animeStatDao.getRecordedAt());
+        animeStat.setPopularity(animeStatDao.getPopularity());
+        animeStat.setScoringCount(animeStatDao.getScoringCount());
+        animeStat.setEpisodes(animeStatDao.getEpisodes());
         return animeStat;
     }
 }

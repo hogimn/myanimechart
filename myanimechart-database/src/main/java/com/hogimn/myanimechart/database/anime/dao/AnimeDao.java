@@ -23,6 +23,11 @@ public class AnimeDao {
     private String source;
     private Integer year;
     private String season;
+    private Integer rank;
+    private Integer popularity;
+    private Integer scoringCount;
+    private Integer episodes;
+    private String airStatus;
 
     public static AnimeDao from(Anime anime) {
         AnimeDao animeDao = new AnimeDao();
@@ -37,6 +42,11 @@ public class AnimeDao {
         animeDao.studios = String.join(", ", anime.getStudios());
         animeDao.year = anime.getYear();
         animeDao.season = anime.getSeason();
+        animeDao.rank = anime.getRank();
+        animeDao.popularity = anime.getPopularity();
+        animeDao.scoringCount = anime.getScoringCount();
+        animeDao.episodes = anime.getEpisodes();
+        animeDao.airStatus = anime.getAirStatus();
         return animeDao;
     }
 
@@ -52,5 +62,10 @@ public class AnimeDao {
         this.season = anime.getSeason();
         this.genre = String.join(", ", anime.getGenre());
         this.studios = String.join(", ", anime.getStudios());
+        this.rank = anime.getRank();
+        this.popularity = anime.getPopularity();
+        this.scoringCount = anime.getScoringCount();
+        this.episodes = anime.getEpisodes();
+        this.airStatus = anime.getAirStatus();
     }
 }

@@ -73,6 +73,10 @@ public class AnimeCollectService {
             animeList = getAnime(DateUtil.nextMonthYear(), DateUtil.nextMonthSeason());
             animeList.forEach(this::saveAnimeStatistics);
         }
+
+        animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
+                DateUtil.currentYear(), DateUtil.currentSeason());
+        animeList.forEach(this::saveAnimeStatistics);
     }
 
     public void saveAnimeStatistics(Anime anime) {

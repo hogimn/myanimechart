@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +27,11 @@ public class Anime {
     private Integer year;
     private String season;
     private List<AnimeStat> animeStats;
+    private Integer rank;
+    private Integer popularity;
+    private Integer scoringCount;
+    private Integer episodes;
+    private String airStatus;
 
     public static Anime from(AnimeDao animeDao) {
         Anime anime = new Anime();
@@ -40,6 +46,11 @@ public class Anime {
         anime.setSource(animeDao.getSource());
         anime.setGenre(Arrays.asList(animeDao.getGenre().split(",")));
         anime.setStudios(Arrays.asList(animeDao.getStudios().split(",")));
+        anime.setRank(animeDao.getRank());
+        anime.setPopularity(animeDao.getPopularity());
+        anime.setScoringCount(animeDao.getScoringCount());
+        anime.setEpisodes(animeDao.getEpisodes());
+        anime.setAirStatus(animeDao.getAirStatus());
         return anime;
     }
 
@@ -56,6 +67,12 @@ public class Anime {
         anime.setSource(katsuteAnime.getSource().field());
         anime.setGenre(Arrays.stream(katsuteAnime.getGenres()).map(Genre::getName).toList());
         anime.setStudios(Arrays.stream(katsuteAnime.getStudios()).map(IDN::getName).toList());
+        anime.setRank(katsuteAnime.getRank());
+        anime.setPopularity(katsuteAnime.getPopularity());
+        anime.setScoringCount(katsuteAnime.getUserScoringCount());
+        anime.setEpisodes(katsuteAnime.getEpisodes());
+        anime.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
+                katsuteAnime.getStatus().field() : katsuteAnime.getRawStatus());
         return anime;
     }
 
