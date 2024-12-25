@@ -4,7 +4,7 @@ CREATE TABLE anime
     title         VARCHAR(255),
     link          VARCHAR(255),
     image         VARCHAR(255),
-    score         DECIMAL(3, 1),
+    score         DOUBLE,
     members       INT,
     genre         VARCHAR(255),
     studios       VARCHAR(255),
