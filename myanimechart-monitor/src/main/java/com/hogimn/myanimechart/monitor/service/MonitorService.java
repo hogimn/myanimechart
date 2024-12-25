@@ -24,7 +24,6 @@ public class MonitorService {
     }
 
     @Transactional
-    @SaveBatchHistory(value = "#batchJobName", saveDirectly = true)
     public void checkBatchNotExecuted(String batchJobName) {
         List<Batch> batches = batchService.getAll();
         for (Batch batch : batches) {
