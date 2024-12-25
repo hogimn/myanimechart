@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.hogimn.myanimechart.database"
 })
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database.repository")
-@EntityScan(basePackages = "com.hogimn.myanimechart.database.dao")
+@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database")
+@EntityScan(basePackages = "com.hogimn.myanimechart.database")
 public class CollectorApplication {
     public static void main(String[] args) {
         SpringApplication.run(CollectorApplication.class, args);
