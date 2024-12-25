@@ -2,6 +2,7 @@ package com.hogimn.myanimechart.monitor.service;
 
 import com.hogimn.myanimechart.common.alarm.AlarmService;
 import com.hogimn.myanimechart.common.util.CronUtil;
+import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
 import com.hogimn.myanimechart.database.domain.Batch;
 import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import com.hogimn.myanimechart.database.service.BatchService;
@@ -27,6 +28,7 @@ public class MonitorService {
     }
 
     @Transactional
+    @SaveBatchHistory(value = "#batchJobName", saveDirectly = true)
     public void checkBatchNotExecuted(String batchJobName) {
         List<Batch> batches = batchService.getAll();
         for (Batch batch : batches) {
