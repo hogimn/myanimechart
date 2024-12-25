@@ -1,6 +1,9 @@
 myanimelist:
   clientId: ${myanimelist_clientid}
 
+discord:
+  webhookUrl: ${discord_webhookurl}
+
 eureka:
   client:
     enabled: true

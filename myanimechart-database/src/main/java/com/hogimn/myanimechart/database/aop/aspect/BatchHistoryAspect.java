@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.database.aop.aspect;
 
 import com.hogimn.myanimechart.common.domain.DiscoveryService;
-import com.hogimn.myanimechart.common.service.ServiceRegistryService;
+import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.SpelUtil;
 import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
 import com.hogimn.myanimechart.database.service.BatchHistoryService;

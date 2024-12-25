@@ -3,7 +3,6 @@ package com.hogimn.myanimechart.database.dao;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.dao.key.BatchHistoryId;
 import com.hogimn.myanimechart.database.domain.Batch;
-import com.hogimn.myanimechart.database.domain.BatchHistory;
 import jakarta.persistence.*;
 import lombok.Data;
 

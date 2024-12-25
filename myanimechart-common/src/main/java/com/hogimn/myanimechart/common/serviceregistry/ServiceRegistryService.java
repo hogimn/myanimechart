@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.common.service;
+package com.hogimn.myanimechart.common.serviceregistry;
 
 import com.hogimn.myanimechart.common.domain.DiscoveryService;
 import com.netflix.appinfo.InstanceInfo;

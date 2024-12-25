@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.monitor.service;
 
+import com.hogimn.myanimechart.common.alarm.AlarmService;
 import com.hogimn.myanimechart.common.util.CronUtil;
-import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
 import com.hogimn.myanimechart.database.domain.Batch;
 import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import com.hogimn.myanimechart.database.service.BatchService;
@@ -15,12 +15,15 @@ import java.util.List;
 @Slf4j
 public class MonitorService {
     private final BatchService batchService;
-    private final BatchHistoryService
-            batchHistoryService;
+    private final BatchHistoryService batchHistoryService;
+    private final List<AlarmService> alarmServices;
 
-    public MonitorService(BatchService batchService, BatchHistoryService batchHistoryService) {
+    public MonitorService(BatchService batchService,
+                          BatchHistoryService batchHistoryService,
+                          List<AlarmService> alarmServices) {
         this.batchService = batchService;
         this.batchHistoryService = batchHistoryService;
+        this.alarmServices = alarmServices;
     }
 
     @Transactional
@@ -30,10 +33,14 @@ public class MonitorService {
             String cron = batch.getCron();
             long period = CronUtil.getPeriodAsSeconds(cron);
             if (!batchHistoryService.checkBatchExecutedWithinPeriod(batch.getName(), period)) {
-                // TODO: alarm service via email
-                log.error("batch not executed within period: {} {}.", batch.getName(), period);
-            }
-            else {
+                String errorMessage = String.format("batch not executed within period: %s %s.", batch.getName(), period);
+                log.error(errorMessage);
+                alarmServices.forEach(alarmService -> {
+                    if (alarmService.isSupported()) {
+                        alarmService.send(errorMessage);
+                    }
+                });
+            } else {
                 log.info("batch executed within period: {} {}.", batch.getName(), period);
             }
         }
