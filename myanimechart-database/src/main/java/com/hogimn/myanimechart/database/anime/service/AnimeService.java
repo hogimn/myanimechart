@@ -6,7 +6,6 @@ import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.unit.DataUnit;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +66,7 @@ public class AnimeService {
         Integer nextYear = DateUtil.nextMonthYear();
         String nextSeason = DateUtil.nextMonthSeason();
         return animeRepository.findAiringAnimeExcludingCurrentAndNextSeason(
-                year, season, nextYear, nextSeason, "airing")
+                year, season, nextYear, nextSeason, "currently_airing")
                 .stream().map(Anime::from).collect(Collectors.toList());
     }
 }

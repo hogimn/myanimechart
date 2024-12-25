@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.common.util;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class DateUtil {
     public static LocalDateTime now() {
