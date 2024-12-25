@@ -1,8 +1,9 @@
 package com.hogimn.myanimechart.database.aop.aspect;
 
+import com.hogimn.myanimechart.common.domain.DiscoveryService;
+import com.hogimn.myanimechart.common.service.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.SpelUtil;
 import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
-import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,16 +14,17 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class BatchHistoryAspect {
-    private final BatchHistoryService batchHistoryService;
+    private final ServiceRegistryService serviceRegistryService;
 
-    public BatchHistoryAspect(BatchHistoryService batchHistoryService) {
-        this.batchHistoryService = batchHistoryService;
+    public BatchHistoryAspect(ServiceRegistryService serviceRegistryService) {
+        this.serviceRegistryService = serviceRegistryService;
     }
 
     @Around("@annotation(saveBatchHistory)")
     public Object saveBatchHistory(ProceedingJoinPoint joinPoint, SaveBatchHistory saveBatchHistory) throws Throwable {
         String batchJobName = SpelUtil.resolveSpelExpression(joinPoint, saveBatchHistory.value());
-        batchHistoryService.saveBatchHistory(batchJobName);
+        serviceRegistryService.send(DiscoveryService.MONITOR, "/saveBatchHistory", batchJobName);
+
         log.info("Start batch job {}", batchJobName);
         Object object = joinPoint.proceed();
         log.info("End batch job {}", batchJobName);

@@ -1,2 +1,8 @@
 myanimelist:
   clientId: ${myanimelist_clientid}
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: ${serviceregistry_url}

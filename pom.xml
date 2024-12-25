@@ -20,6 +20,7 @@
         <module>myanimechart-query</module>
         <module>myanimechart-common</module>
         <module>myanimechart-database</module>
+        <module>myanimechart-serviceregistry</module>
     </modules>
 
     <properties>

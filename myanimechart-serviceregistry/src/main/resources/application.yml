@@ -1,0 +1,15 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: serviceregistry
+  config:
+    import: file:../myanimechart-common/src/main/resources/application.yml
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: ${serviceregistry_url}

@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${mariadb_url}
+    username: ${mariadb_username}
+    password: ${mariadb_password}
+  jpa:
+    hibernate:
+      show-sql: true
+      format-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:flyway-dev
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    fail-on-missing-locations: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.stat=: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
