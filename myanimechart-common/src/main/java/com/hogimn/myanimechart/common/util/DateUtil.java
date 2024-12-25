@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 
 public class DateUtil {
     public static LocalDateTime now() {
-        return LocalDateTime.now(ZoneOffset.UTC);
+        return LocalDateTime.now();
     }
 
     public static int currentYear() {

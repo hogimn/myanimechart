@@ -17,7 +17,7 @@ public class CronUtil {
         Cron cronDef = parser.parse(cron);
 
         ExecutionTime executionTime = ExecutionTime.forCron(cronDef);
-        ZonedDateTime now = DateUtil.now().atZone(ZoneOffset.UTC);
+        ZonedDateTime now = DateUtil.now().atZone(ZoneOffset.systemDefault());
         ZonedDateTime nextExecution = executionTime.nextExecution(now).orElse(now);
         Optional<Duration> optional = executionTime.timeToNextExecution(nextExecution);
 
