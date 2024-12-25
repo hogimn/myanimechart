@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.monitor.batchjob;
 
-import com.hogimn.myanimechart.database.domain.Batch;
-import com.hogimn.myanimechart.database.service.BatchService;
+import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.service.BatchService;
 import com.hogimn.myanimechart.monitor.service.MonitorService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

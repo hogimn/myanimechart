@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.monitor.controller;
 
-import com.hogimn.myanimechart.database.service.BatchHistoryService;
+import com.hogimn.myanimechart.database.batch.service.BatchHistoryService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

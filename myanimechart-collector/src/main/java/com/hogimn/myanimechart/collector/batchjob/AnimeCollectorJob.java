@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.collector.batchjob;
 
 import com.hogimn.myanimechart.collector.service.AnimeCollectService;
-import com.hogimn.myanimechart.database.domain.Batch;
-import com.hogimn.myanimechart.database.service.BatchService;
+import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.service.BatchService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;

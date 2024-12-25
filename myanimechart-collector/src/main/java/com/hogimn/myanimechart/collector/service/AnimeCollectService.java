@@ -1,11 +1,11 @@
 package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.aop.annotation.SaveBatchHistory;
-import com.hogimn.myanimechart.database.dao.AnimeDao;
-import com.hogimn.myanimechart.database.domain.Anime;
-import com.hogimn.myanimechart.database.service.AnimeService;
-import com.hogimn.myanimechart.database.service.AnimeStatService;
+import com.hogimn.myanimechart.database.batch.aop.annotation.SaveBatchHistory;
+import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
+import com.hogimn.myanimechart.database.anime.domain.Anime;
+import com.hogimn.myanimechart.database.anime.service.AnimeService;
+import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.property.time.Season;

@@ -1,0 +1,21 @@
+package com.hogimn.myanimechart.database.batch.domain;
+
+import com.hogimn.myanimechart.database.batch.dao.BatchDao;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Batch {
+    private String name;
+    private String cron;
+
+    public static Batch from(BatchDao batchDao) {
+        Batch batch = new Batch();
+        batch.setName(batchDao.getName());
+        batch.setCron(batchDao.getCron());
+        return batch;
+    }
+}
