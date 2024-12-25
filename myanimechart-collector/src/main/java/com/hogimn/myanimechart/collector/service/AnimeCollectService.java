@@ -44,7 +44,6 @@ public class AnimeCollectService {
                 Anime anime = Anime.from(katsuteAnime);
                 animeList.add(anime);
                 log.info("{}", anime);
-                break;
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
