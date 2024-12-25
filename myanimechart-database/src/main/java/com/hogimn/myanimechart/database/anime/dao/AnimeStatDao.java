@@ -21,7 +21,7 @@ public class AnimeStatDao {
     private double score;
     private Integer popularity;
     private Integer scoringCount;
-    private Integer episodes;
+    private Integer rank;
 
     @Id
     private LocalDateTime recordedAt;
@@ -34,7 +34,7 @@ public class AnimeStatDao {
         animeDao.recordedAt = DateUtil.now();
         animeDao.popularity = anime.getPopularity();
         animeDao.scoringCount = anime.getScoringCount();
-        animeDao.episodes = anime.getEpisodes();
+        animeDao.rank = anime.getRank();
         return animeDao;
     }
 }

@@ -16,7 +16,7 @@ public class AnimeStat {
     private Integer members;
     private Integer popularity;
     private Integer scoringCount;
-    private Integer episodes;
+    private Integer rank;
     private LocalDateTime recordedAt;
 
     public static AnimeStat from(AnimeStatDao animeStatDao) {
@@ -27,7 +27,7 @@ public class AnimeStat {
         animeStat.setRecordedAt(animeStatDao.getRecordedAt());
         animeStat.setPopularity(animeStatDao.getPopularity());
         animeStat.setScoringCount(animeStatDao.getScoringCount());
-        animeStat.setEpisodes(animeStatDao.getEpisodes());
+        animeStat.setRank(animeStatDao.getRank());
         return animeStat;
     }
 }
