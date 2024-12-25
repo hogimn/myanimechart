@@ -11,6 +11,7 @@ import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.property.time.Season;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class AnimeCollectService {
 
     @Transactional
     @SaveBatchHistory("#batchJobName")
+    @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {
         List<Anime> animeList = getAnime(DateUtil.currentYear(), DateUtil.currentSeason());
         animeList.forEach(this::saveAnimeStatistics);

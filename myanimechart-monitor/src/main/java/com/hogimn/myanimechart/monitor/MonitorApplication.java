@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.monitor;
 
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database.repository")
 @EntityScan(basePackages = "com.hogimn.myanimechart.database.dao")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT3M")
 public class MonitorApplication {
     public static void main(String[] args) {
         SpringApplication.run(MonitorApplication.class, args);

@@ -8,6 +8,7 @@ import com.hogimn.myanimechart.database.service.BatchHistoryService;
 import com.hogimn.myanimechart.database.service.BatchService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class MonitorService {
 
     @Transactional
     @SaveBatchHistory(value = "#batchJobName", saveDirectly = true)
+    @SchedulerLock(name = "checkBatchNotExecuted")
     public void checkBatchNotExecuted(String batchJobName) {
         List<Batch> batches = batchService.getAll();
         for (Batch batch : batches) {
