@@ -29,7 +29,7 @@ public class BatchHistoryService {
 
     public boolean checkBatchExecutedWithinPeriod(String name, long seconds) {
         LocalDateTime now = DateUtil.now();
-        LocalDateTime beforePeriod = now.minusSeconds(seconds + seconds / 2);
+        LocalDateTime beforePeriod = now.minusSeconds(seconds + seconds / 6);
         Batch batch = batchService.getBatchByName(name);
         List<BatchHistoryDao> batchHistoryDaoList = batchHistoryRepository
                 .findByBatchAndRecordedAtBetween(BatchDao.from(batch), beforePeriod, now);
