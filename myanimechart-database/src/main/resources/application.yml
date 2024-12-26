@@ -10,7 +10,7 @@ spring:
       format-sql: true
   flyway:
     enabled: true
-    locations: classpath:flyway
+    locations: classpath:flyway-common, classpath:flyway-real
     baseline-on-migrate: true
     validate-on-migrate: true
     fail-on-missing-locations: true
