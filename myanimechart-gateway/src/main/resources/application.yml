@@ -14,12 +14,6 @@ spring:
           uri: lb://query
           predicates:
             - Path=/query/**
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowed-origins: '*'
-            allowed-headers: '*'
-            allowed-methods: '*'
 
 springdoc:
   api-docs:
