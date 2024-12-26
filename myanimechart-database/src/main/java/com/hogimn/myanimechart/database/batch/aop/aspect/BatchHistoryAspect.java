@@ -31,7 +31,7 @@ public class BatchHistoryAspect {
         if (saveBatchHistory.saveDirectly()) {
             batchHistoryService.saveBatchHistory(batchJobName);
         } else {
-            serviceRegistryService.send(RegisteredService.MONITOR, "/saveBatchHistory", batchJobName);
+            serviceRegistryService.send(RegisteredService.MONITOR, "/batch/saveBatchHistory", batchJobName);
         }
 
         log.info("Start batch job {}", batchJobName);
