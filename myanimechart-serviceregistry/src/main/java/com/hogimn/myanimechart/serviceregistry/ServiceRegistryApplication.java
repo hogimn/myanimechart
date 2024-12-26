@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.hogimn.myanimechart.serviceregistry",
-        "com.hogimn.myanimechart.common",
+        "com.hogimn.myanimechart.serviceregistry"
 })
 @EnableEurekaServer
 public class ServiceRegistryApplication {
