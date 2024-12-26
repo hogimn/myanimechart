@@ -34,19 +34,20 @@ public class AnimeCollectService {
     }
 
     public List<Anime> getAnime(int year, String season) {
-        PaginatedIterator<dev.katsute.mal4j.anime.Anime> animePaginatedIterator =
-                myAnimeList.getAnimeSeason(year, getSeason(season)).searchAll();
-
         List<Anime> animeList = new ArrayList<>();
-        while (animePaginatedIterator.hasNext()) {
-            try {
+
+        try {
+            PaginatedIterator<dev.katsute.mal4j.anime.Anime> animePaginatedIterator =
+                    myAnimeList.getAnimeSeason(year, getSeason(season)).searchAll();
+
+            while (animePaginatedIterator.hasNext()) {
                 dev.katsute.mal4j.anime.Anime katsuteAnime = animePaginatedIterator.next();
                 Anime anime = Anime.from(katsuteAnime);
                 animeList.add(anime);
                 log.info("{}", anime);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         return animeList;
