@@ -22,7 +22,7 @@ CREATE TABLE anime_stat
 (
     anime_id      INT,
     members       INT,
-    score         DECIMAL(3, 1),
+    score         DOUBLE,
     scoring_count INT,
     rank          INT,
     popularity    INT,
