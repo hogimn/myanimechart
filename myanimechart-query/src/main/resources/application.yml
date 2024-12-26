@@ -5,5 +5,7 @@ spring:
     import: file:../myanimechart-common/src/main/resources/application.yml,file:../myanimechart-database/src/main/resources/application.yml
 
 springdoc:
+  api-docs:
+    path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html

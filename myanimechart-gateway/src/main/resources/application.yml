@@ -14,3 +14,14 @@ spring:
           uri: lb://query
           predicates:
             - Path=/query/**
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: query
+        url: /query/v3/api-docs
