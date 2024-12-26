@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/monitor")
-public class MonitorController {
+@RequestMapping("/batch")
+public class BatchController {
     private final BatchHistoryService batchHistoryService;
 
-    public MonitorController(BatchHistoryService batchHistoryService) {
+    public BatchController(BatchHistoryService batchHistoryService) {
         this.batchHistoryService = batchHistoryService;
     }
 

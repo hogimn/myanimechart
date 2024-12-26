@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gateway
+  config:
+    import: file:../myanimechart-common/src/main/resources/application.yml
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: query
+          uri: lb://query
+          predicates:
+            - Path=/query/**

@@ -21,6 +21,7 @@
         <module>myanimechart-common</module>
         <module>myanimechart-database</module>
         <module>myanimechart-serviceregistry</module>
+        <module>myanimechart-gateway</module>
     </modules>
 
     <properties>

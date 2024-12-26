@@ -45,7 +45,7 @@ public class ServiceRegistryService {
         try {
             String serviceUrl = getServiceUrl(service);
             if (serviceUrl != null) {
-                String fullUrl = serviceUrl + "/" + service.toString().toLowerCase() + "/" + endpoint;
+                String fullUrl = serviceUrl + "/" + endpoint;
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.TEXT_PLAIN);
