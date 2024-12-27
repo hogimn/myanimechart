@@ -20,6 +20,10 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     const [activeLegend, setActiveLegend] = useState(selectedLegend);
     const chartRef = useRef(null); // Ref to access the chart instance
 
+    useEffect(() => {
+        setActiveLegend(selectedLegend)
+    }, [selectedLegend]);
+
     const chartData = {
         labels: animeStats.map(stat => new Date(stat.recordedAt).toLocaleString()),
         datasets: [
