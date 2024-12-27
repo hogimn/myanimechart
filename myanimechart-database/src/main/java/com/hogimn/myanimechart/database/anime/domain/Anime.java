@@ -53,6 +53,7 @@ public class Anime {
         anime.setEpisodes(animeDao.getEpisodes());
         anime.setAirStatus(animeDao.getAirStatus());
         anime.setTitle(animeDao.getTitle());
+        anime.setType(animeDao.getType());
         return anime;
     }
 
@@ -76,6 +77,8 @@ public class Anime {
         anime.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
                 katsuteAnime.getStatus().field() : katsuteAnime.getRawStatus());
         anime.setTitle(katsuteAnime.getTitle());
+        anime.setType(!Objects.equals(katsuteAnime.getType().field(), "") ?
+                katsuteAnime.getType().field() : katsuteAnime.getRawType());
         return anime;
     }
 
