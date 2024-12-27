@@ -16,7 +16,7 @@ const SelectWrapper = styled.div`
     text-align: right;
 
     .ant-select {
-        width: fit-content;
+        min-width: 117px;
     }
 `;
 
@@ -86,7 +86,8 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
             if (aValue === null && bValue !== null) return 1;
             if (bValue === null && aValue !== null) return -1;
 
-            if (criterion === "score" || criterion === "popularity" || criterion === "members") {
+            if (criterion === "score" || criterion === "popularity" ||
+                criterion === "members" || criterion === "scoringCount") {
                 return bValue - aValue;
             } else if (criterion === "rank") {
                 return aValue - bValue;
@@ -127,6 +128,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
                     <CommonSelect.Option value="members">Members</CommonSelect.Option>
                     <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
                     <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
+                    <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
                 </CommonSelect>
             </SelectWrapper>
 
@@ -145,7 +147,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
                                     style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}
                                 >
                                     <GraphWrapper>
-                                        <AnimeStatsGraph animeStats={anime.animeStats}/>
+                                        <AnimeStatsGraph animeStats={anime.animeStats} selectedLegend={sortBy}/>
                                     </GraphWrapper>
                                 </CommonCol>
                             </AnimeStatSubWrapper>

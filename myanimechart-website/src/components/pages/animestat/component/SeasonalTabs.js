@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import CommonTabs from "../../../common/basic/CommonTabs";
 import SeasonalAnimeList from "./SeasonalAnimeList";
 import styled from "styled-components";

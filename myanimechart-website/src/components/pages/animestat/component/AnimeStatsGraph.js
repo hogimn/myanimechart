@@ -16,8 +16,8 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const zoomOptions = {};
 
-const AnimeStatsGraph = ({animeStats}) => {
-    const [activeLegend, setActiveLegend] = useState('Score');
+const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
+    const [activeLegend, setActiveLegend] = useState(selectedLegend);
     const chartRef = useRef(null); // Ref to access the chart instance
 
     const chartData = {
@@ -29,7 +29,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                 fill: false,
                 borderColor: 'rgba(75,192,192,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'Score',
+                hidden: activeLegend && activeLegend !== 'score',
             },
             {
                 label: 'Members',
@@ -37,7 +37,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                 fill: false,
                 borderColor: 'rgba(255,99,132,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'Members',
+                hidden: activeLegend && activeLegend !== 'members',
             },
             {
                 label: 'Popularity',
@@ -45,7 +45,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                 fill: false,
                 borderColor: 'rgba(153,102,255,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'Popularity',
+                hidden: activeLegend && activeLegend !== 'popularity',
             },
             {
                 label: 'Rank',
@@ -53,7 +53,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                 fill: false,
                 borderColor: 'rgba(255,159,64,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'Rank',
+                hidden: activeLegend && activeLegend !== 'rank',
             },
             {
                 label: 'Scoring Count',
@@ -61,7 +61,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                 fill: false,
                 borderColor: 'rgba(255,205,86,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'Scoring Count',
+                hidden: activeLegend && activeLegend !== 'scoringCount',
             },
         ],
     };
