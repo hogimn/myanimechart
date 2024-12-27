@@ -28,6 +28,7 @@ public class AnimeDao {
     private Integer scoringCount;
     private Integer episodes;
     private String airStatus;
+    private String type;
 
     public static AnimeDao from(Anime anime) {
         AnimeDao animeDao = new AnimeDao();
@@ -47,6 +48,7 @@ public class AnimeDao {
         animeDao.scoringCount = anime.getScoringCount();
         animeDao.episodes = anime.getEpisodes();
         animeDao.airStatus = anime.getAirStatus();
+        animeDao.type = anime.getType();
         return animeDao;
     }
 
@@ -67,5 +69,6 @@ public class AnimeDao {
         this.scoringCount = anime.getScoringCount();
         this.episodes = anime.getEpisodes();
         this.airStatus = anime.getAirStatus();
+        this.type = anime.getType();
     }
 }

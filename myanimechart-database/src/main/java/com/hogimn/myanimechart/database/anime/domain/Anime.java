@@ -32,6 +32,7 @@ public class Anime {
     private Integer scoringCount;
     private Integer episodes;
     private String airStatus;
+    private String type;
 
     public static Anime from(AnimeDao animeDao) {
         Anime anime = new Anime();
@@ -51,6 +52,7 @@ public class Anime {
         anime.setScoringCount(animeDao.getScoringCount());
         anime.setEpisodes(animeDao.getEpisodes());
         anime.setAirStatus(animeDao.getAirStatus());
+        anime.setTitle(animeDao.getTitle());
         return anime;
     }
 
@@ -73,6 +75,7 @@ public class Anime {
         anime.setEpisodes(katsuteAnime.getEpisodes());
         anime.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
                 katsuteAnime.getStatus().field() : katsuteAnime.getRawStatus());
+        anime.setTitle(katsuteAnime.getTitle());
         return anime;
     }
 
