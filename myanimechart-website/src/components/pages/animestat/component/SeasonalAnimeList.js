@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {Component, useEffect, useState} from "react";
 import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
@@ -6,16 +6,61 @@ import CommonAlert from "../../../common/basic/CommonAlert";
 import CommonSpin from "../../../common/basic/CommonSpin";
 import CommonCard from "../../../common/basic/CommonCard";
 import AnimeStatsGraph from "./AnimeStatsGraph";
-import DescriptionSection from "./DescriptionSection";
+import DescriptionSection, {DescriptionContainer} from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import CommonSelect from "../../../common/basic/CommonSelect";
+import styled from "styled-components";
+
+const SelectWrapper = styled.div`
+    margin-bottom: 16px;
+    text-align: right;
+
+    .ant-select {
+        width: fit-content;
+    }
+`;
+
+const AnimeStatWrapper = styled(CommonCol)`
+    display: flex;
+    flex-direction: column;
+
+    .ant-col {
+        max-width: 100%
+    }
+
+    .ant-card {
+        height: 360px;
+    }
+
+    .ant-card-body {
+        display: none;
+    }
+`;
+
+const AnimeStatSubWrapper = styled.div`
+    background-color: rgba(0, 0, 0, 0.25);
+    border: rgba(255, 254, 254, 0.62) 1px solid;
+    border-radius: 5px;
+    margin: 5px;
+`;
+
+const AnimeWrapper = styled.div`
+    display: flex;
+    margin-bottom: 8px;
+`;
+
+const GraphWrapper = styled.div`
+    width: 100%;
+    height: 350px;
+    margin-bottom: 15px;
+`;
 
 const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
     const [animeStats, setAnimeStats] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(12);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,36 +118,39 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
 
     return (
         <>
-            <div style={{marginBottom: "16px", textAlign: "right"}}>
+            <SelectWrapper>
                 <CommonSelect
-                    value={sortBy}
+                    value={`Sort: ${sortBy}`}
                     onChange={(value) => setSortBy(value)}
-                    style={{width: 110}}
                 >
                     <CommonSelect.Option value="score">Score</CommonSelect.Option>
                     <CommonSelect.Option value="members">Members</CommonSelect.Option>
                     <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
                     <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
                 </CommonSelect>
-            </div>
+            </SelectWrapper>
 
             <CommonRow gutter={[16, 16]}>
                 {currentAnimeStats.map((anime) => (
-                    <CommonCol
-                        xs={16}
-                        key={anime.id}
-                        style={{display: "flex", flexDirection: "row", alignItems: "flex-start"}}
-                    >
-                        <div style={{flex: 1, marginRight: "16px"}}>
-                            <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
-                        </div>
+                    <>
+                        <AnimeStatWrapper xs={24} sm={12} md={8} key={`anime-card-${anime.id}`}>
+                            <AnimeStatSubWrapper>
+                                <AnimeWrapper>
+                                    <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
+                                    <DescriptionSection anime={anime}/>
+                                </AnimeWrapper>
 
-                        <DescriptionSection anime={anime}/>
-
-                        <div style={{flex: 5}}>
-                            <AnimeStatsGraph animeStats={anime.animeStats}/>
-                        </div>
-                    </CommonCol>
+                                <CommonCol
+                                    xs={24} sm={24} md={12} key={`anime-graph-${anime.id}`}
+                                    style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}
+                                >
+                                    <GraphWrapper>
+                                        <AnimeStatsGraph animeStats={anime.animeStats}/>
+                                    </GraphWrapper>
+                                </CommonCol>
+                            </AnimeStatSubWrapper>
+                        </AnimeStatWrapper>
+                    </>
                 ))}
             </CommonRow>
 

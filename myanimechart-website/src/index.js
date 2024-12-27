@@ -9,8 +9,8 @@ const darkTheme = {
     token: {
         colorBgBase: '#141414',
         colorTextBase: '#ffffff',
-        colorPrimary: '#1890ff',
-        colorLink: '#1890ff',
+        colorPrimary: '#70a8ce',
+        colorLink: '#4164fd',
         colorBorder: '#444',
     },
 };

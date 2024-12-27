@@ -3,7 +3,6 @@ import Footer from "../organism/Footer";
 import styled from "styled-components";
 
 const PageWrapper = styled.div`
-    background-color: #222431;
     min-height: 100vh;
     color: white;
     padding: 5px

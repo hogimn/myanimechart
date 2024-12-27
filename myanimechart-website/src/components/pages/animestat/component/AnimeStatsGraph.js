@@ -14,21 +14,7 @@ import zoomPlugin from "chartjs-plugin-zoom";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin);
 
-const zoomOptions = {
-    pan: {
-        enabled: true,
-        mode: "x"
-    },
-    zoom: {
-        wheel: {
-            enabled: true
-        },
-        pinch: {
-            enabled: true
-        },
-        mode: "x"
-    }
-};
+const zoomOptions = {};
 
 const AnimeStatsGraph = ({animeStats}) => {
     const [activeLegend, setActiveLegend] = useState('Score');
@@ -105,7 +91,8 @@ const AnimeStatsGraph = ({animeStats}) => {
                     color: '#ffffff',
                     callback: function (value, index) {
                         const showEveryNth = 5;
-                        return index % showEveryNth === 0 ? this.getLabelForValue(value) : '';
+                        // return index % showEveryNth === 0 ? this.getLabelForValue(value) : '';
+                        return '';
                     },
                 },
             },
@@ -143,11 +130,7 @@ const AnimeStatsGraph = ({animeStats}) => {
         };
     }, []);
 
-    return (
-        <div style={{width: '700px', height: '350px'}}> {/* Set to 100% width for full responsiveness */}
-            <Line ref={chartRef} data={chartData} options={options}/>
-        </div>
-    );
+    return <Line ref={chartRef} data={chartData} options={options}/>;
 };
 
 export default AnimeStatsGraph;

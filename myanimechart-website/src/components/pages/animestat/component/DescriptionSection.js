@@ -4,7 +4,8 @@ import CommonCard from "../../../common/basic/CommonCard";
 
 const DescriptionContainer = styled.div`
     flex: 2;
-    margin-right: 16px;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
 `;
 
 const Title = styled.div`
@@ -38,7 +39,6 @@ const DescriptionSection = ({anime}) => {
             <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                 <Title>{anime.title}</Title>
             </Link>
-            <CommonCard.Meta description={anime.score}/>
             <AnimeDetails>
                 <strong>Score:</strong> {anime.score} <br/>
                 <strong>Members:</strong> {anime.members} <br/>
