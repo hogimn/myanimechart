@@ -8,6 +8,7 @@ const CommonAlert = ({message, type = "info", showIcon = true, description, ...r
             type={type}
             showIcon={showIcon}
             description={description}
+            style={{ color: 'black' }}
             {...restProps}
         />
     );
