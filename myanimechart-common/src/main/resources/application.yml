@@ -5,6 +5,8 @@ discord:
   webhookUrl: ${discord_webhookurl}
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     enabled: true
     serviceUrl:
