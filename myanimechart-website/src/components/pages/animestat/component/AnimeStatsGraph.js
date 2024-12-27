@@ -10,8 +10,25 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import zoomPlugin from "chartjs-plugin-zoom";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin);
+
+const zoomOptions = {
+    pan: {
+        enabled: true,
+        mode: "x"
+    },
+    zoom: {
+        wheel: {
+            enabled: true
+        },
+        pinch: {
+            enabled: true
+        },
+        mode: "x"
+    }
+};
 
 const AnimeStatsGraph = ({animeStats}) => {
     const [activeLegend, setActiveLegend] = useState('Score');
@@ -78,6 +95,7 @@ const AnimeStatsGraph = ({animeStats}) => {
                     setActiveLegend(activeLegend === legendItem.text ? null : legendItem.text);
                 },
             },
+            zoom: zoomOptions,
         },
         scales: {
             x: {
