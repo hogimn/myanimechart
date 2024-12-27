@@ -86,10 +86,9 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
             if (aValue === null && bValue !== null) return 1;
             if (bValue === null && aValue !== null) return -1;
 
-            if (criterion === "score" || criterion === "popularity" ||
-                criterion === "members" || criterion === "scoringCount") {
+            if (criterion === "score" || criterion === "members" || criterion === "scoringCount") {
                 return bValue - aValue;
-            } else if (criterion === "rank") {
+            } else if (criterion === "rank" || criterion === "popularity") {
                 return aValue - bValue;
             }
 
