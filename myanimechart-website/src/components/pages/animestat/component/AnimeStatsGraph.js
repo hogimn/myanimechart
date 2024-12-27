@@ -8,7 +8,7 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend, Chart
 } from 'chart.js';
 import zoomPlugin from "chartjs-plugin-zoom";
 
@@ -82,10 +82,24 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             legend: {
                 labels: {
                     color: '#ffffff',
+                    generateLabels: (chart) => {
+                        const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                        return labels.map((label) => {
+                            const datasetIndex = chart.data.datasets
+                                .findIndex(dataset => dataset.label === label.text);
+                            const dataset = chart.data.datasets[datasetIndex];
+                            if (dataset.hidden) {
+                                label.fontColor = 'gray';
+                            } else {
+                                label.fontColor = 'white';
+                            }
+                            return label;
+                        });
+                    },
                 },
                 onClick: (e, legendItem) => {
-                    const clickedLegend = legendItem.text.toLowerCase().replace(/ /g, '_');;
-                    setActiveLegend(activeLegend.toLowerCase() === clickedLegend ? "" : clickedLegend);
+                    const clickedLegend = legendItem.text.toLowerCase().replace(/ /g, '_');
+                    setActiveLegend(clickedLegend);
                 },
             },
             zoom: zoomOptions,
