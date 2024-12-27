@@ -65,7 +65,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 fill: false,
                 borderColor: 'rgba(255,205,86,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'scoringCount',
+                hidden: activeLegend && activeLegend !== 'scoring_count',
             },
         ],
     };
@@ -81,10 +81,11 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             },
             legend: {
                 labels: {
-                    color: 'rgba(255,255,255,0.39)',
+                    color: '#ffffff',
                 },
                 onClick: (e, legendItem) => {
-                    setActiveLegend(activeLegend === legendItem.text ? null : legendItem.text);
+                    const clickedLegend = legendItem.text.toLowerCase().replace(/ /g, '_');;
+                    setActiveLegend(activeLegend.toLowerCase() === clickedLegend ? "" : clickedLegend);
                 },
             },
             zoom: zoomOptions,
@@ -94,8 +95,6 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 ticks: {
                     color: '#ffffff',
                     callback: function (value, index) {
-                        const showEveryNth = 5;
-                        // return index % showEveryNth === 0 ? this.getLabelForValue(value) : '';
                         return '';
                     },
                 },

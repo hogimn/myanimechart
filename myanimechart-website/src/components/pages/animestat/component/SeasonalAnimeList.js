@@ -128,7 +128,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
                     <CommonSelect.Option value="members">Members</CommonSelect.Option>
                     <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
                     <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
-                    <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
+                    <CommonSelect.Option value="scoring_count">ScoringCount</CommonSelect.Option>
                 </CommonSelect>
             </SelectWrapper>
 
