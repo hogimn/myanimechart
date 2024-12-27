@@ -21,7 +21,6 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
     urls:
       - name: query
         url: /query/v3/api-docs
