@@ -17,7 +17,7 @@ const AnimeStatsGraph = ({animeStats}) => {
     const [activeLegend, setActiveLegend] = useState('Score');
 
     const chartData = {
-        labels: animeStats.map(stat => new Date(stat.recordedAt).toLocaleDateString()),
+        labels: animeStats.map(stat => new Date(stat.recordedAt).toLocaleString()),
         datasets: [
             {
                 label: 'Score',
