@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Line} from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -32,6 +32,7 @@ const zoomOptions = {
 
 const AnimeStatsGraph = ({animeStats}) => {
     const [activeLegend, setActiveLegend] = useState('Score');
+    const chartRef = useRef(null); // Ref to access the chart instance
 
     const chartData = {
         labels: animeStats.map(stat => new Date(stat.recordedAt).toLocaleString()),
@@ -81,6 +82,7 @@ const AnimeStatsGraph = ({animeStats}) => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             tooltip: {
                 callbacks: {
@@ -118,9 +120,32 @@ const AnimeStatsGraph = ({animeStats}) => {
         },
     };
 
+    useEffect(() => {
+        const resizeChart = () => {
+            if (chartRef.current) {
+                const chart = chartRef.current;
+                const width = chart.canvas.clientWidth;
+                const height = chart.canvas.clientHeight;
+
+                chart.canvas.width = width * window.devicePixelRatio;
+                chart.canvas.height = height * window.devicePixelRatio;
+                chart.canvas.style.width = `${width}px`;
+                chart.canvas.style.height = `${height}px`;
+
+                chart.resize();
+            }
+        };
+
+        window.addEventListener('resize', resizeChart);
+
+        return () => {
+            window.removeEventListener('resize', resizeChart);
+        };
+    }, []);
+
     return (
-        <div>
-            <Line data={chartData} options={options}/>
+        <div style={{width: '700px', height: '350px'}}> {/* Set to 100% width for full responsiveness */}
+            <Line ref={chartRef} data={chartData} options={options}/>
         </div>
     );
 };
