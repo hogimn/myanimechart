@@ -60,12 +60,12 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 hidden: activeLegend && activeLegend !== 'rank',
             },
             {
-                label: 'Scoring Count',
+                label: 'ScoringCount',
                 data: animeStats.map(stat => stat.scoringCount),
                 fill: false,
                 borderColor: 'rgba(255,205,86,1)',
                 tension: 0.1,
-                hidden: activeLegend && activeLegend !== 'scoring_count',
+                hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
             },
         ],
     };
@@ -98,7 +98,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                     },
                 },
                 onClick: (e, legendItem) => {
-                    const clickedLegend = legendItem.text.toLowerCase().replace(/ /g, '_');
+                    const clickedLegend = legendItem.text.toLowerCase();
                     setActiveLegend(clickedLegend);
                 },
             },

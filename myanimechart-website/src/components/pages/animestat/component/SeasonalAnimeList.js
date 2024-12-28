@@ -1,4 +1,4 @@
-import {Component, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
@@ -6,7 +6,7 @@ import CommonAlert from "../../../common/basic/CommonAlert";
 import CommonSpin from "../../../common/basic/CommonSpin";
 import CommonCard from "../../../common/basic/CommonCard";
 import AnimeStatsGraph from "./AnimeStatsGraph";
-import DescriptionSection, {DescriptionContainer} from "./DescriptionSection";
+import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import styled from "styled-components";
@@ -120,14 +120,14 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
         <>
             <SelectWrapper>
                 <CommonSelect
-                    value={`Sort: ${sortBy}`}
+                    value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
                     onChange={(value) => setSortBy(value)}
                 >
                     <CommonSelect.Option value="score">Score</CommonSelect.Option>
                     <CommonSelect.Option value="members">Members</CommonSelect.Option>
                     <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
                     <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
-                    <CommonSelect.Option value="scoring_count">ScoringCount</CommonSelect.Option>
+                    <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
                 </CommonSelect>
             </SelectWrapper>
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import CommonCard from "../../../common/basic/CommonCard";
 
 const DescriptionContainer = styled.div`
     flex: 2;
