@@ -52,6 +52,12 @@ public class AnimeCollectService {
                         continue;
                     }
 
+                    if (anime.getScore() == 0.0) {
+                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
+                                anime.getTitle(), anime.getScore());
+                        continue;
+                    }
+
                     animeList.add(anime);
                     log.info("Anime added: {}", anime);
                 } catch (Exception e) {
