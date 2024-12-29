@@ -39,7 +39,7 @@ const DescriptionSection = ({anime}) => {
                 <Title>{anime.title}</Title>
             </Link>
             <AnimeDetails>
-                <strong>Score:</strong> {anime.score} <br/>
+                <strong>Score:</strong> {anime.score.toFixed(2)} <br/>
                 <strong>Members:</strong> {anime.members} <br/>
                 <strong>Rank:</strong> {anime.rank} <br/>
                 <strong>Popularity:</strong> {anime.popularity} <br/>
