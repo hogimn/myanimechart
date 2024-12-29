@@ -30,7 +30,14 @@ public class AnimeService {
 
         if (optional.isPresent()) {
             AnimeDao foundAnime = optional.get();
-            foundAnime.setFrom(anime);
+
+            if (foundAnime.getFinishedAt() != null) {
+                foundAnime.setFrom(anime);
+                foundAnime.setFinishedAt(null);
+            } else {
+                foundAnime.setFrom(anime);
+            }
+
             animeRepository.save(foundAnime);
             return foundAnime;
         }
@@ -66,7 +73,7 @@ public class AnimeService {
         Integer nextYear = DateUtil.nextMonthYear();
         String nextSeason = DateUtil.nextMonthSeason();
         return animeRepository.findAiringAnimeExcludingCurrentAndNextSeason(
-                year, season, nextYear, nextSeason, "currently_airing")
+                year, season, nextYear, nextSeason, "currently_airing", "finished_airing")
                 .stream().map(Anime::from).collect(Collectors.toList());
     }
 }

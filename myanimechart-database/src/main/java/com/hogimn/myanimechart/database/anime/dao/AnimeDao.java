@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "anime")
 @Data
@@ -29,6 +31,7 @@ public class AnimeDao {
     private Integer episodes;
     private String airStatus;
     private String type;
+    private LocalDateTime finishedAt;
 
     public static AnimeDao from(Anime anime) {
         AnimeDao animeDao = new AnimeDao();
@@ -49,6 +52,7 @@ public class AnimeDao {
         animeDao.episodes = anime.getEpisodes();
         animeDao.airStatus = anime.getAirStatus();
         animeDao.type = anime.getType();
+        animeDao.finishedAt = anime.getFinishedAt();
         return animeDao;
     }
 
@@ -70,5 +74,6 @@ public class AnimeDao {
         this.episodes = anime.getEpisodes();
         this.airStatus = anime.getAirStatus();
         this.type = anime.getType();
+        this.finishedAt = anime.getFinishedAt();
     }
 }

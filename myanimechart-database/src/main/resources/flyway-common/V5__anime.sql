@@ -1,0 +1,2 @@
+ALTER TABLE anime
+    ADD COLUMN finished_at TIMESTAMP

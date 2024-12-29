@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.database.anime.domain;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import dev.katsute.mal4j.property.Genre;
 import dev.katsute.mal4j.property.IDN;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +35,7 @@ public class Anime {
     private Integer episodes;
     private String airStatus;
     private String type;
+    private LocalDateTime finishedAt;
 
     public static Anime from(AnimeDao animeDao) {
         Anime anime = new Anime();
@@ -54,6 +57,7 @@ public class Anime {
         anime.setAirStatus(animeDao.getAirStatus());
         anime.setTitle(animeDao.getTitle());
         anime.setType(animeDao.getType());
+        anime.setFinishedAt(animeDao.getFinishedAt());
         return anime;
     }
 
@@ -79,6 +83,11 @@ public class Anime {
         anime.setTitle(katsuteAnime.getTitle());
         anime.setType(!Objects.equals(katsuteAnime.getType().field(), "") ?
                 katsuteAnime.getType().field() : katsuteAnime.getRawType());
+
+        if (anime.getAirStatus().equals("finished_airing")) {
+            anime.setFinishedAt(DateUtil.now());
+        }
+
         return anime;
     }
 
