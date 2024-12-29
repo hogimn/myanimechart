@@ -47,7 +47,7 @@ public class AnimeCollectService {
                     Anime anime = Anime.from(katsuteAnime);
 
                     if (anime.getYear() != year || !Objects.equals(anime.getSeason(), season)) {
-                        log.debug("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
+                        log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
                                 anime.getTitle(), anime.getYear(), year, anime.getSeason(), season);
                         continue;
                     }
@@ -55,7 +55,7 @@ public class AnimeCollectService {
                     animeList.add(anime);
                     log.info("Anime added: {}", anime);
                 } catch (Exception e) {
-                    log.warn("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
+                    log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }
             }
         } catch (Exception e) {
