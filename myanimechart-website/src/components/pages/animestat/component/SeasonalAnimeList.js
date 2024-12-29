@@ -13,7 +13,8 @@ import styled from "styled-components";
 
 const SelectWrapper = styled.div`
     margin-bottom: 16px;
-    text-align: right;
+    margin-left: 5px;
+    text-align: left;
 
     .ant-select {
         min-width: 117px;
@@ -21,6 +22,12 @@ const SelectWrapper = styled.div`
 
     .ant-select + .ant-select {
         margin-left: 10px;
+    }
+
+    @media (max-width: 768px) {
+        text-align: right;
+        margin-left: 0;
+        margin-right: 5px;
     }
 `;
 
