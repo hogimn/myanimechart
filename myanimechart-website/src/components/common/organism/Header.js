@@ -7,7 +7,6 @@ const HeaderWrapper = styled.header`
 
     h1 {
         margin-left: 10px;
-        font-family: "Comic Sans MS", serif
     }
 `;
 
