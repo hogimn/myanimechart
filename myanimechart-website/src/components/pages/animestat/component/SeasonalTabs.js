@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CommonTabs from "../../../common/basic/CommonTabs";
 import SeasonalAnimeList from "./SeasonalAnimeList";
 import styled from "styled-components";
@@ -53,6 +53,10 @@ const SeasonalTabs = () => {
         setActiveTab(key);
         setPage(1);
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [page]);
 
     return (
         <div>
