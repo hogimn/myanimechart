@@ -65,6 +65,11 @@ public class AnimeCollectService {
         return animeList;
     }
 
+    public Anime getAnime(Long id) {
+        dev.katsute.mal4j.anime.Anime katsuteAnime = myAnimeList.getAnime(id);
+        return Anime.from(katsuteAnime);
+    }
+
     private Season getSeason(String season) {
         return switch (season) {
             case "spring" -> Season.Spring;
@@ -89,7 +94,9 @@ public class AnimeCollectService {
 
         animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
                 DateUtil.currentYear(), DateUtil.currentSeason());
-        animeList.forEach(this::saveAnimeStatistics);
+        animeList.stream()
+                .map((anime) -> getAnime(anime.getId()))
+                .forEach(this::saveAnimeStatistics);
     }
 
     public void saveAnimeStatistics(Anime anime) {
