@@ -12,6 +12,7 @@ const CustomTabs = styled(CommonTabs)`
 
 const SeasonalTabs = () => {
     const [sortBy, setSortBy] = useState("score");
+    const [filterBy, setFilterBy] = useState("all");
     const [activeTab, setActiveTab] = useState("1");
     const [page, setPage] = useState(1);
     const pageSize = 12;
@@ -26,6 +27,8 @@ const SeasonalTabs = () => {
                     season="fall"
                     sortBy={sortBy}
                     setSortBy={setSortBy}
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
@@ -41,6 +44,8 @@ const SeasonalTabs = () => {
                     season="winter"
                     sortBy={sortBy}
                     setSortBy={setSortBy}
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}

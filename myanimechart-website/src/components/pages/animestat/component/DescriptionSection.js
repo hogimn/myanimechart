@@ -47,7 +47,8 @@ const DescriptionSection = ({anime}) => {
                 <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
                 <strong>Episodes:</strong> {anime.episodes} <br/>
                 <strong>Year:</strong> {anime.year} <br/>
-                <strong>Season:</strong> {anime.season}
+                <strong>Season:</strong> {anime.season} <br />
+                <strong>Type:</strong> {anime.type} <br/>
             </AnimeDetails>
         </DescriptionContainer>
     );

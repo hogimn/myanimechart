@@ -18,6 +18,10 @@ const SelectWrapper = styled.div`
     .ant-select {
         min-width: 117px;
     }
+
+    .ant-select + .ant-select {
+        margin-left: 10px;
+    }
 `;
 
 const AnimeStatWrapper = styled(CommonCol)`
@@ -55,7 +59,7 @@ const GraphWrapper = styled.div`
     margin-bottom: 15px;
 `;
 
-const SeasonalAnimeList = ({year, season, sortBy, setSortBy, page, setPage, pageSize}) => {
+const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilterBy, page, setPage, pageSize}) => {
     const [animeStats, setAnimeStats] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -94,6 +98,14 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, page, setPage, page
         });
     };
 
+    const filterAnimeStats = (data, filterBy) => {
+        if (filterBy === 'all') {
+            return data;
+        }
+
+        return data.filter(anime => anime.type === filterBy);
+    };
+
     const onPageChange = (page) => {
         setPage(page);
     };
@@ -111,12 +123,27 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, page, setPage, page
     }
 
     const sortedAnimeStats = sortAnimeStats(animeStats, sortBy);
+    const filteredAnimeStats = filterAnimeStats(sortedAnimeStats, filterBy);
     const startIndex = (page - 1) * pageSize;
-    const currentAnimeStats = sortedAnimeStats.slice(startIndex, startIndex + pageSize);
+    const currentAnimeStats = filteredAnimeStats.slice(startIndex, startIndex + pageSize);
 
     return (
         <>
             <SelectWrapper>
+                <CommonSelect
+                    value={`Type: ${filterBy}`}
+                    onChange={(value) => setFilterBy(value)}
+                >
+                    <CommonSelect.Option value="all">all</CommonSelect.Option>
+                    <CommonSelect.Option value="tv">tv</CommonSelect.Option>
+                    <CommonSelect.Option value="ona">ona</CommonSelect.Option>
+                    <CommonSelect.Option value="movie">movie</CommonSelect.Option>
+                    <CommonSelect.Option value="music">music</CommonSelect.Option>
+                    <CommonSelect.Option value="pv">pv</CommonSelect.Option>
+                    <CommonSelect.Option value="special">special</CommonSelect.Option>
+                    <CommonSelect.Option value="tv_special">tv_special</CommonSelect.Option>
+                </CommonSelect>
+
                 <CommonSelect
                     value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
                     onChange={(value) => setSortBy(value)}
