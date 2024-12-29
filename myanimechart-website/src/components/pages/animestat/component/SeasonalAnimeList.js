@@ -55,12 +55,10 @@ const GraphWrapper = styled.div`
     margin-bottom: 15px;
 `;
 
-const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
+const SeasonalAnimeList = ({year, season, sortBy, setSortBy, page, setPage, pageSize}) => {
     const [animeStats, setAnimeStats] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -97,7 +95,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
     };
 
     const onPageChange = (page) => {
-        setCurrentPage(page);
+        setPage(page);
     };
 
     if (loading) {
@@ -113,8 +111,8 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
     }
 
     const sortedAnimeStats = sortAnimeStats(animeStats, sortBy);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentAnimeStats = sortedAnimeStats.slice(startIndex, startIndex + itemsPerPage);
+    const startIndex = (page - 1) * pageSize;
+    const currentAnimeStats = sortedAnimeStats.slice(startIndex, startIndex + pageSize);
 
     return (
         <>
@@ -156,8 +154,8 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy}) => {
             </CommonRow>
 
             <CommonPagination
-                current={currentPage}
-                pageSize={itemsPerPage}
+                current={page}
+                pageSize={pageSize}
                 total={animeStats.length}
                 onChange={onPageChange}
                 style={{marginTop: "16px", textAlign: "center"}}

@@ -12,6 +12,9 @@ const CustomTabs = styled(CommonTabs)`
 
 const SeasonalTabs = () => {
     const [sortBy, setSortBy] = useState("score");
+    const [activeTab, setActiveTab] = useState("1");
+    const [page, setPage] = useState(1);
+    const pageSize = 12;
 
     const tabs = [
         {
@@ -23,6 +26,9 @@ const SeasonalTabs = () => {
                     season="fall"
                     sortBy={sortBy}
                     setSortBy={setSortBy}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
                 />
             ),
         },
@@ -35,17 +41,26 @@ const SeasonalTabs = () => {
                     season="winter"
                     sortBy={sortBy}
                     setSortBy={setSortBy}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
                 />
             ),
         },
     ];
+
+    const handleTabChange = (key) => {
+        setActiveTab(key);
+        setPage(1);
+    };
 
     return (
         <div>
             <CustomTabs
                 tabs={tabs}
                 defaultActiveKey="1"
-                onChange={(key) => console.log(`Selected Tab: ${key}`)}
+                activeKey={activeTab}
+                onChange={handleTabChange} // Call handleTabChange on tab change
             />
         </div>
     );
