@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -44,14 +45,21 @@ public class AnimeCollectService {
                 try {
                     dev.katsute.mal4j.anime.Anime katsuteAnime = animePaginatedIterator.next();
                     Anime anime = Anime.from(katsuteAnime);
+
+                    if (anime.getYear() != year || !Objects.equals(anime.getSeason(), season)) {
+                        log.debug("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
+                                anime.getTitle(), anime.getYear(), year, anime.getSeason(), season);
+                        continue;
+                    }
+
                     animeList.add(anime);
-                    log.info("{}", anime);
+                    log.info("Anime added: {}", anime);
                 } catch (Exception e) {
-                    log.error(e.getMessage(), e);
+                    log.warn("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("Failed to retrieve anime for season '{} {}': {}", season, year, e.getMessage(), e);
         }
 
         return animeList;
