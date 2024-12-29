@@ -14,7 +14,7 @@ const Header = () => {
     return (
         <HeaderWrapper>
             <Logo src={"/myanimechart-logo.png"} alt={"MyAnimeChart Logo"} width={"100px"}/>
-            <h1>Seasonal Anime Chart</h1>
+            <h1>MyAnimeChart</h1>
         </HeaderWrapper>
     );
 }
