@@ -183,7 +183,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
             <CommonPagination
                 current={page}
                 pageSize={pageSize}
-                total={animeStats.length}
+                total={filteredAnimeStats.length}
                 onChange={onPageChange}
                 style={{marginTop: "16px", textAlign: "center"}}
                 showSizeChanger={false}

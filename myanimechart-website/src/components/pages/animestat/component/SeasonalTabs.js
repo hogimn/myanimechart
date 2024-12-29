@@ -59,9 +59,18 @@ const SeasonalTabs = () => {
         setPage(1);
     };
 
-    useEffect(() => {
+    const goToTop = () => {
         window.scrollTo(0, 0);
+    };
+
+    useEffect(() => {
+        goToTop();
     }, [page]);
+
+    useEffect(() => {
+        setPage(1);
+        goToTop();
+    }, [filterBy]);
 
     return (
         <div>
