@@ -7,12 +7,17 @@ const PageWrapper = styled.div`
     color: white;
 `;
 
+const MainWrapper = styled.main`
+`
+
 const PageTemplate = ({children}) => {
     return (
         <>
             <PageWrapper>
                 <Header/>
-                {children}
+                <MainWrapper>
+                    {children}
+                </MainWrapper>
                 <Footer/>
             </PageWrapper>
         </>

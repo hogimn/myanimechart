@@ -48,19 +48,19 @@ const AnimeStatWrapper = styled(CommonCol)`
     }
 `;
 
-const AnimeStatSubWrapper = styled.div`
+const AnimeStatSubWrapper = styled.article`
     background-color: rgba(0, 0, 0, 0.25);
     border: rgba(255, 254, 254, 0.62) 1px solid;
     border-radius: 5px;
     margin: 5px;
 `;
 
-const AnimeWrapper = styled.div`
+const AnimeWrapper = styled.section`
     display: flex;
     margin-bottom: 8px;
 `;
 
-const GraphWrapper = styled.div`
+const GraphWrapper = styled.section`
     width: 100%;
     height: 350px;
     margin-bottom: 15px;
@@ -165,25 +165,23 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
 
             <CommonRow gutter={[16, 16]}>
                 {currentAnimeStats.map((anime) => (
-                    <>
-                        <AnimeStatWrapper xs={24} sm={12} md={8} key={`anime-card-${anime.id}`}>
-                            <AnimeStatSubWrapper>
-                                <AnimeWrapper>
-                                    <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
-                                    <DescriptionSection anime={anime}/>
-                                </AnimeWrapper>
+                    <AnimeStatWrapper xs={24} sm={12} md={8} key={`anime-card-${anime.id}`}>
+                        <AnimeStatSubWrapper>
+                            <AnimeWrapper>
+                                <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
+                                <DescriptionSection anime={anime}/>
+                            </AnimeWrapper>
 
-                                <CommonCol
-                                    xs={24} sm={24} md={12} key={`anime-graph-${anime.id}`}
-                                    style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}
-                                >
-                                    <GraphWrapper>
-                                        <AnimeStatsGraph animeStats={anime.animeStats} selectedLegend={sortBy}/>
-                                    </GraphWrapper>
-                                </CommonCol>
-                            </AnimeStatSubWrapper>
-                        </AnimeStatWrapper>
-                    </>
+                            <CommonCol
+                                xs={24} sm={24} md={12} key={`anime-graph-${anime.id}`}
+                                style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}
+                            >
+                                <GraphWrapper>
+                                    <AnimeStatsGraph animeStats={anime.animeStats} selectedLegend={sortBy}/>
+                                </GraphWrapper>
+                            </CommonCol>
+                        </AnimeStatSubWrapper>
+                    </AnimeStatWrapper>
                 ))}
             </CommonRow>
 
