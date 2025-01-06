@@ -11,3 +11,9 @@ eureka:
     enabled: true
     serviceUrl:
       defaultZone: ${serviceregistry_url}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
