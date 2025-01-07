@@ -4,8 +4,12 @@ import SeasonalAnimeList from "./SeasonalAnimeList";
 import styled from "styled-components";
 
 const CustomTabs = styled(CommonTabs)`
+    .ant-tabs-tab + .ant-tabs-tab {
+        margin: 0 0 0 0;
+    }
+    
     .ant-tabs-tab {
-        font-size: 20px;
+        font-size: 17px;
         padding: 12px 24px;
     }
 `;
