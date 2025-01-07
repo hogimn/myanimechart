@@ -106,11 +106,13 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
     };
 
     const filterAnimeStats = (data, filterBy) => {
-        if (filterBy === 'all') {
+        if (filterBy.type === "all" && filterBy.airStatus === "all") {
             return data;
         }
 
-        return data.filter(anime => anime.type === filterBy);
+        return data.filter(anime =>
+            (anime.type === filterBy.type || filterBy.type === "all") &&
+            (anime.airStatus === filterBy.airStatus || filterBy.airStatus === "all"));
     };
 
     const onPageChange = (page) => {
@@ -138,8 +140,8 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
         <>
             <SelectWrapper>
                 <CommonSelect
-                    value={`Type: ${filterBy}`}
-                    onChange={(value) => setFilterBy(value)}
+                    value={`Type: ${filterBy.type}`}
+                    onChange={(value) => setFilterBy({...filterBy, type: value})}
                 >
                     <CommonSelect.Option value="all">all</CommonSelect.Option>
                     <CommonSelect.Option value="tv">tv</CommonSelect.Option>
@@ -149,6 +151,15 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
                     <CommonSelect.Option value="pv">pv</CommonSelect.Option>
                     <CommonSelect.Option value="special">special</CommonSelect.Option>
                     <CommonSelect.Option value="tv_special">tv_special</CommonSelect.Option>
+                </CommonSelect>
+
+                <CommonSelect
+                    value={`Air Status: ${filterBy.airStatus}`}
+                    onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
+                >
+                    <CommonSelect.Option value="all">all</CommonSelect.Option>
+                    <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
+                    <CommonSelect.Option value="currently_airing">currently_airing</CommonSelect.Option>
                 </CommonSelect>
 
                 <CommonSelect

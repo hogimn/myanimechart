@@ -12,7 +12,7 @@ const CustomTabs = styled(CommonTabs)`
 
 const SeasonalTabs = () => {
     const [sortBy, setSortBy] = useState("score");
-    const [filterBy, setFilterBy] = useState("all");
+    const [filterBy, setFilterBy] = useState({type: "all", airStatus: "all"});
     const [activeTab, setActiveTab] = useState("1");
     const [page, setPage] = useState(1);
     const pageSize = 12;
