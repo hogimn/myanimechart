@@ -17,4 +17,4 @@ set MODULE_NAME=%1
 set PORT=%2
 
 echo Running Spring Boot application: %MODULE_NAME% on port %PORT%
-call .\mvnw spring-boot:run -pl %MODULE_NAME% -D"spring-boot.run.arguments"=--server.port=%PORT%
+call .\mvnw spring-boot:run -pl %MODULE_NAME% -D"spring-boot.run.jvmArguments"="-Dserver.port=%PORT% -Djavax.net.ssl.trustStore=%truststore_path% -Djavax.net.ssl.trustStorePassword=%truststore_password%"
