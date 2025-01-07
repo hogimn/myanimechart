@@ -7,6 +7,11 @@ discord:
 eureka:
   instance:
     prefer-ip-address: true
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+    statusPageUrl: https://${eureka.hostname}:${server.port}/actuator/info
+    healthCheckUrl: https://${eureka.hostname}:${server.port}/actuator/health
+    homePageUrl: https://${eureka.hostname}:${server.port}/
   client:
     enabled: true
     serviceUrl:
@@ -17,3 +22,13 @@ management:
     web:
       exposure:
         include: '*'
+
+server:
+  ssl:
+    key-store: ${keystore_path}
+    key-store-password: ${keystore_password}
+    key-store-type: JKS
+    key-alias: ${keystore_alias}
+    trust-store: ${truststore_path}
+    trust-store-password: ${truststore_password}
+    trust-store-type: JKS

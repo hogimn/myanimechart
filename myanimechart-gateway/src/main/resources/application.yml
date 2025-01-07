@@ -24,10 +24,3 @@ springdoc:
     urls:
       - name: query
         url: /query/v3/api-docs
-
-server:
-  ssl:
-    key-store: ${keystore_path}
-    key-store-password: ${keystore_password}
-    key-store-type: JKS
-    key-alias: ${keystore_alias}
