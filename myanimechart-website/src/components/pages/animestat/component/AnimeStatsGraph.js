@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-date-fns';
-import { parseISO } from 'date-fns';
+import {parseISO} from 'date-fns';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
@@ -34,42 +34,61 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             {
                 label: 'Score',
                 data: animeStats.map(stat => stat.score),
-                fill: false,
                 borderColor: 'rgba(75,192,192,1)',
+                backgroundColor: 'rgba(75,192,192,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend !== 'score',
+                borderWidth: 0.3,
+                pointBackgroundColor: 'rgba(75,192,192,1)',
+                pointRadius: 2,
             },
             {
                 label: 'Members',
                 data: animeStats.map(stat => stat.members),
                 fill: false,
                 borderColor: 'rgba(255,99,132,1)',
+                backgroundColor: 'rgba(255,99,132,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend !== 'members',
+                borderWidth: 0.3,
+                pointBackgroundColor: 'rgba(255,99,132,1)',
+                pointRadius: 2,
             },
             {
                 label: 'Popularity',
                 data: animeStats.map(stat => stat.popularity),
                 fill: false,
                 borderColor: 'rgba(153,102,255,1)',
+                backgroundColor: 'rgba(153,102,255,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend !== 'popularity',
+                borderWidth: 0.3,
+                pointBackgroundColor: 'rgba(153,102,255,1)',
+                pointRadius: 2,
             },
             {
                 label: 'Rank',
                 data: animeStats.map(stat => stat.rank),
                 fill: false,
                 borderColor: 'rgba(255,159,64,1)',
+            backgroundColor: 'rgba(255,159,64,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend !== 'rank',
+                borderWidth: 0.3,
+                pointBackgroundColor: 'rgba(255,159,64,1)',
+                pointRadius: 2,
             },
             {
                 label: 'ScoringCount',
                 data: animeStats.map(stat => stat.scoringCount),
                 fill: false,
                 borderColor: 'rgba(255,205,86,1)',
+                backgroundColor: 'rgba(255,205,86,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
+                borderWidth: 0.3,
+                pointBackgroundColor: 'rgba(255,205,86,1)',
+                pointRadius: 2,
             },
         ],
     };
