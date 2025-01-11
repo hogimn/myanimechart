@@ -149,8 +149,8 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
                     onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
                 >
                     <CommonSelect.Option value="all">all</CommonSelect.Option>
-                    <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
                     <CommonSelect.Option value="currently_airing">currently_airing</CommonSelect.Option>
+                    <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
                 </CommonSelect>
 
                 <CommonSelect
