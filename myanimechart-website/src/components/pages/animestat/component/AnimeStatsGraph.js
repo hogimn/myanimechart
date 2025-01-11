@@ -15,18 +15,40 @@ import {
 import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-date-fns';
 import {parseISO} from 'date-fns';
+import CommonButton from "../../../common/basic/CommonButton";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
-const zoomOptions = {};
+const zoomOptions = {
+    zoom: {
+        wheel: {
+            enabled: true,
+            modifierKey: 'ctrl',
+        },
+        pinch: {
+            enabled: true,
+        },
+        mode: 'x',
+    },
+    pan: {
+        enabled: true,
+        mode: 'x',
+    },
+};
 
 const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     const [activeLegend, setActiveLegend] = useState(selectedLegend);
     const chartRef = useRef(null); // Ref to access the chart instance
 
     useEffect(() => {
-        setActiveLegend(selectedLegend)
+        setActiveLegend(selectedLegend);
     }, [selectedLegend]);
+
+    const handleResetZoom = () => {
+        if (chartRef.current) {
+            chartRef.current.resetZoom();
+        }
+    };
 
     const chartData = {
         labels: animeStats.map(stat => parseISO(stat.recordedAt)),
@@ -71,7 +93,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 data: animeStats.map(stat => stat.rank),
                 fill: false,
                 borderColor: 'rgba(255,159,64,1)',
-            backgroundColor: 'rgba(255,159,64,1)',
+                backgroundColor: 'rgba(255,159,64,1)',
                 tension: 0.1,
                 hidden: activeLegend && activeLegend !== 'rank',
                 borderWidth: 0.3,
@@ -97,23 +119,23 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
         responsive: true,
         maintainAspectRatio: false,
         hover: {
-            mode: "nearest",
+            mode: 'nearest',
             intersect: false,
         },
         plugins: {
             tooltip: {
-                mode: "nearest",
+                mode: 'nearest',
                 intersect: false,
                 callbacks: {
-                    label: (context) => `${context.dataset.label}: ${context.raw}`,
+                    label: context => `${context.dataset.label}: ${context.raw}`,
                 },
             },
             legend: {
                 labels: {
                     color: '#ffffff',
-                    generateLabels: (chart) => {
+                    generateLabels: chart => {
                         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                        return labels.map((label) => {
+                        return labels.map(label => {
                             const datasetIndex = chart.data.datasets
                                 .findIndex(dataset => dataset.label === label.text);
                             const dataset = chart.data.datasets[datasetIndex];
@@ -137,8 +159,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             x: {
                 type: 'time',
                 time: {
-                    unit: 'day', // Adjust this to 'minute', 'hour', etc., depending on your data
-
+                    unit: 'day',
                 },
                 ticks: {
                     color: '#ffffff',
@@ -181,7 +202,22 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
         };
     }, []);
 
-    return <Line ref={chartRef} data={chartData} options={options}/>;
+    return (
+        <>
+            <Line ref={chartRef} data={chartData} options={options}/>
+            <CommonButton
+                style={{
+                    position: 'absolute',
+                    top: -5,
+                    right: 10,
+                    zIndex: 10,
+                }}
+                onClick={handleResetZoom}
+            >
+                Reset
+            </CommonButton>
+        </>
+    );
 };
 
 export default AnimeStatsGraph;
