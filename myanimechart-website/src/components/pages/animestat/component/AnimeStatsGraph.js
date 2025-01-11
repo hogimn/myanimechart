@@ -16,6 +16,7 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-date-fns';
 import {parseISO} from 'date-fns';
 import CommonButton from "../../../common/basic/CommonButton";
+import {isMobile} from 'react-device-detect';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
@@ -25,13 +26,10 @@ const zoomOptions = {
             enabled: true,
             modifierKey: 'ctrl',
         },
-        pinch: {
-            enabled: true,
-        },
         mode: 'x',
     },
     pan: {
-        enabled: true,
+        enabled: !isMobile,
         mode: 'x',
     },
 };
@@ -208,13 +206,13 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             <CommonButton
                 style={{
                     position: 'absolute',
-                    top: -5,
+                    top: -50,
                     right: 10,
                     zIndex: 10,
                 }}
                 onClick={handleResetZoom}
             >
-                Reset
+                Reset Zoom
             </CommonButton>
         </>
     );
