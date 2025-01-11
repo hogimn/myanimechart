@@ -27,9 +27,6 @@ const zoomOptions = {
             enabled: true,
             modifierKey: 'ctrl',
         },
-        pinch: {
-            enabled: true
-        },
         mode: 'x',
     },
     pan: {
