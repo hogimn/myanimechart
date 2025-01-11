@@ -96,8 +96,14 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
+        hover: {
+            mode: "nearest",
+            intersect: false,
+        },
         plugins: {
             tooltip: {
+                mode: "nearest",
+                intersect: false,
                 callbacks: {
                     label: (context) => `${context.dataset.label}: ${context.raw}`,
                 },
