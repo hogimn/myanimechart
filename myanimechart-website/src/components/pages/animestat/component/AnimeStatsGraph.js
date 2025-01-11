@@ -17,6 +17,7 @@ import 'chartjs-adapter-date-fns';
 import {parseISO} from 'date-fns';
 import CommonButton from "../../../common/basic/CommonButton";
 import {isMobile} from 'react-device-detect';
+import styled from "styled-components";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
@@ -36,6 +37,15 @@ const zoomOptions = {
         mode: 'x',
     },
 };
+
+const ResetButtonWrapper = styled(CommonButton)`
+    position: absolute;
+    top: -7px;
+    right: 10px;
+    z-index: 10;
+    padding-left: 10px;
+    padding-right: 10px;
+`;
 
 const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     const [activeLegend, setActiveLegend] = useState(selectedLegend);
@@ -206,17 +216,11 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     return (
         <>
             <Line ref={chartRef} data={chartData} options={options}/>
-            <CommonButton
-                style={{
-                    position: 'absolute',
-                    top: -5,
-                    right: 10,
-                    zIndex: 10,
-                }}
+            <ResetButtonWrapper
                 onClick={handleResetZoom}
             >
-                Reset Zoom
-            </CommonButton>
+                ↻
+            </ResetButtonWrapper>
         </>
     );
 };
