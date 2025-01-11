@@ -8,11 +8,15 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend, Chart
+    Legend,
+    Chart,
+    TimeScale,
 } from 'chart.js';
 import zoomPlugin from "chartjs-plugin-zoom";
+import 'chartjs-adapter-date-fns';
+import { parseISO } from 'date-fns';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
 const zoomOptions = {};
 
@@ -25,7 +29,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     }, [selectedLegend]);
 
     const chartData = {
-        labels: animeStats.map(stat => new Date(stat.recordedAt).toLocaleString()),
+        labels: animeStats.map(stat => parseISO(stat.recordedAt)),
         datasets: [
             {
                 label: 'Score',
@@ -106,6 +110,11 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
         },
         scales: {
             x: {
+                type: 'time',
+                time: {
+                    unit: 'day', // Adjust this to 'minute', 'hour', etc., depending on your data
+
+                },
                 ticks: {
                     color: '#ffffff',
                     callback: function (value, index) {
