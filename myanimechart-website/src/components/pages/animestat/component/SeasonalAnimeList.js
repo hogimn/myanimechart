@@ -55,6 +55,9 @@ const GraphWrapper = styled.section`
     width: 100%;
     height: 350px;
     margin-bottom: 15px;
+    canvas {
+        touch-action: pan-y !important;
+    }
 `;
 
 const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilterBy, page, setPage, pageSize}) => {
