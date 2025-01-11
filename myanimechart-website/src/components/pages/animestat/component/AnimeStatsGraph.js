@@ -26,6 +26,9 @@ const zoomOptions = {
             enabled: true,
             modifierKey: 'ctrl',
         },
+        pinch: {
+            enabled: true
+        },
         mode: 'x',
     },
     pan: {
@@ -206,7 +209,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             <CommonButton
                 style={{
                     position: 'absolute',
-                    top: -50,
+                    top: -5,
                     right: 10,
                     zIndex: 10,
                 }}
