@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -35,6 +33,7 @@ public class AnimeCollectService {
 
     public List<Anime> getAnime(int year, String season) {
         List<Anime> animeList = new ArrayList<>();
+        Set<Long> animeIdSet = new HashSet<>();
 
         try {
             PaginatedIterator<dev.katsute.mal4j.anime.Anime> animePaginatedIterator =
@@ -57,8 +56,13 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    animeList.add(anime);
-                    log.info("Anime added: {}", anime);
+                    if (!animeIdSet.contains(anime.getId())) {
+                        animeList.add(anime);
+                        animeIdSet.add(anime.getId());
+                        log.info("Anime added: {}", anime);
+                    } else {
+                        log.warn("Anime Id Duplicate: {}", anime);
+                    }
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }
