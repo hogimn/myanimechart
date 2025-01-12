@@ -2,12 +2,20 @@ import React, {useEffect, useState} from "react";
 import CommonTabs from "../../../common/basic/CommonTabs";
 import SeasonalAnimeList from "./SeasonalAnimeList";
 import styled from "styled-components";
+import {
+    getCurrentSeason,
+    getCurrentSeasonYear,
+    getNextSeason,
+    getNextSeasonYear,
+    getPreviousSeason,
+    getPreviousSeasonYear
+} from "../../../../util/dateUtil";
 
 const CustomTabs = styled(CommonTabs)`
     .ant-tabs-tab + .ant-tabs-tab {
         margin: 0 0 0 0;
     }
-    
+
     .ant-tabs-tab {
         font-size: 17px;
         padding: 12px 24px;
@@ -17,18 +25,27 @@ const CustomTabs = styled(CommonTabs)`
 const SeasonalTabs = () => {
     const [sortBy, setSortBy] = useState("score");
     const [filterBy, setFilterBy] = useState({type: "all", airStatus: "all"});
-    const [activeTab, setActiveTab] = useState("1");
+    const [activeTab, setActiveTab] = useState("2"); // 기본적으로 "현재 달 시즌" 활성화
     const [page, setPage] = useState(1);
     const pageSize = 12;
+
+    // 전달, 현재, 다음 시즌 및 연도 계산
+    const previousSeason = getPreviousSeason();
+    const currentSeason = getCurrentSeason();
+    const nextSeason = getNextSeason();
+
+    const previousYear = getPreviousSeasonYear();
+    const currentYear = getCurrentSeasonYear();
+    const nextYear = getNextSeasonYear();
 
     const tabs = [
         {
             key: "1",
-            label: "Fall 2024",
+            label: `${previousSeason.charAt(0).toUpperCase() + previousSeason.slice(1)} ${previousYear}`,
             content: (
                 <SeasonalAnimeList
-                    year={2024}
-                    season="fall"
+                    year={previousYear}
+                    season={previousSeason}
                     sortBy={sortBy}
                     setSortBy={setSortBy}
                     filterBy={filterBy}
@@ -41,11 +58,28 @@ const SeasonalTabs = () => {
         },
         {
             key: "2",
-            label: "Winter 2025",
+            label: `${currentSeason.charAt(0).toUpperCase() + currentSeason.slice(1)} ${currentYear}`,
             content: (
                 <SeasonalAnimeList
-                    year={2025}
-                    season="winter"
+                    year={currentYear}
+                    season={currentSeason}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
+                />
+            ),
+        },
+        {
+            key: "3",
+            label: `${nextSeason.charAt(0).toUpperCase() + nextSeason.slice(1)} ${nextYear}`,
+            content: (
+                <SeasonalAnimeList
+                    year={nextYear}
+                    season={nextSeason}
                     sortBy={sortBy}
                     setSortBy={setSortBy}
                     filterBy={filterBy}
@@ -80,9 +114,9 @@ const SeasonalTabs = () => {
         <div>
             <CustomTabs
                 tabs={tabs}
-                defaultActiveKey="1"
+                defaultActiveKey="2"
                 activeKey={activeTab}
-                onChange={handleTabChange} // Call handleTabChange on tab change
+                onChange={handleTabChange}
             />
         </div>
     );
