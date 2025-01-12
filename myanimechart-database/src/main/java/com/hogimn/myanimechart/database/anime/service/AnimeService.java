@@ -69,11 +69,10 @@ public class AnimeService {
         return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
     }
 
-    public List<Anime> getAiringAnimeExcludingCurrentAndNextSeason(Integer year, String season) {
-        Integer nextYear = DateUtil.nextMonthYear();
-        String nextSeason = DateUtil.nextMonthSeason();
+    public List<Anime> getAiringAnimeExcludingCurrentAndNextSeason(Integer year, String season,
+                                                                   Integer nextYear, String nextSeason) {
         return animeRepository.findAiringAnimeExcludingCurrentAndNextSeason(
-                year, season, nextYear, nextSeason, "currently_airing", "finished_airing")
+                        year, season, nextYear, nextSeason, "currently_airing", "finished_airing")
                 .stream().map(Anime::from).collect(Collectors.toList());
     }
 }

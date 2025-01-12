@@ -84,16 +84,15 @@ public class AnimeCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {
-        List<Anime> animeList = getAnime(DateUtil.currentYear(), DateUtil.currentSeason());
+        List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
         animeList.forEach(this::saveAnimeStatistics);
 
-        if (DateUtil.changingSeasonMonth()) {
-            animeList = getAnime(DateUtil.nextMonthYear(), DateUtil.nextMonthSeason());
-            animeList.forEach(this::saveAnimeStatistics);
-        }
+        animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+        animeList.forEach(this::saveAnimeStatistics);
 
         animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
-                DateUtil.currentYear(), DateUtil.currentSeason());
+                DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
+                DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
         animeList.stream()
                 .map((anime) -> getAnime(anime.getId()))
                 .forEach(this::saveAnimeStatistics);
