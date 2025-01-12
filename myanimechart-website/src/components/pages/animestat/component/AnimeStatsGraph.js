@@ -38,7 +38,7 @@ const zoomOptions = {
     },
 };
 
-const ResetButtonWrapper = styled(CommonButton)`
+const StyledResetButton = styled(CommonButton)`
     position: absolute;
     top: -7px;
     right: 10px;
@@ -204,11 +204,11 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
     return (
         <>
             <Line ref={chartRef} data={chartData} options={options}/>
-            <ResetButtonWrapper
+            <StyledResetButton
                 onClick={handleResetZoom}
             >
                 ↻
-            </ResetButtonWrapper>
+            </StyledResetButton>
         </>
     );
 };

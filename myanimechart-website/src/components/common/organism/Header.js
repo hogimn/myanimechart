@@ -3,7 +3,7 @@ import Logo from "./logo/Logo";
 import {getImagePath} from "../../../util/pathUtil";
 import {Link} from "react-router-dom";
 
-const HeaderWrapper = styled.header`
+const StyledHeader = styled.header`
     display: flex;
     align-items: center;
 
@@ -19,14 +19,14 @@ const StyledLink = styled(Link)`
 
 const Header = () => {
     return (
-        <HeaderWrapper>
+        <StyledHeader>
             <StyledLink to="/">
                 <Logo src={getImagePath("myanimechart-logo.png")} alt={"MyAnimeChart Logo"} width={"100px"} />
             </StyledLink>
             <StyledLink to="/">
                 <h1>MyAnimeChart</h1>
             </StyledLink>
-        </HeaderWrapper>
+        </StyledHeader>
     );
 }
 
