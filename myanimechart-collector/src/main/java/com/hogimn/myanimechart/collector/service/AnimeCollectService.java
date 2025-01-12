@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
+import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
@@ -123,8 +124,13 @@ public class AnimeCollectService {
     }
 
     private void SaveAnimeAndAnimeStat(List<Anime> animeList) {
-        animeList.stream()
-                .map(animeService::upsertAnime)
-                .forEach(animeStatService::saveAnimeStat);
+        for (Anime anime : animeList) {
+            try {
+                AnimeDao animeDao = animeService.upsertAnime(anime);
+                animeStatService.saveAnimeStat(animeDao);
+            } catch (Exception e) {
+                log.error("Error processing anime DML '{}'. Details: {}", anime.getTitle(), e.getMessage(), e);
+            }
+        }
     }
 }
