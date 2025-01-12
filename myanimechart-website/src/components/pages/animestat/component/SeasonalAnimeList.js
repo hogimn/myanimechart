@@ -11,6 +11,13 @@ import CommonPagination from "../../../common/basic/CommonPagination";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import styled from "styled-components";
 
+const StyledSpin = styled(CommonSpin)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+`;
+
 const SelectWrapper = styled.div`
     margin-bottom: 16px;
     text-align: left;
@@ -114,7 +121,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
     };
 
     if (loading) {
-        return <CommonSpin tip="Loading..."/>;
+        return <StyledSpin tip="Loading..."/>;
     }
 
     if (error) {
