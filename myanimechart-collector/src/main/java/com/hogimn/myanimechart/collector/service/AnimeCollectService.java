@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -85,28 +86,27 @@ public class AnimeCollectService {
     @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {
         List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
-        animeList.forEach(this::saveAnimeStatistics);
+        SaveAnimeAndAnimeStat(animeList);
 
         animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        animeList.forEach(this::saveAnimeStatistics);
+        SaveAnimeAndAnimeStat(animeList);
 
         animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        animeList.stream()
+        animeList = animeList.stream()
                 .map((anime) -> getAnime(anime.getId()))
-                .forEach(this::saveAnimeStatistics);
+                .toList();
+        SaveAnimeAndAnimeStat(animeList);
     }
 
-    public void saveAnimeStatistics(Anime anime) {
-        AnimeDao animeDao = animeService.upsertAnime(anime);
-
-        if (anime.getScore() == 0.0) {
-            log.info("Skipping anime stat '{}': Score {} (expected: > 0.0)",
-                    anime.getTitle(), anime.getScore());
-            return;
-        }
-
-        animeStatService.saveAnimeStat(animeDao);
+    private void SaveAnimeAndAnimeStat(List<Anime> animeList) {
+        animeList.stream()
+                .map(animeService::upsertAnime)
+                .peek(animeDao ->
+                        log.info("Skipping anime stat '{}': Score {} (expected: > 0.0)",
+                                animeDao.getTitle(), animeDao.getScore()))
+                .filter(animeDao -> animeDao.getScore() != 0.0)
+                .forEach(animeStatService::saveAnimeStat);
     }
 }
