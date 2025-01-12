@@ -52,12 +52,6 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    if (anime.getScore() == 0.0) {
-                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
-                                anime.getTitle(), anime.getScore());
-                        continue;
-                    }
-
                     animeList.add(anime);
                     log.info("Anime added: {}", anime);
                 } catch (Exception e) {
@@ -107,6 +101,13 @@ public class AnimeCollectService {
 
     public void saveAnimeStatistics(Anime anime) {
         AnimeDao animeDao = animeService.upsertAnime(anime);
+
+        if (anime.getScore() == 0.0) {
+            log.info("Skipping anime stat '{}': Score {} (expected: > 0.0)",
+                    anime.getTitle(), anime.getScore());
+            return;
+        }
+
         animeStatService.saveAnimeStat(animeDao);
     }
 }
