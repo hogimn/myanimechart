@@ -41,8 +41,7 @@ public class AnimeService {
             return foundAnime;
         }
 
-        animeRepository.save(animeDao);
-        return animeDao;
+        return animeRepository.save(animeDao);
     }
 
     public Anime getAnimeByTitle(String title) {
