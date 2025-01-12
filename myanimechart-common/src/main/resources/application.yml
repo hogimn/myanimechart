@@ -6,7 +6,7 @@ discord:
 
 eureka:
   instance:
-    prefer-ip-address: true
+    hostname: api.myanimechart.com
     non-secure-port-enabled: false
     secure-port-enabled: true
     statusPageUrl: https://${eureka.hostname}:${server.port}/actuator/info
