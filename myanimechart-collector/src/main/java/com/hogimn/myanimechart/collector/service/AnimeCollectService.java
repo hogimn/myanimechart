@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -91,20 +89,32 @@ public class AnimeCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {
-        List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
-        SaveAnimeAndAnimeStat(animeList);
+        collectAnimeStatisticsCurrentSeason();
 
         if (DateUtil.changingSeasonMonth()) {
-            animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-            SaveAnimeAndAnimeStat(animeList);
+            collectAnimeStatisticsNextSeason();
         }
 
-        animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
+        collectAnimeStatisticsOldSeasonCurrentlyAiring();
+    }
+
+    private void collectAnimeStatisticsOldSeasonCurrentlyAiring() {
+        List<Anime> animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
         animeList = animeList.stream()
                 .map((anime) -> getAnime(anime.getId()))
                 .toList();
+        SaveAnimeAndAnimeStat(animeList);
+    }
+
+    private void collectAnimeStatisticsNextSeason() {
+        List<Anime> animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+        SaveAnimeAndAnimeStat(animeList);
+    }
+
+    private void collectAnimeStatisticsCurrentSeason() {
+        List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
         SaveAnimeAndAnimeStat(animeList);
     }
 
