@@ -53,6 +53,12 @@ public class AnimeCollectService {
                         continue;
                     }
 
+                    if (anime.getScore() == 0.0) {
+                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
+                                anime.getTitle(), anime.getScore());
+                        continue;
+                    }
+
                     animeList.add(anime);
                     log.info("Anime added: {}", anime);
                 } catch (Exception e) {
@@ -88,8 +94,10 @@ public class AnimeCollectService {
         List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
         SaveAnimeAndAnimeStat(animeList);
 
-        animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        SaveAnimeAndAnimeStat(animeList);
+        if (DateUtil.changingSeasonMonth()) {
+            animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+            SaveAnimeAndAnimeStat(animeList);
+        }
 
         animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
@@ -103,10 +111,6 @@ public class AnimeCollectService {
     private void SaveAnimeAndAnimeStat(List<Anime> animeList) {
         animeList.stream()
                 .map(animeService::upsertAnime)
-                .peek(animeDao ->
-                        log.info("Skipping anime stat '{}': Score {} (expected: > 0.0)",
-                                animeDao.getTitle(), animeDao.getScore()))
-                .filter(animeDao -> animeDao.getScore() != 0.0)
                 .forEach(animeStatService::saveAnimeStat);
     }
 }

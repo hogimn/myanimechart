@@ -1,6 +1,5 @@
 package com.hogimn.myanimechart.database.anime.service;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
