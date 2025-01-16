@@ -42,15 +42,13 @@ const SearchBox = ({onSearch}) => {
         <SearchBoxWrapper>
             <CommonInput
                 placeholder="Search Anime"
+                prefix={<SearchOutlined />}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onPressEnter={() => handleSearch(searchTerm)}
                 allowClear
             />
             <ButtonWrapper>
-                <CommonButton onClick={e => handleSearch(e.target.value)}>
-                    <SearchOutlined/>
-                </CommonButton>
                 <CommonButton onClick={handleReset}>
                     <CloseOutlined/>
                 </CommonButton>
