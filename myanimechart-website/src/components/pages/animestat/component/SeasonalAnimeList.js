@@ -80,7 +80,7 @@ const SeasonalAnimeList = ({
                                pageSize,
                                animeList
                            }) => {
-    const [animeStats, setAnimeStats] = useState(animeList != null ? animeList : []);
+    const [animeStats, setAnimeStats] = useState([]);
     const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
     const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -101,6 +101,8 @@ const SeasonalAnimeList = ({
 
         if (year != null && season != null) {
             fetchData();
+        } else if (animeList != null) {
+            setAnimeStats(animeList);
         }
     }, [year, season, animeList]);
 

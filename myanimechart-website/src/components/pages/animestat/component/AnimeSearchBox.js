@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 import CommonInput from "../../../common/basic/CommonInput";
