@@ -1,0 +1,35 @@
+myanimelist:
+  clientId: ${myanimelist_clientid}
+
+discord:
+  webhookUrl: ${discord_webhookurl}
+
+eureka:
+  instance:
+    hostname: localhost
+    non-secure-port-enabled: true
+    secure-port-enabled: false
+    statusPageUrl: http://${eureka.hostname}:${server.port}/actuator/info
+    healthCheckUrl: http://${eureka.hostname}:${server.port}/actuator/health
+    homePageUrl: http://${eureka.hostname}:${server.port}/
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: ${serviceregistry_url}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+server:
+  ssl:
+    enabled: false
+    key-store: ${keystore_path}
+    key-store-password: ${keystore_password}
+    key-store-type: JKS
+    key-alias: ${keystore_alias}
+    trust-store: ${truststore_path}
+    trust-store-password: ${truststore_password}
+    trust-store-type: JKS
