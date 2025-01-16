@@ -211,7 +211,7 @@ const SeasonalAnimeList = ({
 
             <CommonRow gutter={[16, 16]}>
                 {currentAnimeStats.map((anime) => (
-                    <AnimeStatWrapper xs={24} lg={12} xl={8} key={`anime-card-${anime.id}`}>
+                    <AnimeStatWrapper xs={24} md={12} lg={12} xl={8} key={`anime-card-${anime.id}`}>
                         <AnimeStatSubWrapper>
                             <AnimeWrapper>
                                 <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
