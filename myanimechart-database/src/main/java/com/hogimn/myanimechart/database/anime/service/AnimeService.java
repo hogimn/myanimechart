@@ -73,4 +73,9 @@ public class AnimeService {
                         year, season, nextYear, nextSeason, "currently_airing", "finished_airing")
                 .stream().map(Anime::from).collect(Collectors.toList());
     }
+
+    public List<Anime> getAnimeByTitleStartingWith(String title) {
+        List<AnimeDao> animeDaos = animeRepository.findAllByTitleStartingWith(title);
+        return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
+    }
 }

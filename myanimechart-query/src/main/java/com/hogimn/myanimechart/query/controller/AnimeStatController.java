@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.query.controller;
 
 import com.hogimn.myanimechart.database.anime.domain.Anime;
+import com.hogimn.myanimechart.database.anime.domain.AnimeStat;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,11 @@ public class AnimeStatController {
     @GetMapping("/getAnimeStatsByTitle")
     public Anime getAnimeStatsByTitle(@RequestParam("title") String title) {
         return animeStatService.getAnimeStatsByTitle(title);
+    }
+
+    @GetMapping("/getAnimeStatsByTitleStartingWith")
+    public List<Anime> getAnimeStatsByTitleStartingWith(@RequestParam("title") String title) {
+        return animeStatService.getAnimeStatsByTitleStartingWith(title);
     }
 
     @GetMapping("/{year}/{season}")

@@ -62,13 +62,27 @@ const GraphWrapper = styled.section`
     width: 100%;
     height: 350px;
     margin-bottom: 15px;
+
     canvas {
         touch-action: pan-y !important;
     }
 `;
 
-const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilterBy, page, setPage, pageSize}) => {
-    const [animeStats, setAnimeStats] = useState([]);
+const SeasonalAnimeList = ({
+                               year,
+                               season,
+                               sortBy,
+                               setSortBy,
+                               filterBy,
+                               setFilterBy,
+                               page,
+                               setPage,
+                               pageSize,
+                               animeList
+                           }) => {
+    const [animeStats, setAnimeStats] = useState(animeList != null ? animeList : []);
+    const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
+    const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -85,36 +99,55 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
             }
         };
 
-        fetchData();
-    }, [year, season]);
+        if (year != null && season != null) {
+            fetchData();
+        }
+    }, [year, season, animeList]);
 
-    const sortAnimeStats = (data, criterion) => {
-        return [...data].sort((a, b) => {
-            const aValue = a[criterion] ?? null;
-            const bValue = b[criterion] ?? null;
+    useEffect(() => {
+        const sortAnimeStats = (data, criterion) => {
+            return [...data].sort((a, b) => {
+                const aValue = a[criterion] ?? null;
+                const bValue = b[criterion] ?? null;
 
-            if (aValue === null && bValue !== null) return 1;
-            if (bValue === null && aValue !== null) return -1;
+                if (aValue === null && bValue !== null) return 1;
+                if (bValue === null && aValue !== null) return -1;
 
-            if (criterion === "score" || criterion === "members" || criterion === "scoringCount") {
-                return bValue - aValue;
-            } else if (criterion === "rank" || criterion === "popularity") {
-                return aValue - bValue;
+                if (criterion === "score" || criterion === "members" || criterion === "scoringCount") {
+                    return bValue - aValue;
+                } else if (criterion === "rank" || criterion === "popularity") {
+                    return aValue - bValue;
+                }
+
+                return 0;
+            });
+        };
+
+        const filterAnimeStats = (data, filterBy) => {
+            if (filterBy.type === "all" && filterBy.airStatus === "all") {
+                return data;
             }
 
-            return 0;
-        });
-    };
+            return data.filter(anime =>
+                (anime.type === filterBy.type || filterBy.type === "all") &&
+                (anime.airStatus === filterBy.airStatus || filterBy.airStatus === "all"));
+        };
 
-    const filterAnimeStats = (data, filterBy) => {
-        if (filterBy.type === "all" && filterBy.airStatus === "all") {
-            return data;
+        let updatedAnimeStats = animeStats;
+        if (sortBy != null) {
+            updatedAnimeStats = sortAnimeStats(updatedAnimeStats, sortBy);
+        }
+        if (filterBy != null) {
+            updatedAnimeStats = filterAnimeStats(updatedAnimeStats, filterBy);
         }
 
-        return data.filter(anime =>
-            (anime.type === filterBy.type || filterBy.type === "all") &&
-            (anime.airStatus === filterBy.airStatus || filterBy.airStatus === "all"));
-    };
+        setSortedAndFilteredStats(updatedAnimeStats);
+    }, [animeStats, sortBy, filterBy, animeList]);
+
+    useEffect(() => {
+        const startIndex = (page - 1) * pageSize;
+        setCurrentAnimeStats(sortedAndFilteredStats.slice(startIndex, startIndex + pageSize));
+    }, [page, pageSize, sortedAndFilteredStats]);
 
     const onPageChange = (page) => {
         setPage(page);
@@ -128,51 +161,52 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
         return <CommonAlert message={error} type="error"/>;
     }
 
-    if (!animeStats.length) {
-        return <p>No anime found for this season</p>;
+    if (!sortedAndFilteredStats.length) {
+        return <p>No anime found</p>;
     }
-
-    const sortedAnimeStats = sortAnimeStats(animeStats, sortBy);
-    const filteredAnimeStats = filterAnimeStats(sortedAnimeStats, filterBy);
-    const startIndex = (page - 1) * pageSize;
-    const currentAnimeStats = filteredAnimeStats.slice(startIndex, startIndex + pageSize);
 
     return (
         <>
             <SelectWrapper>
-                <CommonSelect
-                    value={`Type: ${filterBy.type}`}
-                    onChange={(value) => setFilterBy({...filterBy, type: value})}
-                >
-                    <CommonSelect.Option value="all">all</CommonSelect.Option>
-                    <CommonSelect.Option value="tv">tv</CommonSelect.Option>
-                    <CommonSelect.Option value="ona">ona</CommonSelect.Option>
-                    <CommonSelect.Option value="movie">movie</CommonSelect.Option>
-                    <CommonSelect.Option value="music">music</CommonSelect.Option>
-                    <CommonSelect.Option value="pv">pv</CommonSelect.Option>
-                    <CommonSelect.Option value="special">special</CommonSelect.Option>
-                    <CommonSelect.Option value="tv_special">tv_special</CommonSelect.Option>
-                </CommonSelect>
+                {filterBy && (
+                    <>
+                        <CommonSelect
+                            value={`Type: ${filterBy.type}`}
+                            onChange={(value) => setFilterBy({...filterBy, type: value})}
+                        >
+                            <CommonSelect.Option value="all">all</CommonSelect.Option>
+                            <CommonSelect.Option value="tv">tv</CommonSelect.Option>
+                            <CommonSelect.Option value="ona">ona</CommonSelect.Option>
+                            <CommonSelect.Option value="movie">movie</CommonSelect.Option>
+                            <CommonSelect.Option value="music">music</CommonSelect.Option>
+                            <CommonSelect.Option value="pv">pv</CommonSelect.Option>
+                            <CommonSelect.Option value="special">special</CommonSelect.Option>
+                            <CommonSelect.Option value="tv_special">tv_special</CommonSelect.Option>
+                        </CommonSelect>
 
-                <CommonSelect
-                    value={`Air Status: ${filterBy.airStatus}`}
-                    onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
-                >
-                    <CommonSelect.Option value="all">all</CommonSelect.Option>
-                    <CommonSelect.Option value="currently_airing">currently_airing</CommonSelect.Option>
-                    <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
-                </CommonSelect>
+                        <CommonSelect
+                            value={`Air Status: ${filterBy.airStatus}`}
+                            onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
+                        >
+                            <CommonSelect.Option value="all">all</CommonSelect.Option>
+                            <CommonSelect.Option value="currently_airing">currently_airing</CommonSelect.Option>
+                            <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
+                        </CommonSelect>
+                    </>
+                )}
 
-                <CommonSelect
-                    value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
-                    onChange={(value) => setSortBy(value)}
-                >
-                    <CommonSelect.Option value="score">Score</CommonSelect.Option>
-                    <CommonSelect.Option value="members">Members</CommonSelect.Option>
-                    <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
-                    <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
-                    <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
-                </CommonSelect>
+                {sortBy && (
+                    <CommonSelect
+                        value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
+                        onChange={(value) => setSortBy(value)}
+                    >
+                        <CommonSelect.Option value="score">Score</CommonSelect.Option>
+                        <CommonSelect.Option value="members">Members</CommonSelect.Option>
+                        <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
+                        <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
+                        <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
+                    </CommonSelect>
+                )}
             </SelectWrapper>
 
             <CommonRow gutter={[16, 16]}>
@@ -200,7 +234,7 @@ const SeasonalAnimeList = ({year, season, sortBy, setSortBy, filterBy, setFilter
             <CommonPagination
                 current={page}
                 pageSize={pageSize}
-                total={filteredAnimeStats.length}
+                total={sortedAndFilteredStats.length}
                 onChange={onPageChange}
                 style={{marginTop: "16px", textAlign: "center"}}
                 showSizeChanger={false}

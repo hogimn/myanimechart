@@ -22,6 +22,11 @@ public class AnimeController {
         return animeService.getAnimeByTitle(title);
     }
 
+    @GetMapping("/getAnimeByTitleStartingWith")
+    public List<Anime> getAnimeByTitleStartingWith(@RequestParam("title") String title) {
+        return animeService.getAnimeByTitleStartingWith(title);
+    }
+
     @GetMapping("/getAnimeById")
     public Anime getAnimeById(@RequestParam("id") Long id) {
         return animeService.getAnimeById(id);

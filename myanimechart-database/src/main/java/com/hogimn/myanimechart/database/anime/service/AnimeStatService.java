@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -78,5 +79,15 @@ public class AnimeStatService {
             return anime;
         }
         throw new IllegalArgumentException("Anime not found (" + id + ")");
+    }
+
+    public List<Anime> getAnimeStatsByTitleStartingWith(String title) {
+        List<AnimeDao> animeDaos = animeRepository.findAllByTitleStartingWith(title);
+        return animeDaos.stream().map(animeDao -> {
+            Anime anime = Anime.from(animeDao);
+            List<AnimeStat> animeStat = getAnimeStatByAnime(Anime.from(animeDao));
+            anime.setAnimeStats(animeStat);
+            return anime;
+        }).toList();
     }
 }

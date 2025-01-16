@@ -19,4 +19,6 @@ public interface AnimeRepository extends JpaRepository<AnimeDao, Long> {
     List<AnimeDao> findAiringAnimeExcludingCurrentAndNextSeason(Integer year, String season,
                                                                 Integer nextYear, String nextSeason,
                                                                 String currentlyAiring, String finishedAiring);
+
+    List<AnimeDao> findAllByTitleStartingWith(String title);
 }

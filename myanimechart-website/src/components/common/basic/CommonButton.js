@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button } from 'antd';
+import {Button} from 'antd';
 
-const CommonButton = ({ type = 'default', onClick, children, ...restProps }) => {
+const CommonButton = ({type = 'default', onClick, children, ...restProps}) => {
     return (
         <Button type={type} onClick={onClick} {...restProps}>
             {children}

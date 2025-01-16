@@ -10,6 +10,8 @@ import {
     getPreviousSeason,
     getPreviousSeasonYear
 } from "../../../../util/dateUtil";
+import AnimeStatApi from "../../../api/animestat/AnimeApi";
+import AnimeSearchBox from "./AnimeSearchBox";
 
 const CustomTabs = styled(CommonTabs)`
     .ant-tabs-tab + .ant-tabs-tab {
@@ -25,11 +27,21 @@ const CustomTabs = styled(CommonTabs)`
 const SeasonalTabs = () => {
     const [sortBy, setSortBy] = useState("score");
     const [filterBy, setFilterBy] = useState({type: "all", airStatus: "all"});
-    const [activeTab, setActiveTab] = useState("2"); // 기본적으로 "현재 달 시즌" 활성화
+    const [activeTab, setActiveTab] = useState("2");
     const [page, setPage] = useState(1);
     const pageSize = 12;
+    const [searchResults, setSearchResults] = useState([]);
 
-    // 전달, 현재, 다음 시즌 및 연도 계산
+    const handleSearch = async (query) => {
+        if (query == null || query.trim() === "") {
+            setSearchResults([]);
+            return;
+        }
+
+        const data = await AnimeStatApi.searchAnimeByTitleStartingWith(query);
+        setSearchResults(data);
+    };
+
     const previousSeason = getPreviousSeason();
     const currentSeason = getCurrentSeason();
     const nextSeason = getNextSeason();
@@ -112,12 +124,25 @@ const SeasonalTabs = () => {
 
     return (
         <div>
-            <CustomTabs
-                tabs={tabs}
-                defaultActiveKey="2"
-                activeKey={activeTab}
-                onChange={handleTabChange}
-            />
+            <AnimeSearchBox onSearch={handleSearch}/>
+            {searchResults.length > 0 ? (
+                <SeasonalAnimeList
+                    animeList={searchResults}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}/>
+            ) : (
+                <CustomTabs
+                    tabs={tabs}
+                    defaultActiveKey="2"
+                    activeKey={activeTab}
+                    onChange={handleTabChange}
+                />
+            )}
         </div>
     );
 };
