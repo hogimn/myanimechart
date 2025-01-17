@@ -1,18 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Status = styled.div`
+const Tag = styled.div`
     display: inline-block;
-    color: ${(props) => (props.status === 'finished_airing' ? '#fd7976' : 'lightgreen')};
-    padding: 3px;
-    border: solid 1px rgba(238, 238, 238, 0.52);
-    border-radius: 5px;
-    width: fit-content;
-`;
-
-const Season = styled.div`
-    display: inline-block;
-    color: #ffc8e9;
+    color: ${(props) => (props.color)};
     padding: 3px;
     border: solid 1px rgba(238, 238, 238, 0.52);
     border-radius: 5px;
@@ -24,7 +15,7 @@ const DescriptionContainer = styled.div`
     background-color: rgba(0, 0, 0, 0.2);
     padding: 10px;
     
-    ${Season} {
+    ${Tag} {
         margin-right: 5px;
     }
 `;
@@ -60,8 +51,8 @@ const DescriptionSection = ({anime}) => {
             <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                 <Title>{anime.title}</Title>
             </Link>
-            <Season>{anime.season} {anime.year}</Season>
-            <Status status={anime.airStatus}>{anime.airStatus}</Status> <br/>
+            <Tag color={'#ffc8e9'}>{anime.season} {anime.year}</Tag>
+            <Tag color={anime.status === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{anime.airStatus}</Tag> <br/>
             <AnimeDetails>
                 <strong>Score:</strong> {anime.score.toFixed(2)} <br/>
                 <strong>Members:</strong> {anime.members} <br/>

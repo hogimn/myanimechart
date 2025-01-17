@@ -127,7 +127,7 @@ const SeasonalTabs = () => {
     }, [filterBy]);
 
     return (
-        <div>
+        <>
             <AnimeSearchBox onSearch={handleSearch}/>
             {input.length > 0 || searchResults.length > 0 ? (
                 <SeasonalAnimeList
@@ -147,7 +147,7 @@ const SeasonalTabs = () => {
                     onChange={handleTabChange}
                 />
             )}
-        </div>
+        </>
     );
 };
 
