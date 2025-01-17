@@ -31,8 +31,10 @@ const SeasonalTabs = () => {
     const [page, setPage] = useState(1);
     const pageSize = 12;
     const [searchResults, setSearchResults] = useState([]);
+    const [input, setInput] = useState("");
 
     const handleSearch = async (keyword) => {
+        setInput(keyword);
         if (keyword == null || keyword.trim() === "") {
             setSearchResults([]);
             return;
@@ -126,7 +128,7 @@ const SeasonalTabs = () => {
     return (
         <div>
             <AnimeSearchBox onSearch={handleSearch}/>
-            {searchResults.length > 0 ? (
+            {input.length > 0 || searchResults.length > 0 ? (
                 <SeasonalAnimeList
                     animeList={searchResults}
                     sortBy={sortBy}
