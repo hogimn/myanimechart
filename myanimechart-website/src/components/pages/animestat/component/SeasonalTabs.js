@@ -158,8 +158,8 @@ const SeasonalTabs = () => {
                             onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
                         >
                             <CommonSelect.Option value="all">ALL</CommonSelect.Option>
-                            <CommonSelect.Option value="currently_airing">Currently Airing</CommonSelect.Option>
-                            <CommonSelect.Option value="finished_airing">Finished Airing</CommonSelect.Option>
+                            <CommonSelect.Option value="currently_airing">Airing</CommonSelect.Option>
+                            <CommonSelect.Option value="finished_airing">Ended</CommonSelect.Option>
                         </CommonSelect>
                     </>
                 )}
