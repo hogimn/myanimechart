@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const AnimeStatApi = {
-    searchAnimeByTitleStartingWith: async (title) => {
+const AnimeApi = {
+    searchAnimeByKeyword: async (keyword) => {
         try {
             const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
-            const response = await axios.get(`${gatewayUrl}/query/animeStat/getAnimeStatsByTitleStartingWith`, {
-                params: { title }
+            const response = await axios.get(`${gatewayUrl}/query/animeStat/getAnimeStatsByKeyword`, {
+                params: { keyword }
             });
             return response.data;
         } catch (error) {
@@ -15,4 +15,4 @@ const AnimeStatApi = {
     }
 }
 
-export default AnimeStatApi;
+export default AnimeApi;

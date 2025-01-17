@@ -9,8 +9,10 @@ import com.hogimn.myanimechart.database.anime.repository.AnimeStatRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,9 +83,14 @@ public class AnimeStatService {
         throw new IllegalArgumentException("Anime not found (" + id + ")");
     }
 
-    public List<Anime> getAnimeStatsByTitleStartingWith(String title) {
-        List<AnimeDao> animeDaos = animeRepository.findAllByTitleStartingWith(title);
-        return animeDaos.stream().map(animeDao -> {
+    public List<Anime> getAnimeStatsByKeyword(String keyword) {
+        List<AnimeDao> startsWithResults = animeRepository.findAllByTitleStartingWith(keyword);
+        List<AnimeDao> containsResults = animeRepository.findAllByTitleContaining(keyword);
+
+        Set<AnimeDao> combinedResults = new LinkedHashSet<>(startsWithResults);
+        combinedResults.addAll(containsResults);
+
+        return combinedResults.stream().map(animeDao -> {
             Anime anime = Anime.from(animeDao);
             List<AnimeStat> animeStat = getAnimeStatByAnime(Anime.from(animeDao));
             anime.setAnimeStats(animeStat);

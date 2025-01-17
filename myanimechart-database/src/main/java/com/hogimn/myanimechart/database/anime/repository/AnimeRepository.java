@@ -21,4 +21,6 @@ public interface AnimeRepository extends JpaRepository<AnimeDao, Long> {
                                                                 String currentlyAiring, String finishedAiring);
 
     List<AnimeDao> findAllByTitleStartingWith(String title);
+
+    List<AnimeDao> findAllByTitleContaining(String title);
 }

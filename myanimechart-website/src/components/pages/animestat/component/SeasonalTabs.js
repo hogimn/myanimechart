@@ -10,7 +10,7 @@ import {
     getPreviousSeason,
     getPreviousSeasonYear
 } from "../../../../util/dateUtil";
-import AnimeStatApi from "../../../api/animestat/AnimeApi";
+import AnimeApi from "../../../api/animestat/AnimeApi";
 import AnimeSearchBox from "./AnimeSearchBox";
 
 const CustomTabs = styled(CommonTabs)`
@@ -32,13 +32,13 @@ const SeasonalTabs = () => {
     const pageSize = 12;
     const [searchResults, setSearchResults] = useState([]);
 
-    const handleSearch = async (query) => {
-        if (query == null || query.trim() === "") {
+    const handleSearch = async (keyword) => {
+        if (keyword == null || keyword.trim() === "") {
             setSearchResults([]);
             return;
         }
 
-        const data = await AnimeStatApi.searchAnimeByTitleStartingWith(query);
+        const data = await AnimeApi.searchAnimeByKeyword(keyword);
         setSearchResults(data);
         return data;
     };
