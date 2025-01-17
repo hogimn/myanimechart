@@ -12,6 +12,19 @@ import {
 } from "../../../../util/dateUtil";
 import AnimeApi from "../../../api/animestat/AnimeApi";
 import AnimeSearchBox from "./AnimeSearchBox";
+import CommonSelect from "../../../common/basic/CommonSelect";
+import {toAirStatusLabel, toTypeLabel} from "../../../../util/strUtil";
+
+const SelectWrapper = styled.div`
+    margin-bottom: 16px;
+    text-align: left;
+
+    .ant-select {
+        min-width: fit-content;
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+`;
 
 const CustomTabs = styled(CommonTabs)`
     .ant-tabs-tab + .ant-tabs-tab {
@@ -63,9 +76,7 @@ const SeasonalTabs = () => {
                     year={previousYear}
                     season={previousSeason}
                     sortBy={sortBy}
-                    setSortBy={setSortBy}
                     filterBy={filterBy}
-                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
@@ -80,9 +91,7 @@ const SeasonalTabs = () => {
                     year={currentYear}
                     season={currentSeason}
                     sortBy={sortBy}
-                    setSortBy={setSortBy}
                     filterBy={filterBy}
-                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
@@ -97,9 +106,7 @@ const SeasonalTabs = () => {
                     year={nextYear}
                     season={nextSeason}
                     sortBy={sortBy}
-                    setSortBy={setSortBy}
                     filterBy={filterBy}
-                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
@@ -129,13 +136,52 @@ const SeasonalTabs = () => {
     return (
         <>
             <AnimeSearchBox onSearch={handleSearch}/>
+            <SelectWrapper>
+                {filterBy && (
+                    <>
+                        <CommonSelect
+                            value={`Type: ${toTypeLabel(filterBy.type)}`}
+                            onChange={(value) => setFilterBy({...filterBy, type: value})}
+                        >
+                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+                            <CommonSelect.Option value="tv">TV</CommonSelect.Option>
+                            <CommonSelect.Option value="ona">ONA</CommonSelect.Option>
+                            <CommonSelect.Option value="movie">Movie</CommonSelect.Option>
+                            <CommonSelect.Option value="music">Music</CommonSelect.Option>
+                            <CommonSelect.Option value="pv">PV</CommonSelect.Option>
+                            <CommonSelect.Option value="special">Special</CommonSelect.Option>
+                            <CommonSelect.Option value="tv_special">TV Special</CommonSelect.Option>
+                        </CommonSelect>
+
+                        <CommonSelect
+                            value={`Air Status: ${toAirStatusLabel(filterBy.airStatus)}`}
+                            onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
+                        >
+                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+                            <CommonSelect.Option value="currently_airing">Currently Airing</CommonSelect.Option>
+                            <CommonSelect.Option value="finished_airing">Finished Airing</CommonSelect.Option>
+                        </CommonSelect>
+                    </>
+                )}
+
+                {sortBy && (
+                    <CommonSelect
+                        value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
+                        onChange={(value) => setSortBy(value)}
+                    >
+                        <CommonSelect.Option value="score">Score</CommonSelect.Option>
+                        <CommonSelect.Option value="members">Members</CommonSelect.Option>
+                        <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
+                        <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
+                        <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
+                    </CommonSelect>
+                )}
+            </SelectWrapper>
             {input.length > 0 || searchResults.length > 0 ? (
                 <SeasonalAnimeList
                     animeList={searchResults}
                     sortBy={sortBy}
-                    setSortBy={setSortBy}
                     filterBy={filterBy}
-                    setFilterBy={setFilterBy}
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}/>

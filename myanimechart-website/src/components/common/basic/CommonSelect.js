@@ -1,7 +1,7 @@
 import React from "react";
 import {Select} from "antd";
 
-const CommonSelect = ({options, placeholder, value, onChange, allowClear = true, children, ...restProps}) => {
+const CommonSelect = ({options, placeholder, value, onChange, allowClear = false, children, ...restProps}) => {
     return (
         <Select
             value={value}

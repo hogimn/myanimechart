@@ -8,26 +8,13 @@ import CommonCard from "../../../common/basic/CommonCard";
 import AnimeStatsGraph from "./AnimeStatsGraph";
 import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
-import CommonSelect from "../../../common/basic/CommonSelect";
 import styled from "styled-components";
-import {toAirStatusLabel, toTypeLabel} from "../../../../util/strUtil";
 
 const StyledSpin = styled(CommonSpin)`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-`;
-
-const SelectWrapper = styled.div`
-    margin-bottom: 16px;
-    text-align: left;
-
-    .ant-select {
-        min-width: fit-content;
-        margin-top: 5px;
-        margin-left: 5px;
-    }
 `;
 
 const AnimeStatWrapper = styled(CommonCol)`
@@ -73,9 +60,7 @@ const SeasonalAnimeList = ({
                                year,
                                season,
                                sortBy,
-                               setSortBy,
                                filterBy,
-                               setFilterBy,
                                page,
                                setPage,
                                pageSize,
@@ -170,47 +155,6 @@ const SeasonalAnimeList = ({
 
     return (
         <>
-            <SelectWrapper>
-                {filterBy && (
-                    <>
-                        <CommonSelect
-                            value={`Type: ${toTypeLabel(filterBy.type)}`}
-                            onChange={(value) => setFilterBy({...filterBy, type: value})}
-                        >
-                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
-                            <CommonSelect.Option value="tv">TV</CommonSelect.Option>
-                            <CommonSelect.Option value="ona">ONA</CommonSelect.Option>
-                            <CommonSelect.Option value="movie">Movie</CommonSelect.Option>
-                            <CommonSelect.Option value="music">Music</CommonSelect.Option>
-                            <CommonSelect.Option value="pv">PV</CommonSelect.Option>
-                            <CommonSelect.Option value="special">Special</CommonSelect.Option>
-                            <CommonSelect.Option value="tv_special">TV Special</CommonSelect.Option>
-                        </CommonSelect>
-
-                        <CommonSelect
-                            value={`Air Status: ${toAirStatusLabel(filterBy.airStatus)}`}
-                            onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
-                        >
-                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
-                            <CommonSelect.Option value="currently_airing">Currently Airing</CommonSelect.Option>
-                            <CommonSelect.Option value="finished_airing">Finished Airing</CommonSelect.Option>
-                        </CommonSelect>
-                    </>
-                )}
-
-                {sortBy && (
-                    <CommonSelect
-                        value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
-                        onChange={(value) => setSortBy(value)}
-                    >
-                        <CommonSelect.Option value="score">Score</CommonSelect.Option>
-                        <CommonSelect.Option value="members">Members</CommonSelect.Option>
-                        <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
-                        <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
-                        <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
-                    </CommonSelect>
-                )}
-            </SelectWrapper>
 
             <CommonRow gutter={[16, 16]}>
                 {currentAnimeStats.map((anime) => (
