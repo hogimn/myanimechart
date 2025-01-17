@@ -1,8 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
-import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
+import {SearchOutlined} from "@ant-design/icons";
 import CommonInput from "../../../common/basic/CommonInput";
-import CommonButton from "../../../common/basic/CommonButton";
 
 const SearchBoxWrapper = styled.div`
     display: flex;
@@ -13,16 +12,6 @@ const SearchBoxWrapper = styled.div`
 
     .ant-input-affix-wrapper {
         width: 400px;
-    }
-`;
-
-const ButtonWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-
-    .ant-btn + .ant-btn {
-        margin-left: 5px
     }
 `;
 
@@ -56,11 +45,6 @@ const SearchBox = ({onSearch}) => {
                 onPressEnter={() => onSearch(searchTerm)}
                 allowClear
             />
-            <ButtonWrapper>
-                <CommonButton onClick={handleReset}>
-                    <CloseOutlined/>
-                </CommonButton>
-            </ButtonWrapper>
         </SearchBoxWrapper>
     );
 };
