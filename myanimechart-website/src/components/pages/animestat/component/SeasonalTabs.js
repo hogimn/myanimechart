@@ -40,6 +40,7 @@ const SeasonalTabs = () => {
 
         const data = await AnimeStatApi.searchAnimeByTitleStartingWith(query);
         setSearchResults(data);
+        return data;
     };
 
     const previousSeason = getPreviousSeason();

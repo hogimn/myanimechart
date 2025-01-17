@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 import CommonInput from "../../../common/basic/CommonInput";
@@ -29,9 +29,13 @@ const ButtonWrapper = styled.div`
 const SearchBox = ({onSearch}) => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    const handleSearch = (value) => {
-        onSearch(value);
-    };
+    useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            onSearch(searchTerm);
+        }, 500);
+
+        return () => clearTimeout(debounceTimer);
+    }, [searchTerm, onSearch]);
 
     const handleReset = () => {
         setSearchTerm("");
@@ -42,10 +46,10 @@ const SearchBox = ({onSearch}) => {
         <SearchBoxWrapper>
             <CommonInput
                 placeholder="Search Anime"
-                prefix={<SearchOutlined />}
+                prefix={<SearchOutlined/>}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onPressEnter={() => handleSearch(searchTerm)}
+                onPressEnter={() => onSearch(searchTerm)}
                 allowClear
             />
             <ButtonWrapper>
