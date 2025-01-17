@@ -24,9 +24,9 @@ export const toAirStatusLabel = (str) => {
         case 'all':
             return 'ALL';
         case 'currently_airing':
-            return 'Currently Airing'
+            return 'Airing'
         case 'finished_airing':
-            return 'Finished Airing';
+            return 'Ended';
         default:
             return str;
     }
@@ -41,4 +41,8 @@ export const toEpisodeLabel = (str) => {
         return "Unknown";
     }
     return str;
+}
+
+export const toScoreLabel = (str) => {
+    return str.toFixed(2);
 }

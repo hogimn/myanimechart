@@ -25,12 +25,14 @@ const AnimeStatWrapper = styled(CommonCol)`
         max-width: 100%
     }
 
-    .ant-card {
-        height: 360px;
-    }
-
     .ant-card-body {
         display: none;
+    }
+
+    @media (max-width: 768px) {
+        .ant-card-cover {
+            width: 160px;
+        }
     }
 `;
 
