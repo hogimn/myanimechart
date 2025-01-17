@@ -21,6 +21,8 @@ export const toTypeLabel = (str) => {
 
 export const toAirStatusLabel = (str) => {
     switch (str) {
+        case 'all':
+            return 'ALL';
         case 'currently_airing':
             return 'Currently Airing'
         case 'finished_airing':

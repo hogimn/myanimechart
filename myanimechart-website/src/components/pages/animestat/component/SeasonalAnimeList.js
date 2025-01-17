@@ -10,6 +10,7 @@ import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import styled from "styled-components";
+import {toAirStatusLabel, toTypeLabel} from "../../../../util/strUtil";
 
 const StyledSpin = styled(CommonSpin)`
     display: flex;
@@ -173,26 +174,26 @@ const SeasonalAnimeList = ({
                 {filterBy && (
                     <>
                         <CommonSelect
-                            value={`Type: ${filterBy.type}`}
+                            value={`Type: ${toTypeLabel(filterBy.type)}`}
                             onChange={(value) => setFilterBy({...filterBy, type: value})}
                         >
-                            <CommonSelect.Option value="all">all</CommonSelect.Option>
-                            <CommonSelect.Option value="tv">tv</CommonSelect.Option>
-                            <CommonSelect.Option value="ona">ona</CommonSelect.Option>
-                            <CommonSelect.Option value="movie">movie</CommonSelect.Option>
-                            <CommonSelect.Option value="music">music</CommonSelect.Option>
-                            <CommonSelect.Option value="pv">pv</CommonSelect.Option>
-                            <CommonSelect.Option value="special">special</CommonSelect.Option>
-                            <CommonSelect.Option value="tv_special">tv_special</CommonSelect.Option>
+                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+                            <CommonSelect.Option value="tv">TV</CommonSelect.Option>
+                            <CommonSelect.Option value="ona">ONA</CommonSelect.Option>
+                            <CommonSelect.Option value="movie">Movie</CommonSelect.Option>
+                            <CommonSelect.Option value="music">Music</CommonSelect.Option>
+                            <CommonSelect.Option value="pv">PV</CommonSelect.Option>
+                            <CommonSelect.Option value="special">Special</CommonSelect.Option>
+                            <CommonSelect.Option value="tv_special">TV Special</CommonSelect.Option>
                         </CommonSelect>
 
                         <CommonSelect
-                            value={`Air Status: ${filterBy.airStatus}`}
+                            value={`Air Status: ${toAirStatusLabel(filterBy.airStatus)}`}
                             onChange={(value) => setFilterBy({...filterBy, airStatus: value})}
                         >
-                            <CommonSelect.Option value="all">all</CommonSelect.Option>
-                            <CommonSelect.Option value="currently_airing">currently_airing</CommonSelect.Option>
-                            <CommonSelect.Option value="finished_airing">finished_airing</CommonSelect.Option>
+                            <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+                            <CommonSelect.Option value="currently_airing">Currently Airing</CommonSelect.Option>
+                            <CommonSelect.Option value="finished_airing">Finished Airing</CommonSelect.Option>
                         </CommonSelect>
                     </>
                 )}
