@@ -1,18 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Status = styled.span`
+const Status = styled.div`
+    display: inline-block;
     color: ${(props) => (props.status === 'finished_airing' ? '#fd7976' : 'lightgreen')};
     padding: 3px;
     border: solid 1px rgba(238, 238, 238, 0.52);
     border-radius: 5px;
+    width: fit-content;
 `;
 
-const Season = styled.span`
+const Season = styled.div`
+    display: inline-block;
     color: #ffc8e9;
     padding: 3px;
     border: solid 1px rgba(238, 238, 238, 0.52);
     border-radius: 5px;
+    width: fit-content;
 `;
 
 const DescriptionContainer = styled.div`
@@ -20,8 +24,8 @@ const DescriptionContainer = styled.div`
     background-color: rgba(0, 0, 0, 0.2);
     padding: 10px;
     
-    ${Season} + ${Status} {
-        margin-left: 5px;
+    ${Season} {
+        margin-right: 5px;
     }
 `;
 
