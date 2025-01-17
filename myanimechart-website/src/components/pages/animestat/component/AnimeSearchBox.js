@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 import CommonInput from "../../../common/basic/CommonInput";
@@ -28,13 +28,17 @@ const ButtonWrapper = styled.div`
 
 const SearchBox = ({onSearch}) => {
     const [searchTerm, setSearchTerm] = useState("");
+    const previousSearchTerm = useRef("");
 
     useEffect(() => {
-        const debounceTimer = setTimeout(() => {
-            onSearch(searchTerm);
-        }, 500);
+        if (searchTerm !== previousSearchTerm.current) {
+            const debounceTimer = setTimeout(() => {
+                onSearch(searchTerm);
+                previousSearchTerm.current = searchTerm;
+            }, 500);
 
-        return () => clearTimeout(debounceTimer);
+            return () => clearTimeout(debounceTimer);
+        }
     }, [searchTerm, onSearch]);
 
     const handleReset = () => {
