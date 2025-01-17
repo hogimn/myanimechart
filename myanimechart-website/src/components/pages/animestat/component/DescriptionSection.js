@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {capitalizeFirstLetter, toAirStatusLabel, toTypeLabel} from "../../../../util/strUtil";
+import {capitalizeFirstLetter, toAirStatusLabel, toEpisodeLabel, toTypeLabel} from "../../../../util/strUtil";
 
 const Tag = styled.div`
     display: inline-block;
@@ -55,7 +55,7 @@ const DescriptionSection = ({anime}) => {
             <Tag color={anime.status === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{toAirStatusLabel(anime.airStatus)}</Tag>
             <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
-            <Tag>{anime.episodes} Episodes</Tag>
+            <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag>
             <AnimeDetails>
                 <strong>Score:</strong> {anime.score.toFixed(2)} <br/>
                 <strong>Members:</strong> {anime.members} <br/>

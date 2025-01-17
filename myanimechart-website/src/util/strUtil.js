@@ -35,3 +35,10 @@ export const toAirStatusLabel = (str) => {
 export const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export const toEpisodeLabel = (str) => {
+    if (str === 0) {
+        return "Unknown";
+    }
+    return str;
+}
