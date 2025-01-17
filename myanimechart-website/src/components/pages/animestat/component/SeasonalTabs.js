@@ -42,6 +42,7 @@ const SeasonalTabs = () => {
 
         const data = await AnimeApi.searchAnimeByKeyword(keyword);
         setSearchResults(data);
+        setPage(1);
         return data;
     };
 
