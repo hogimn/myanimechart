@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import {
     capitalizeFirstLetter,
-    toAirStatusLabel, toDateLabel,
+    toDateLabel,
     toEpisodeLabel,
-    toScoreLabel,
     toTypeLabel
 } from "../../../../util/strUtil";
 import {FiChevronDown, FiChevronUp} from "react-icons/fi";
@@ -127,14 +126,9 @@ const DescriptionSection = ({anime}) => {
                 </TitleContainer>
                 <SubTitle>{anime.englishTitle}</SubTitle>
             </Link>
-            <Tag>★{toScoreLabel(anime.score)}</Tag>
             <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
-
-            <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
-            <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
-            <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
 
             <ToggleButton onClick={handleToggleDetails}>
                 {showDetails ? 'Show Less' : 'More Info'}
@@ -142,11 +136,11 @@ const DescriptionSection = ({anime}) => {
             </ToggleButton>
 
             <AnimeDetails style={{display: showDetails ? 'block' : 'none'}}>
+                <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
+                <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
+                <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
                 <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
                 <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
-                <strong>Members:</strong> {anime.members} <br/>
-                <strong>Rank:</strong> {anime.rank} <br/>
-                <strong>Popularity:</strong> {anime.popularity} <br/>
             </AnimeDetails>
         </DescriptionContainer>
     );

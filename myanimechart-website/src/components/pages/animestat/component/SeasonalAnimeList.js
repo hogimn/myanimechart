@@ -4,11 +4,13 @@ import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
 import CommonAlert from "../../../common/basic/CommonAlert";
 import CommonSpin from "../../../common/basic/CommonSpin";
-import CommonCard from "../../../common/basic/CommonCard";
 import AnimeStatsGraph from "./AnimeStatsGraph";
 import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import styled from "styled-components";
+import {toScoreLabel} from "../../../../util/strUtil";
+import {FaStar, FaTrophy, FaUserFriends} from "react-icons/fa";
+import {MdTrendingUp} from "react-icons/md";
 
 const StyledSpin = styled(CommonSpin)`
     display: flex;
@@ -55,6 +57,43 @@ const GraphWrapper = styled.section`
 
     canvas {
         touch-action: pan-y !important;
+    }
+`;
+
+const OverlayBox = styled.div`
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    svg {
+        margin-right: 5px;
+    }
+`;
+
+const ImageWrapper = styled.div`
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+`;
+
+const AnimeImage = styled.img`
+    width: 220px;
+    height: 100%;
+    object-fit: cover;
+
+    @media (max-width: 768px) {
+        width: 150px;
     }
 `;
 
@@ -169,7 +208,27 @@ const SeasonalAnimeList = ({
                     <AnimeStatWrapper xs={24} md={12} lg={12} xl={8} key={`anime-card-${anime.id}`}>
                         <AnimeStatSubWrapper>
                             <AnimeWrapper>
-                                <CommonCard hoverable cover={<img alt={anime.title} src={anime.image}/>}/>
+                                <ImageWrapper>
+                                    <AnimeImage alt={anime.title} src={anime.image}/>
+                                    <OverlayBox>
+                                        <span>
+                                             <FaStar/>
+                                            {toScoreLabel(anime.score)}
+                                        </span>
+                                        <span>
+                                            <FaUserFriends/>
+                                            {anime.members.toLocaleString()}
+                                        </span>
+                                        <span>
+                                            <FaTrophy/>
+                                            {anime.rank}
+                                        </span>
+                                        <span>
+                                            <MdTrendingUp/>
+                                            {anime.popularity}
+                                        </span>
+                                    </OverlayBox>
+                                </ImageWrapper>
                                 <DescriptionSection anime={anime}/>
                             </AnimeWrapper>
 
