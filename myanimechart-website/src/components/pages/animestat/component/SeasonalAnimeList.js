@@ -58,6 +58,10 @@ const GraphWrapper = styled.section`
     canvas {
         touch-action: pan-y !important;
     }
+    
+    @media (max-width: 768px) {
+        height: 250px;
+    }
 `;
 
 const OverlayBox = styled.div`

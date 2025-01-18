@@ -18,6 +18,7 @@ import {parseISO} from 'date-fns';
 import CommonButton from "../../../common/basic/CommonButton";
 import {isMobile} from 'react-device-detect';
 import styled from "styled-components";
+import {MdRestore} from "react-icons/md";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
 
@@ -40,11 +41,10 @@ const zoomOptions = {
 
 const StyledResetButton = styled(CommonButton)`
     position: absolute;
-    top: -7px;
-    right: 10px;
-    z-index: 10;
-    padding-left: 10px;
-    padding-right: 10px;
+    top: -45px;
+    right: 5px;
+    padding: 7px;
+    margin: 0;
 `;
 
 const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
@@ -209,12 +209,12 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
 
     return (
         <>
-            <Line ref={chartRef} data={chartData} options={options}/>
             <StyledResetButton
                 onClick={handleResetZoom}
             >
-                ↻
+                <MdRestore/>
             </StyledResetButton>
+            <Line ref={chartRef} data={chartData} options={options}/>
         </>
     );
 };
