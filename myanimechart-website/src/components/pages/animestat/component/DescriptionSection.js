@@ -98,10 +98,10 @@ const DescriptionSection = ({anime}) => {
             <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                 <Title>{anime.title}</Title>
             </Link>
-            <Tag color={'rgba(255,221,0,0.86)'}>★{toScoreLabel(anime.score)}</Tag>
+            <Tag>★{toScoreLabel(anime.score)}</Tag>
             <Tag
                 color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{toAirStatusLabel(anime.airStatus)}</Tag>
-            <Tag color={'rgba(255,189,222,0.76)'}>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
+            <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
 
