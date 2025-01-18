@@ -66,7 +66,8 @@ const SeasonalAnimeList = ({
                                page,
                                setPage,
                                pageSize,
-                               animeList
+                               animeList,
+                               selected
                            }) => {
     const [animeStats, setAnimeStats] = useState([]);
     const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
@@ -75,6 +76,10 @@ const SeasonalAnimeList = ({
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!selected) {
+            return;
+        }
+
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -92,7 +97,7 @@ const SeasonalAnimeList = ({
         } else if (animeList != null) {
             setAnimeStats(animeList);
         }
-    }, [year, season, animeList]);
+    }, [year, season, animeList, selected]);
 
     useEffect(() => {
         const sortAnimeStats = (data, criterion) => {

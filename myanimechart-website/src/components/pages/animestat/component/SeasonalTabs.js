@@ -80,6 +80,7 @@ const SeasonalTabs = () => {
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
+                    selected={activeTab === "1"}
                 />
             ),
         },
@@ -95,6 +96,7 @@ const SeasonalTabs = () => {
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
+                    selected={activeTab === "2"}
                 />
             ),
         },
@@ -110,6 +112,7 @@ const SeasonalTabs = () => {
                     page={page}
                     setPage={setPage}
                     pageSize={pageSize}
+                    selected={activeTab === "3"}
                 />
             ),
         },
