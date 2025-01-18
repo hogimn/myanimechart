@@ -52,7 +52,7 @@ const AnimeWrapper = styled.section`
 
 const GraphWrapper = styled.section`
     width: 100%;
-    height: 350px;
+    height: 300px;
     margin-bottom: 15px;
 
     canvas {
