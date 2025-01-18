@@ -18,6 +18,15 @@ const Tag = styled.div`
     width: fit-content;
 `;
 
+const Dot = styled.div`
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: ${(props) => (props.color)};
+    margin-left: 10px;
+`;
+
 const DescriptionContainer = styled.div`
     flex: 2;
     background-color: rgba(0, 0, 0, 0.2);
@@ -29,7 +38,13 @@ const DescriptionContainer = styled.div`
     }
 `;
 
+const TitleContainer = styled.span`
+    display: inline;
+    align-items: center;
+`;
+
 const Title = styled.div`
+    display: inline;
     font-size: 1.3rem;
     font-weight: bold;
     color: white;
@@ -106,12 +121,13 @@ const DescriptionSection = ({anime}) => {
     return (
         <DescriptionContainer>
             <Link href={anime.link} target="_blank" rel="noopener noreferrer">
-                <Title>{anime.title}</Title>
+                <TitleContainer>
+                    <Title>{anime.title}</Title>
+                    <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}/>
+                </TitleContainer>
                 <SubTitle>{anime.englishTitle}</SubTitle>
             </Link>
             <Tag>★{toScoreLabel(anime.score)}</Tag>
-            <Tag
-                color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{toAirStatusLabel(anime.airStatus)}</Tag>
             <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
