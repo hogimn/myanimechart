@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.database.anime.dao;
 
 import com.hogimn.myanimechart.database.anime.domain.Anime;
-import dev.katsute.mal4j.property.NullableDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -38,6 +37,7 @@ public class AnimeDao {
     private Date endDate;
     private String englishTitle;
     private String japaneseTitle;
+    private String synopsis;
 
     public static AnimeDao from(Anime anime) {
         AnimeDao animeDao = new AnimeDao();
@@ -63,6 +63,7 @@ public class AnimeDao {
         animeDao.endDate = anime.getEndDate();
         animeDao.englishTitle = anime.getEnglishTitle();
         animeDao.japaneseTitle = anime.getJapaneseTitle();
+        animeDao.synopsis = anime.getSynopsis();
         return animeDao;
     }
 
@@ -89,5 +90,6 @@ public class AnimeDao {
         this.endDate = anime.getEndDate();
         this.englishTitle = anime.getEnglishTitle();
         this.japaneseTitle = anime.getJapaneseTitle();
+        this.synopsis = anime.getSynopsis();
     }
 }

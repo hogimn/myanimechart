@@ -141,7 +141,8 @@ const DescriptionSection = ({anime}) => {
                 {showDetails ? <FiChevronUp/> : <FiChevronDown/>}
             </ToggleButton>
 
-            <AnimeDetails style={{display: showDetails ? 'block' : 'none'}}>
+            <AnimeDetails systyle={{display: showDetails ? 'block' : 'none'}}>
+                {anime.synopsis} <br /> <br />
                 <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
                 <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
                 <strong>Studios:</strong> {anime.studios.join(', ')} <br/>

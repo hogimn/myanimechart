@@ -4,7 +4,6 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import dev.katsute.mal4j.property.Genre;
 import dev.katsute.mal4j.property.IDN;
-import dev.katsute.mal4j.property.NullableDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +41,7 @@ public class Anime {
     private Date endDate;
     private String englishTitle;
     private String japaneseTitle;
+    private String synopsis;
 
     public static Anime from(AnimeDao animeDao) {
         Anime anime = new Anime();
@@ -68,6 +68,7 @@ public class Anime {
         anime.setEndDate(animeDao.getEndDate());
         anime.setEnglishTitle(animeDao.getEnglishTitle());
         anime.setJapaneseTitle(animeDao.getJapaneseTitle());
+        anime.setSynopsis(animeDao.getSynopsis());
         return anime;
     }
 
@@ -102,8 +103,8 @@ public class Anime {
         anime.setEndDate(katsuteAnime.getEndDate() != null ? katsuteAnime.getEndDate().getDate() : null);
         anime.setEnglishTitle(katsuteAnime.getAlternativeTitles().getEnglish());
         anime.setJapaneseTitle(katsuteAnime.getAlternativeTitles().getJapanese());
+        anime.setSynopsis(katsuteAnime.getSynopsis());
 
         return anime;
     }
-
 }
