@@ -169,6 +169,7 @@ const SeasonalTabs = () => {
                         value={`Sort: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`}
                         onChange={(value) => setSortBy(value)}
                     >
+                        <CommonSelect.Option value="none">None</CommonSelect.Option>
                         <CommonSelect.Option value="score">Score</CommonSelect.Option>
                         <CommonSelect.Option value="members">Members</CommonSelect.Option>
                         <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
