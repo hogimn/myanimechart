@@ -116,6 +116,7 @@ const DescriptionSection = ({anime}) => {
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
 
+            <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
             <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
             <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
 
@@ -130,7 +131,6 @@ const DescriptionSection = ({anime}) => {
                 <strong>Members:</strong> {anime.members} <br/>
                 <strong>Rank:</strong> {anime.rank} <br/>
                 <strong>Popularity:</strong> {anime.popularity} <br/>
-                <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
             </AnimeDetails>
         </DescriptionContainer>
     );
