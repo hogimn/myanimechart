@@ -30,6 +30,12 @@ const DescriptionContainer = styled.div`
     flex: 2;
     background-color: rgba(0, 0, 0, 0.2);
     padding: 10px;
+    overflow-y: auto;
+    height: 350px;
+    
+    @media (max-width: 769px) {
+        height: 200px;
+    }
 
     ${Tag} {
         margin-right: 5px;
