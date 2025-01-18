@@ -27,7 +27,6 @@ const DescriptionContainer = styled.div`
         margin-right: 5px;
         margin-bottom: 5px;
     }
-    
 `;
 
 const Title = styled.div`
@@ -51,11 +50,18 @@ const Link = styled.a`
 `;
 
 const AnimeDetails = styled.div`
-    margin-top: 8px;
+    @media (max-width: 768px) {
+        margin-top: 5px;
+    }
+
     font-size: 0.9rem;
 
     & strong {
         font-weight: bold;
+    }
+
+    @media (min-width: 769px) {
+        display: block !important;
     }
 `;
 
@@ -80,18 +86,6 @@ const ToggleButton = styled.div`
     }
 `;
 
-const FullDescription = styled.div`
-    display: block;
-
-    @media (min-width: 769px) {
-        display: block;
-    }
-
-    @media (max-width: 768px) {
-        display: none;
-    }
-`;
-
 const DescriptionSection = ({anime}) => {
     const [showDetails, setShowDetails] = useState(false);
 
@@ -105,7 +99,8 @@ const DescriptionSection = ({anime}) => {
                 <Title>{anime.title}</Title>
             </Link>
             <Tag color={'rgba(255,221,0,0.86)'}>★{toScoreLabel(anime.score)}</Tag>
-            <Tag color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{toAirStatusLabel(anime.airStatus)}</Tag>
+            <Tag
+                color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}>{toAirStatusLabel(anime.airStatus)}</Tag>
             <Tag color={'rgba(255,189,222,0.76)'}>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
@@ -118,23 +113,11 @@ const DescriptionSection = ({anime}) => {
                 {showDetails ? <FiChevronUp/> : <FiChevronDown/>}
             </ToggleButton>
 
-            <FullDescription>
-                <AnimeDetails>
-                    <strong>Members:</strong> {anime.members} <br/>
-                    <strong>Rank:</strong> {anime.rank} <br/>
-                    <strong>Popularity:</strong> {anime.popularity} <br/>
-                    <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
-                    <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
-                </AnimeDetails>
-            </FullDescription>
-
-            {showDetails && (
-                <AnimeDetails>
-                    <strong>Members:</strong> {anime.members} <br/>
-                    <strong>Rank:</strong> {anime.rank} <br/>
-                    <strong>Popularity:</strong> {anime.popularity} <br/>
-                </AnimeDetails>
-            )}
+            <AnimeDetails style={{display: showDetails ? 'block' : 'none'}}>
+                <strong>Members:</strong> {anime.members} <br/>
+                <strong>Rank:</strong> {anime.rank} <br/>
+                <strong>Popularity:</strong> {anime.popularity} <br/>
+            </AnimeDetails>
         </DescriptionContainer>
     );
 };
