@@ -48,11 +48,17 @@ const StyledResetButton = styled(CommonButton)`
 `;
 
 const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
-    const [activeLegend, setActiveLegend] = useState(selectedLegend);
-    const chartRef = useRef(null); // Ref to access the chart instance
+    const [activeLegend, setActiveLegend] = useState('');
+    const chartRef = useRef(null);
 
     useEffect(() => {
-        setActiveLegend(selectedLegend);
+        if (selectedLegend === 'startDate') {
+            const val = localStorage.getItem("selectedLegend");
+            setActiveLegend(val);
+        } else {
+            setActiveLegend(selectedLegend);
+            localStorage.setItem("selectedLegend", selectedLegend);
+        }
     }, [selectedLegend]);
 
     const handleResetZoom = () => {
@@ -75,46 +81,46 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
             {
                 label: 'Score',
                 data: animeStats.map(stat => stat.score),
-                borderColor: 'rgba(75,192,192,1)',
-                backgroundColor: 'rgba(75,192,192,1)',
-                pointBackgroundColor: 'rgba(75,192,192,1)',
+                borderColor: 'rgb(104,255,242)',
+                backgroundColor: 'rgb(104,255,242)',
+                pointBackgroundColor: 'rgb(104,255,242)',
                 hidden: activeLegend && activeLegend !== 'score',
+                ...baseDatasetConfig
+            },
+            {
+                label: 'ScoringCount',
+                data: animeStats.map(stat => stat.scoringCount),
+                borderColor: 'rgb(94,183,255)',
+                backgroundColor: 'rgb(94,183,255)',
+                pointBackgroundColor: 'rgb(94,183,255)',
+                hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
                 ...baseDatasetConfig
             },
             {
                 label: 'Members',
                 data: animeStats.map(stat => stat.members),
-                borderColor: 'rgba(255,99,132,1)',
-                backgroundColor: 'rgba(255,99,132,1)',
-                pointBackgroundColor: 'rgba(255,99,132,1)',
+                borderColor: 'rgb(126,109,246)',
+                backgroundColor: 'rgb(126,109,246)',
+                pointBackgroundColor: 'rgb(126,109,246)',
                 hidden: activeLegend && activeLegend !== 'members',
                 ...baseDatasetConfig
             },
             {
                 label: 'Popularity',
                 data: animeStats.map(stat => stat.popularity),
-                borderColor: 'rgba(153,102,255,1)',
-                backgroundColor: 'rgba(153,102,255,1)',
-                pointBackgroundColor: 'rgba(153,102,255,1)',
+                borderColor: 'rgb(255,118,237)',
+                backgroundColor: 'rgb(255,118,237)',
+                pointBackgroundColor: 'rgb(255,118,237)',
                 hidden: activeLegend && activeLegend !== 'popularity',
                 ...baseDatasetConfig
             },
             {
                 label: 'Rank',
                 data: animeStats.map(stat => stat.rank),
-                borderColor: 'rgba(255,159,64,1)',
-                backgroundColor: 'rgba(255,159,64,1)',
-                pointBackgroundColor: 'rgba(255,159,64,1)',
+                borderColor: 'rgb(253,116,116)',
+                backgroundColor: 'rgb(253,116,116)',
+                pointBackgroundColor: 'rgb(253,116,116)',
                 hidden: activeLegend && activeLegend !== 'rank',
-                ...baseDatasetConfig
-            },
-            {
-                label: 'ScoringCount',
-                data: animeStats.map(stat => stat.scoringCount),
-                borderColor: 'rgba(255,205,86,1)',
-                backgroundColor: 'rgba(255,205,86,1)',
-                pointBackgroundColor: 'rgba(255,205,86,1)',
-                hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
                 ...baseDatasetConfig
             },
         ],
