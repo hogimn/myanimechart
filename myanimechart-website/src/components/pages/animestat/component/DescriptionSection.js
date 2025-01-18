@@ -94,7 +94,7 @@ const ToggleButton = styled.div`
     align-items: center;
     cursor: pointer;
     color: #3e9ef6;
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-top: 3px;
 
     & svg {
