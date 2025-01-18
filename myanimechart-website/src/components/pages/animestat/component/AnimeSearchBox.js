@@ -30,11 +30,6 @@ const SearchBox = ({onSearch}) => {
         }
     }, [searchTerm, onSearch]);
 
-    const handleReset = () => {
-        setSearchTerm("");
-        onSearch("");
-    };
-
     return (
         <SearchBoxWrapper>
             <CommonInput

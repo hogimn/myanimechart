@@ -188,7 +188,9 @@ const SeasonalTabs = () => {
                     filterBy={filterBy}
                     page={page}
                     setPage={setPage}
-                    pageSize={pageSize}/>
+                    pageSize={pageSize}
+                    selected={true}
+                />
             ) : (
                 <CustomTabs
                     tabs={tabs}
