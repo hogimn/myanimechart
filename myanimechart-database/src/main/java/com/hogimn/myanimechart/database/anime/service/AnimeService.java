@@ -77,12 +77,7 @@ public class AnimeService {
     }
 
     public List<Anime> getAnimeByKeyword(String keyword) {
-        List<AnimeDao> startsWithResults = animeRepository.findAllByTitleStartingWith(keyword);
-        List<AnimeDao> containsResults = animeRepository.findAllByTitleContaining(keyword);
-
-        Set<AnimeDao> combinedResults = new LinkedHashSet<>(startsWithResults);
-        combinedResults.addAll(containsResults);
-
-        return combinedResults.stream().map(Anime::from).collect(Collectors.toList());
+        List<AnimeDao> animeDaos = animeRepository.findAllByTitleContaining(keyword);
+        return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
     }
 }
