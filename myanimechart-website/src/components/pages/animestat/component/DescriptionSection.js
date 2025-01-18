@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import {
     capitalizeFirstLetter,
-    toAirStatusLabel,
+    toAirStatusLabel, toDateLabel,
     toEpisodeLabel,
     toScoreLabel,
     toTypeLabel
@@ -32,11 +32,21 @@ const DescriptionContainer = styled.div`
 const Title = styled.div`
     font-size: 1.3rem;
     font-weight: bold;
-    margin-bottom: 8px;
     color: white;
 
     @media (max-width: 769px) {
-        font-size: 1.1rem;
+        font-size: 1.0rem;
+    }
+`;
+
+const SubTitle = styled.div`
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: gray;
+
+    @media (max-width: 769px) {
+        font-size: 0.6rem;
     }
 `;
 
@@ -97,6 +107,7 @@ const DescriptionSection = ({anime}) => {
         <DescriptionContainer>
             <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                 <Title>{anime.title}</Title>
+                <SubTitle>{anime.englishTitle}</SubTitle>
             </Link>
             <Tag>★{toScoreLabel(anime.score)}</Tag>
             <Tag
@@ -114,9 +125,12 @@ const DescriptionSection = ({anime}) => {
             </ToggleButton>
 
             <AnimeDetails style={{display: showDetails ? 'block' : 'none'}}>
+                <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
+                <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
                 <strong>Members:</strong> {anime.members} <br/>
                 <strong>Rank:</strong> {anime.rank} <br/>
                 <strong>Popularity:</strong> {anime.popularity} <br/>
+                <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
             </AnimeDetails>
         </DescriptionContainer>
     );

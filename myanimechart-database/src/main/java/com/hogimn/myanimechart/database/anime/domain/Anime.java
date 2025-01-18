@@ -4,12 +4,14 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import dev.katsute.mal4j.property.Genre;
 import dev.katsute.mal4j.property.IDN;
+import dev.katsute.mal4j.property.NullableDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,10 @@ public class Anime {
     private String airStatus;
     private String type;
     private LocalDateTime finishedAt;
+    private Date startDate;
+    private Date endDate;
+    private String englishTitle;
+    private String japaneseTitle;
 
     public static Anime from(AnimeDao animeDao) {
         Anime anime = new Anime();
@@ -58,6 +64,10 @@ public class Anime {
         anime.setTitle(animeDao.getTitle());
         anime.setType(animeDao.getType());
         anime.setFinishedAt(animeDao.getFinishedAt());
+        anime.setStartDate(animeDao.getStartDate());
+        anime.setEndDate(animeDao.getEndDate());
+        anime.setEnglishTitle(animeDao.getEnglishTitle());
+        anime.setJapaneseTitle(animeDao.getJapaneseTitle());
         return anime;
     }
 
@@ -87,6 +97,11 @@ public class Anime {
         if (anime.getAirStatus().equals("finished_airing")) {
             anime.setFinishedAt(DateUtil.now());
         }
+
+        anime.setStartDate(katsuteAnime.getStartDate() != null ? katsuteAnime.getStartDate().getDate() : null);
+        anime.setEndDate(katsuteAnime.getEndDate() != null ? katsuteAnime.getEndDate().getDate() : null);
+        anime.setEnglishTitle(katsuteAnime.getAlternativeTitles().getEnglish());
+        anime.setJapaneseTitle(katsuteAnime.getAlternativeTitles().getJapanese());
 
         return anime;
     }

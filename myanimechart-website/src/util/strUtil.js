@@ -46,3 +46,10 @@ export const toEpisodeLabel = (str) => {
 export const toScoreLabel = (str) => {
     return str.toFixed(2);
 }
+
+export const toDateLabel = (str) => {
+    if (str == null) {
+        return 'Unknown';
+    }
+    return str.split('T')[0];
+}

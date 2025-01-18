@@ -1,12 +1,14 @@
 package com.hogimn.myanimechart.database.anime.dao;
 
 import com.hogimn.myanimechart.database.anime.domain.Anime;
+import dev.katsute.mal4j.property.NullableDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "anime")
@@ -32,6 +34,10 @@ public class AnimeDao {
     private String airStatus;
     private String type;
     private LocalDateTime finishedAt;
+    private Date startDate;
+    private Date endDate;
+    private String englishTitle;
+    private String japaneseTitle;
 
     public static AnimeDao from(Anime anime) {
         AnimeDao animeDao = new AnimeDao();
@@ -53,6 +59,10 @@ public class AnimeDao {
         animeDao.airStatus = anime.getAirStatus();
         animeDao.type = anime.getType();
         animeDao.finishedAt = anime.getFinishedAt();
+        animeDao.startDate = anime.getStartDate();
+        animeDao.endDate = anime.getEndDate();
+        animeDao.englishTitle = anime.getEnglishTitle();
+        animeDao.japaneseTitle = anime.getJapaneseTitle();
         return animeDao;
     }
 
@@ -75,5 +85,9 @@ public class AnimeDao {
         this.airStatus = anime.getAirStatus();
         this.type = anime.getType();
         this.finishedAt = anime.getFinishedAt();
+        this.startDate = anime.getStartDate();
+        this.endDate = anime.getEndDate();
+        this.englishTitle = anime.getEnglishTitle();
+        this.japaneseTitle = anime.getJapaneseTitle();
     }
 }

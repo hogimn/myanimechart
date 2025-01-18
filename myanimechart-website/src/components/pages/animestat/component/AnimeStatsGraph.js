@@ -1,16 +1,16 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import {
-    Chart as ChartJS,
     CategoryScale,
+    Chart as ChartJS,
+    Chart,
+    Legend,
     LinearScale,
-    PointElement,
     LineElement,
+    PointElement,
+    TimeScale,
     Title,
     Tooltip,
-    Legend,
-    Chart,
-    TimeScale,
 } from 'chart.js';
 import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-date-fns';

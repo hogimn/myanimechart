@@ -112,6 +112,8 @@ const SeasonalAnimeList = ({
                     return bValue - aValue;
                 } else if (criterion === "rank" || criterion === "popularity") {
                     return aValue - bValue;
+                } else if (criterion === "startDate") {
+                    return new Date(aValue) - new Date(bValue);
                 }
 
                 return 0;
