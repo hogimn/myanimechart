@@ -8,7 +8,6 @@ const CommonSelect = ({options, placeholder, value, onChange, allowClear = false
             onChange={onChange}
             placeholder={placeholder}
             allowClear={allowClear}
-
             {...restProps}
         >
             {options && options.map((option, index) => (

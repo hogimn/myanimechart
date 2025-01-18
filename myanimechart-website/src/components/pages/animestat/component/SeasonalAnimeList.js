@@ -162,8 +162,7 @@ const SeasonalAnimeList = ({
 
     return (
         <>
-
-            <CommonRow gutter={[16, 16]}>
+            <CommonRow>
                 {currentAnimeStats.map((anime) => (
                     <AnimeStatWrapper xs={24} md={12} lg={12} xl={8} key={`anime-card-${anime.id}`}>
                         <AnimeStatSubWrapper>

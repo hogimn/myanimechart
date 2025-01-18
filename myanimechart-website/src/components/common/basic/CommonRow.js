@@ -1,9 +1,9 @@
 import React from "react";
 import {Row} from "antd";
 
-const CommonRow = ({gutter = [16, 16], justify = "start", align = "top", children, ...restProps}) => {
+const CommonRow = ({children, ...restProps}) => {
     return (
-        <Row gutter={gutter} justify={justify} align={align} {...restProps}>
+        <Row {...restProps}>
             {children}
         </Row>
     );
