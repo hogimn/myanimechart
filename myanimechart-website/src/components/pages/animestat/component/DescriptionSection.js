@@ -1,10 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-    toDateLabel,
-    toEpisodeLabel,
-    toTypeLabel
-} from "../../../../util/strUtil";
+import {toDateLabel, toEpisodeLabel, toTypeLabel} from "../../../../util/strUtil";
 
 const GenresBox = styled.div`
     display: flex;

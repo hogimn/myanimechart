@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.anime.domain;
+package com.hogimn.myanimechart.database.anime.dto;
 
 import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnimeStat {
+public class AnimeStatDto {
     private Long animeId;
     private Double score;
     private Integer members;
@@ -19,8 +19,8 @@ public class AnimeStat {
     private Integer rank;
     private LocalDateTime recordedAt;
 
-    public static AnimeStat from(AnimeStatDao animeStatDao) {
-        AnimeStat animeStat = new AnimeStat();
+    public static AnimeStatDto from(AnimeStatDao animeStatDao) {
+        AnimeStatDto animeStat = new AnimeStatDto();
         animeStat.setAnimeId(animeStatDao.getAnime().getId());
         animeStat.setScore(animeStatDao.getScore());
         animeStat.setMembers(animeStatDao.getMembers());

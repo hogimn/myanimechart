@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.query.controller;
 
-import com.hogimn.myanimechart.database.anime.domain.Anime;
+import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +18,22 @@ public class AnimeController {
     }
 
     @GetMapping("/getAnimeByTitle")
-    public Anime getAnimeByTitle(@RequestParam("title") String title) {
-        return animeService.getAnimeByTitle(title);
+    public AnimeDto getAnimeByTitle(@RequestParam("title") String title) {
+        return animeService.getAnimeDtoByTitle(title);
     }
 
     @GetMapping("/getAnimeByKeyword")
-    public List<Anime> getAnimeByKeyword(@RequestParam("keyword") String keyword) {
-        return animeService.getAnimeByKeyword(keyword);
+    public List<AnimeDto> getAnimeByKeyword(@RequestParam("keyword") String keyword) {
+        return animeService.getAnimeDtosByKeyword(keyword);
     }
 
     @GetMapping("/getAnimeById")
-    public Anime getAnimeById(@RequestParam("id") Long id) {
-        return animeService.getAnimeById(id);
+    public AnimeDto getAnimeById(@RequestParam("id") Long id) {
+        return animeService.getAnimeDtoById(id);
     }
 
     @GetMapping("/{year}/{season}")
-    public List<Anime> getAnimeByYearAndSeason(@PathVariable Integer year, @PathVariable String season) {
-        return animeService.getAnimeByYearAndSeason(year, season);
+    public List<AnimeDto> getAnimeByYearAndSeason(@PathVariable Integer year, @PathVariable String season) {
+        return animeService.getAnimeDtosByYearAndSeason(year, season);
     }
 }

@@ -2,7 +2,6 @@ package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
-import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.PollOptionService;
 import com.hogimn.myanimechart.database.anime.service.PollService;
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,11 +61,11 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
-        List<Anime> animeList = animeService.getAiringAnime();
-        animeList.forEach(anime -> {
+        List<AnimeDao> animeList = animeService.getAiringAnime();
+        animeList.forEach(animeDao -> {
             try {
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
-                        .withQuery(anime.getTitle() + " Episode")
+                        .withQuery(animeDao.getTitle() + " Episode")
                         .searchAll();
 
                 while (forumTopicPaginatedIterator.hasNext()) {
@@ -81,8 +80,8 @@ public class PollCollectService {
                     Long topicId = forumTopic.getID();
                     String topicTitle = forumTopic.getTitle();
 
-                    if (!topicTitle.startsWith(anime.getTitle() + " Episode")) {
-                        log.info("Topic name does not start with anime title. topic: {},  anime: {}", forumTopic.getTitle(), anime.getTitle());
+                    if (!topicTitle.startsWith(animeDao.getTitle() + " Episode")) {
+                        log.info("Topic name does not start with anime title. topic: {},  anime: {}", forumTopic.getTitle(), animeDao.getTitle());
                         continue;
                     }
 
@@ -111,14 +110,14 @@ public class PollCollectService {
                             int votes = option.getVotes();
                             String text = option.getText();
                             PollOptionDao pollOptionDao = pollOptionService.getPollOptionDao(text);
-                            pollService.upsertPoll(AnimeDao.from(anime), pollOptionDao, topicId, topicTitle, votes, episode);
+                            pollService.upsertPoll(animeDao, pollOptionDao, topicId, topicTitle, votes, episode);
                         } catch (Exception e) {
                             log.error(e.getMessage(), e);
                         }
                     }
                 }
             } catch (Exception e) {
-                log.error("Failed to forumTopic  '{} {}': {}", anime.getId(), anime.getTitle(), e.getMessage(), e);
+                log.error("Failed to forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
             }
         });
     }

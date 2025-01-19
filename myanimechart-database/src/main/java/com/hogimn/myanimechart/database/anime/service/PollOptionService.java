@@ -1,9 +1,7 @@
 package com.hogimn.myanimechart.database.anime.service;
 
 import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
-import com.hogimn.myanimechart.database.anime.domain.PollOption;
 import com.hogimn.myanimechart.database.anime.repository.PollOptionRepository;
-import com.hogimn.myanimechart.database.anime.repository.PollRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

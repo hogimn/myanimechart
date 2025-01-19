@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.anime.domain;
+package com.hogimn.myanimechart.database.anime.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Poll {
+public class PollDto {
     private Long animeId;
     private Integer pollId;
     private Long topicId;

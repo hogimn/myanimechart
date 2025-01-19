@@ -2,19 +2,21 @@ package com.hogimn.myanimechart.collector.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
-import com.hogimn.myanimechart.database.anime.domain.Anime;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
 import com.hogimn.myanimechart.database.batch.aop.annotation.SaveBatchHistory;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
+import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -32,8 +34,7 @@ public class AnimeCollectService {
         this.myAnimeList = myAnimeList;
     }
 
-    public List<Anime> getAnime(int year, String season) {
-        List<Anime> animeList = new ArrayList<>();
+    public void collectAnime(int year, String season) {
         Set<Long> animeIdSet = new HashSet<>();
 
         try {
@@ -42,26 +43,12 @@ public class AnimeCollectService {
 
             while (animePaginatedIterator.hasNext()) {
                 try {
-                    dev.katsute.mal4j.anime.Anime katsuteAnime = animePaginatedIterator.next();
+                    dev.katsute.mal4j.anime.Anime anime = animePaginatedIterator.next();
                     Thread.sleep(1000);
-                    Anime anime = Anime.from(katsuteAnime);
 
-                    if (anime.getYear() != year || !Objects.equals(anime.getSeason(), season)) {
-                        log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
-                                anime.getTitle(), anime.getYear(), year, anime.getSeason(), season);
-                        continue;
-                    }
-
-                    if (anime.getScore() == 0.0) {
-                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
-                                anime.getTitle(), anime.getScore());
-                        continue;
-                    }
-
-                    if (!animeIdSet.contains(anime.getId())) {
-                        animeList.add(anime);
-                        animeIdSet.add(anime.getId());
-                        log.info("Anime added: {}", anime);
+                    if (!animeIdSet.contains(anime.getID())) {
+                        animeIdSet.add(anime.getID());
+                        animeService.upsertAnime(anime, year, season);
                     } else {
                         log.warn("Anime Id Duplicate: {}", anime);
                     }
@@ -72,14 +59,11 @@ public class AnimeCollectService {
         } catch (Exception e) {
             log.error("Failed to retrieve anime for season '{} {}': {}", season, year, e.getMessage(), e);
         }
-
-        return animeList;
     }
 
     public Anime getAnime(Long id) {
         try {
-            dev.katsute.mal4j.anime.Anime katsuteAnime = myAnimeList.getAnime(id);
-            return Anime.from(katsuteAnime);
+            return myAnimeList.getAnime(id);
         } catch (Exception e) {
             log.error("Failed to retrieve anime '{}': {}", id, e.getMessage(), e);
             return null;
@@ -110,36 +94,24 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeStatisticsOldSeasonCurrentlyAiring() {
-        List<Anime> animeList = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
+        List<AnimeDao> animeDaos = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        animeList = animeList.stream()
-                .map((anime) -> getAnime(anime.getId()))
-                .toList();
-        SaveAnimeAndAnimeStat(animeList);
+        for (AnimeDao animeDao : animeDaos) {
+            try {
+                Anime anime = getAnime(animeDao.getId());
+                animeService.upsertAnime(anime, animeDao.getYear(), animeDao.getSeason());
+            } catch (Exception e) {
+                log.error("Failed to collect anime statistics for anime '{}': {}", animeDao.getId(), e.getMessage(), e);
+            }
+        }
     }
 
     private void collectAnimeStatisticsNextSeason() {
-        List<Anime> animeList = getAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        SaveAnimeAndAnimeStat(animeList);
+        collectAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
     }
 
     private void collectAnimeStatisticsCurrentSeason() {
-        List<Anime> animeList = getAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
-        SaveAnimeAndAnimeStat(animeList);
-    }
-
-    private void SaveAnimeAndAnimeStat(List<Anime> animeList) {
-        for (Anime anime : animeList) {
-            if (anime == null) {
-                continue;
-            }
-            try {
-                AnimeDao animeDao = animeService.upsertAnime(anime);
-                animeStatService.saveAnimeStat(animeDao);
-            } catch (Exception e) {
-                log.error("Error processing anime DML '{}'. Details: {}", anime.getTitle(), e.getMessage(), e);
-            }
-        }
+        collectAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
     }
 }

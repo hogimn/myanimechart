@@ -2,8 +2,8 @@ package com.hogimn.myanimechart.database.anime.service;
 
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
-import com.hogimn.myanimechart.database.anime.domain.Anime;
-import com.hogimn.myanimechart.database.anime.domain.AnimeStat;
+import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
+import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeStatRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,45 +30,53 @@ public class AnimeStatService {
         animeStatRepository.save(animeStatDao);
     }
 
-    public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {
-        return animeService.getAnimeByYearAndSeason(year, season);
+    public List<AnimeStatDao> getAnimeStatDaosByAnime(AnimeDao animeDao) {
+        return animeStatRepository.findByAnime(animeDao);
     }
 
-    public List<AnimeStat> getAnimeStatByAnime(Anime anime) {
-        Anime animeFound = animeService.getAnimeById(anime.getId());
-        List<AnimeStatDao> animeStatDaos = animeStatRepository.findByAnime(AnimeDao.from(animeFound));
-        return animeStatDaos.stream().map(AnimeStat::from).toList();
+    public List<AnimeStatDto> getAnimeStatDtosByAnime(AnimeDao animeDao) {
+        List<AnimeStatDao> animeStatDaos = getAnimeStatDaosByAnime(animeDao);
+        return animeStatDaos.stream().map(AnimeStatDto::from).toList();
     }
 
-    public List<Anime> getAnimeStats(Integer year, String season) {
-        List<Anime> animeList = getAnimeByYearAndSeason(year, season);
-        animeList.forEach(anime -> {
-            List<AnimeStat> animeStat = getAnimeStatByAnime(anime);
-            anime.setAnimeStats(animeStat);
-        });
-        return animeList;
+    public List<AnimeDto> getAnimeStats(Integer year, String season) {
+        List<AnimeDao> animeDaos = animeService.getAnimeDaosByYearAndSeason(year, season);
+        List<AnimeDto> animeDtos = animeDaos.stream().map(AnimeDto::from).toList();
+        for (int i = 0; i < animeDtos.size(); i++) {
+            AnimeDao animeDao = animeDaos.get(i);
+            AnimeDto animeDto = animeDtos.get(i);
+            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+            animeDto.setAnimeStats(animeStat);
+        }
+
+        return animeDtos;
     }
 
-    public Anime getAnimeStatsByTitle(String title) {
-        Anime anime = animeService.getAnimeByTitle(title);
-        List<AnimeStat> animeStat = getAnimeStatByAnime(anime);
-        anime.setAnimeStats(animeStat);
-        return anime;
+    public AnimeDto getAnimeStatsByTitle(String title) {
+        AnimeDao animeDao = animeService.getAnimeDaoByTitle(title);
+        AnimeDto animeDto = AnimeDto.from(animeDao);
+        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+        animeDto.setAnimeStats(animeStat);
+        return animeDto;
     }
 
-    public Anime getAnimeStatsById(Long id) {
-        Anime anime = animeService.getAnimeById(id);
-        List<AnimeStat> animeStat = getAnimeStatByAnime(anime);
-        anime.setAnimeStats(animeStat);
-        return anime;
+    public AnimeDto getAnimeStatsById(Long id) {
+        AnimeDao animeDao = animeService.getAnimeDaoById(id);
+        AnimeDto animeDto = AnimeDto.from(animeService.getAnimeDaoById(id));
+        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+        animeDto.setAnimeStats(animeStat);
+        return animeDto;
     }
 
-    public List<Anime> getAnimeStatsByKeyword(String keyword) {
-        List<Anime> animeList = animeService.getAnimeByKeyword(keyword);
-        animeList.forEach(anime -> {
-            List<AnimeStat> animeStat = getAnimeStatByAnime(anime);
-            anime.setAnimeStats(animeStat);
-        });
-        return animeList;
+    public List<AnimeDto> getAnimeStatsByKeyword(String keyword) {
+        List<AnimeDao> animeDaos = animeService.getAnimeDaosByKeyword(keyword);
+        List<AnimeDto> animeDtos = animeService.getAnimeDtosByKeyword(keyword);
+        for (int i = 0; i < animeDtos.size(); i++) {
+            AnimeDao animeDao = animeDaos.get(i);
+            AnimeDto animeDto = animeDtos.get(i);
+            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+            animeDto.setAnimeStats(animeStat);
+        }
+        return animeDtos;
     }
 }

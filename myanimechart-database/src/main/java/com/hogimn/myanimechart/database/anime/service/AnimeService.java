@@ -1,12 +1,15 @@
 package com.hogimn.myanimechart.database.anime.service;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
-import com.hogimn.myanimechart.database.anime.domain.Anime;
+import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
+import dev.katsute.mal4j.anime.Anime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,68 +22,91 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public AnimeDao upsertAnime(Anime anime) {
+    public void upsertAnime(Anime anime, int year, String season) {
         if (anime == null) {
-            return null;
+            return;
         }
 
         AnimeDao animeDao = AnimeDao.from(anime);
-        Optional<AnimeDao> optional = animeRepository.findByTitle(anime.getTitle());
-
-        if (optional.isPresent()) {
-            AnimeDao foundAnime = optional.get();
-
-            if (foundAnime.getFinishedAt() != null) {
-                foundAnime.setFrom(anime);
-                foundAnime.setFinishedAt(null);
-            } else {
-                foundAnime.setFrom(anime);
-            }
-
-            animeRepository.save(foundAnime);
-            return foundAnime;
+        if (animeDao.getYear() != year || !Objects.equals(animeDao.getSeason(), season)) {
+            log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
+                    animeDao.getTitle(), animeDao.getYear(), year, animeDao.getSeason(), season);
+            return;
         }
 
-        return animeRepository.save(animeDao);
+        if (animeDao.getScore() == 0.0) {
+            log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
+                    animeDao.getTitle(), animeDao.getScore());
+            return;
+        }
+
+        Optional<AnimeDao> optional = animeRepository.findById(animeDao.getId());
+        if (optional.isPresent()) {
+            if (animeDao.getFinishedAt() != null) {
+                animeDao.setFinishedAt(null);
+            }
+            animeDao.setUpdatedAt(DateUtil.now());
+            AnimeDao saved = animeRepository.save(animeDao);
+            log.info("Updated anime: {}", saved);
+            return;
+        }
+
+        animeDao.setCreatedAt(DateUtil.now());
+        AnimeDao saved = animeRepository.save(animeDao);
+        log.info("Inserted new anime: {}", saved);
     }
 
-    public Anime getAnimeByTitle(String title) {
+    public AnimeDao getAnimeDaoByTitle(String title) {
         Optional<AnimeDao> optional = animeRepository.findByTitle(title);
         if (optional.isPresent()) {
-            AnimeDao animeDao = optional.get();
-            return Anime.from(animeDao);
+            return optional.get();
         }
         throw new IllegalArgumentException("Anime not found (" + title + ")");
     }
 
-    public Anime getAnimeById(Long id) {
+    public AnimeDto getAnimeDtoByTitle(String title) {
+        AnimeDao animeDao = getAnimeDaoByTitle(title);
+        return AnimeDto.from(animeDao);
+    }
+
+    public AnimeDto getAnimeDtoById(Long id) {
+        AnimeDao animeDao = getAnimeDaoById(id);
+        return AnimeDto.from(animeDao);
+    }
+
+    public AnimeDao getAnimeDaoById(Long id) {
         Optional<AnimeDao> optional = animeRepository.findById(id);
         if (optional.isPresent()) {
-            AnimeDao animeDao = optional.get();
-            return Anime.from(animeDao);
+            return optional.get();
         }
         throw new IllegalArgumentException("Anime not found (" + id + ")");
     }
 
-    public List<Anime> getAnimeByYearAndSeason(Integer year, String season) {
-        List<AnimeDao> animeDaos = animeRepository.findByYearAndSeason(year, season);
-        return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
+    public List<AnimeDao> getAnimeDaosByYearAndSeason(int year, String season) {
+        return animeRepository.findByYearAndSeason(year, season);
     }
 
-    public List<Anime> getAiringAnimeExcludingCurrentAndNextSeason(Integer year, String season,
-                                                                   Integer nextYear, String nextSeason) {
+    public List<AnimeDto> getAnimeDtosByYearAndSeason(int year, String season) {
+        List<AnimeDao> animeDaos = getAnimeDaosByYearAndSeason(year, season);
+        return animeDaos.stream().map(AnimeDto::from).collect(Collectors.toList());
+    }
+
+    public List<AnimeDao> getAiringAnimeExcludingCurrentAndNextSeason(int year, String season,
+                                                                      int nextYear, String nextSeason) {
         return animeRepository.findAiringAnimeExcludingCurrentAndNextSeason(
-                        year, season, nextYear, nextSeason, "currently_airing", "finished_airing")
-                .stream().map(Anime::from).collect(Collectors.toList());
+                year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
     }
 
-    public List<Anime> getAnimeByKeyword(String keyword) {
-        List<AnimeDao> animeDaos = animeRepository.findAllByTitleContaining(keyword);
-        return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
+    public List<AnimeDao> getAnimeDaosByKeyword(String keyword) {
+        return animeRepository.findAllByTitleContaining(keyword);
     }
 
-    public List<Anime> getAiringAnime() {
-        return animeRepository.findAiringAnime("currently_airing", "finished_airing")
-                .stream().map(Anime::from).collect(Collectors.toList());
+    public List<AnimeDto> getAnimeDtosByKeyword(String keyword) {
+        List<AnimeDao> animeDaos = getAnimeDaosByKeyword(keyword);
+        return animeDaos.stream().map(AnimeDto::from).collect(Collectors.toList());
+    }
+
+    public List<AnimeDao> getAiringAnime() {
+        return animeRepository.findAiringAnime("currently_airing", "finished_airing");
     }
 }

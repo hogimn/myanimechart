@@ -5,8 +5,6 @@ import styled from "styled-components";
 import {
     getCurrentSeason,
     getCurrentSeasonYear,
-    getNextSeason,
-    getNextSeasonYear,
     getPreviousSeason,
     getPreviousSeasonYear
 } from "../../../../util/dateUtil";
