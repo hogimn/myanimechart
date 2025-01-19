@@ -76,8 +76,13 @@ public class AnimeCollectService {
     }
 
     public Anime getAnime(Long id) {
-        dev.katsute.mal4j.anime.Anime katsuteAnime = myAnimeList.getAnime(id);
-        return Anime.from(katsuteAnime);
+        try {
+            dev.katsute.mal4j.anime.Anime katsuteAnime = myAnimeList.getAnime(id);
+            return Anime.from(katsuteAnime);
+        } catch (Exception e) {
+            log.error("Failed to retrieve anime '{}': {}", id, e.getMessage(), e);
+            return null;
+        }
     }
 
     private Season getSeason(String season) {
@@ -125,6 +130,9 @@ public class AnimeCollectService {
 
     private void SaveAnimeAndAnimeStat(List<Anime> animeList) {
         for (Anime anime : animeList) {
+            if (anime == null) {
+                continue;
+            }
             try {
                 AnimeDao animeDao = animeService.upsertAnime(anime);
                 animeStatService.saveAnimeStat(animeDao);
