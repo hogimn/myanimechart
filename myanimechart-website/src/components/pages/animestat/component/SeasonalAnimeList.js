@@ -11,6 +11,7 @@ import styled from "styled-components";
 import {toScoreLabel} from "../../../../util/strUtil";
 import {FaStar, FaTrophy, FaUserFriends} from "react-icons/fa";
 import {MdTrendingUp} from "react-icons/md";
+import AnimeImage from "./AnimeImage";
 
 const StyledSpin = styled(CommonSpin)`
     display: flex;
@@ -92,16 +93,6 @@ const ImageWrapper = styled.div`
 
     @media (max-width: 769px) {
         height: 200px;
-    }
-`;
-
-const AnimeImage = styled.img`
-    width: 220px;
-    height: 100%;
-    object-fit: cover;
-
-    @media (max-width: 768px) {
-        width: 150px;
     }
 `;
 
