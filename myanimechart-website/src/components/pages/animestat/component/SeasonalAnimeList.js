@@ -84,12 +84,15 @@ const OverlayBox = styled.div`
 
 const ImageWrapper = styled.div`
     display: inline-block;
-    height: 200px;
     cursor: pointer;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
+
+    @media (max-width: 769px) {
+        height: 200px;
+    }
 `;
 
 const AnimeImage = styled.img`
