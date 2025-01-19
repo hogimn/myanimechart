@@ -72,7 +72,7 @@ public class PollCollectService {
                     ForumTopic forumTopic;
                     try {
                         forumTopic = forumTopicPaginatedIterator.next();
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         continue;

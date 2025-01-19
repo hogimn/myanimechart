@@ -44,7 +44,7 @@ public class AnimeCollectService {
             while (animePaginatedIterator.hasNext()) {
                 try {
                     dev.katsute.mal4j.anime.Anime anime = animePaginatedIterator.next();
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
 
                     if (!animeIdSet.contains(anime.getID())) {
                         animeIdSet.add(anime.getID());

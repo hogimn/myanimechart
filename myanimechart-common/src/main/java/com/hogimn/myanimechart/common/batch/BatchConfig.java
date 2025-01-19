@@ -10,7 +10,6 @@ public class BatchConfig {
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(ThreadPoolTaskSchedulerBuilder builder) {
         return builder
-                .poolSize(2)
                 .threadNamePrefix("batch-")
                 .build();
     }
