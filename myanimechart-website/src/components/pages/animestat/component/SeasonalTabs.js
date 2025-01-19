@@ -61,11 +61,9 @@ const SeasonalTabs = () => {
 
     const previousSeason = getPreviousSeason();
     const currentSeason = getCurrentSeason();
-    const nextSeason = getNextSeason();
 
     const previousYear = getPreviousSeasonYear();
     const currentYear = getCurrentSeasonYear();
-    const nextYear = getNextSeasonYear();
 
     const tabs = [
         {
@@ -97,22 +95,6 @@ const SeasonalTabs = () => {
                     setPage={setPage}
                     pageSize={pageSize}
                     selected={activeTab === "2"}
-                />
-            ),
-        },
-        {
-            key: "3",
-            label: `${nextSeason.charAt(0).toUpperCase() + nextSeason.slice(1)} ${nextYear}`,
-            content: (
-                <SeasonalAnimeList
-                    year={nextYear}
-                    season={nextSeason}
-                    sortBy={sortBy}
-                    filterBy={filterBy}
-                    page={page}
-                    setPage={setPage}
-                    pageSize={pageSize}
-                    selected={activeTab === "3"}
                 />
             ),
         },
