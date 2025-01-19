@@ -84,6 +84,7 @@ const OverlayBox = styled.div`
 
 const ImageWrapper = styled.div`
     display: inline-block;
+    height: 200px;
     cursor: pointer;
     border-radius: 8px;
     overflow: hidden;
