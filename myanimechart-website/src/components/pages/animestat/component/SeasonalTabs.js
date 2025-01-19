@@ -155,11 +155,11 @@ const SeasonalTabs = () => {
                         onChange={(value) => setSortBy(value)}
                     >
                         <CommonSelect.Option value="score">Score</CommonSelect.Option>
-                        <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
-                        <CommonSelect.Option value="startDate">StartDate</CommonSelect.Option>
                         <CommonSelect.Option value="members">Members</CommonSelect.Option>
                         <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
                         <CommonSelect.Option value="popularity">Popularity</CommonSelect.Option>
+                        <CommonSelect.Option value="scoringCount">ScoringCount</CommonSelect.Option>
+                        <CommonSelect.Option value="startDate">StartDate</CommonSelect.Option>
                     </CommonSelect>
                 )}
             </SelectWrapper>

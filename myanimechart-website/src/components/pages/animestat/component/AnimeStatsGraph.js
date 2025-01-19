@@ -114,21 +114,21 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 ...baseDatasetConfig
             },
             {
-                label: 'Popularity',
-                data: animeStats.map(stat => stat.popularity),
+                label: 'Rank',
+                data: animeStats.map(stat => stat.rank),
                 borderColor: 'rgb(126,109,246)',
                 backgroundColor: 'rgb(126,109,246)',
                 pointBackgroundColor: 'rgb(126,109,246)',
-                hidden: activeLegend && activeLegend !== 'popularity',
+                hidden: activeLegend && activeLegend !== 'rank',
                 ...baseDatasetConfig
             },
             {
-                label: 'Rank',
-                data: animeStats.map(stat => stat.rank),
+                label: 'Popularity',
+                data: animeStats.map(stat => stat.popularity),
                 borderColor: 'rgb(255,118,237)',
                 backgroundColor: 'rgb(255,118,237)',
                 pointBackgroundColor: 'rgb(255,118,237)',
-                hidden: activeLegend && activeLegend !== 'rank',
+                hidden: activeLegend && activeLegend !== 'popularity',
                 ...baseDatasetConfig
             },
             {
