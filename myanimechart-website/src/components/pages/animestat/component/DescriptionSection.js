@@ -65,7 +65,7 @@ const DescriptionContainer = styled.div`
 `;
 
 const HeaderContainer = styled.div`
-    padding: 5px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0);
     max-height: 87px;
     height: 87px;
