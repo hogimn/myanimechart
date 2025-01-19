@@ -189,29 +189,6 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
         },
     };
 
-    useEffect(() => {
-        const resizeChart = () => {
-            if (chartRef.current) {
-                const chart = chartRef.current;
-                const width = chart.canvas.clientWidth;
-                const height = chart.canvas.clientHeight;
-
-                chart.canvas.width = width * window.devicePixelRatio;
-                chart.canvas.height = height * window.devicePixelRatio;
-                chart.canvas.style.width = `${width}px`;
-                chart.canvas.style.height = `${height}px`;
-
-                chart.resize();
-            }
-        };
-
-        window.addEventListener('resize', resizeChart);
-
-        return () => {
-            window.removeEventListener('resize', resizeChart);
-        };
-    }, []);
-
     return (
         <>
             <StyledResetButton
