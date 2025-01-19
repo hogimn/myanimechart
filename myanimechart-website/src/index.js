@@ -12,6 +12,7 @@ const darkTheme = {
         colorPrimary: '#70a8ce',
         colorLink: '#4164fd',
         colorBorder: '#444',
+        fontFamily: 'Avenir, sans-serif',
     },
 };
 

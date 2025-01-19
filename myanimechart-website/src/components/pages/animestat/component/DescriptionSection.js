@@ -105,7 +105,7 @@ const Link = styled.a`
 `;
 
 const AnimeDetails = styled.div`
-    padding: 5px;
+    padding: 10px;
     font-size: 0.9rem;
 
     & strong {
