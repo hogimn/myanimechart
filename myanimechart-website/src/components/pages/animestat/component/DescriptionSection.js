@@ -14,22 +14,22 @@ const Tag = styled.div`
     border: solid 1px rgba(238, 238, 238, 0.52);
     border-radius: 5px;
     width: fit-content;
-    margin: 5px;
     font-size: 0.7rem;
 `;
 
 const Dot = styled.div`
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background-color: ${(props) => (props.color)};
     margin-right: 5px;
+    margin-left: 5px;
 `;
 
 const DescriptionContainer = styled.div`
     flex: 2;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.24);
     overflow-y: auto;
     height: 350px;
 
@@ -45,9 +45,18 @@ const DescriptionContainer = styled.div`
 
 const HeaderContainer = styled.div`
     padding: 5px;
-    background-color: rgba(0, 0, 0, 0.73);
+    background-color: rgba(0, 0, 0, 0.45);
     max-height: 87px;
     height: 87px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 769px) {
+        max-height: 70px;
+        height: 70px;
+    }
 `;
 
 const TitleContainer = styled.span`
@@ -56,32 +65,33 @@ const TitleContainer = styled.span`
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 `;
 
 const Title = styled.div`
     display: inline;
     font-size: 1.3rem;
     font-weight: bold;
-    color: white;
+    color: #a7ccf1;
+    line-height: 1.0;
 
     @media (max-width: 769px) {
-        font-size: 1.0rem;
+        font-size: 1.1rem;
     }
 `;
 
 const SubTitle = styled.div`
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
     color: gray;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 
     @media (max-width: 769px) {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
     }
 `;
 
@@ -96,11 +106,6 @@ const Link = styled.a`
 
 const AnimeDetails = styled.div`
     padding: 5px;
-
-    @media (max-width: 768px) {
-        margin-top: 5px;
-    }
-
     font-size: 0.9rem;
 
     & strong {
@@ -118,12 +123,12 @@ const DescriptionSection = ({anime}) => {
             <HeaderContainer>
                 <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                     <TitleContainer>
-                        <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}/>
                         <Title>{anime.title}</Title>
                     </TitleContainer>
                     <SubTitle>{anime.englishTitle}</SubTitle>
                 </Link>
             </HeaderContainer>
+            <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : '#00ff95'}/>
             <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
