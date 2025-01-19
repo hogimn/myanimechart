@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
     capitalizeFirstLetter,
@@ -6,8 +6,6 @@ import {
     toEpisodeLabel,
     toTypeLabel
 } from "../../../../util/strUtil";
-import {isMobile} from 'react-device-detect';
-import {FiChevronDown, FiChevronUp} from "react-icons/fi";
 
 const Tag = styled.div`
     display: inline-block;
@@ -16,6 +14,8 @@ const Tag = styled.div`
     border: solid 1px rgba(238, 238, 238, 0.52);
     border-radius: 5px;
     width: fit-content;
+    margin: 5px;
+    font-size: 0.7rem;
 `;
 
 const Dot = styled.div`
@@ -24,13 +24,12 @@ const Dot = styled.div`
     height: 10px;
     border-radius: 50%;
     background-color: ${(props) => (props.color)};
-    margin-left: 10px;
+    margin-right: 5px;
 `;
 
 const DescriptionContainer = styled.div`
     flex: 2;
     background-color: rgba(0, 0, 0, 0.2);
-    padding: 10px;
     overflow-y: auto;
     height: 350px;
 
@@ -44,9 +43,19 @@ const DescriptionContainer = styled.div`
     }
 `;
 
+const HeaderContainer = styled.div`
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.73);
+    max-height: 87px;
+    height: 87px;
+`;
+
 const TitleContainer = styled.span`
-    display: inline;
-    align-items: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 const Title = styled.div`
@@ -65,6 +74,11 @@ const SubTitle = styled.div`
     font-weight: bold;
     margin-bottom: 8px;
     color: gray;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     @media (max-width: 769px) {
         font-size: 0.6rem;
@@ -81,6 +95,8 @@ const Link = styled.a`
 `;
 
 const AnimeDetails = styled.div`
+    padding: 5px;
+
     @media (max-width: 768px) {
         margin-top: 5px;
     }
@@ -96,62 +112,30 @@ const AnimeDetails = styled.div`
     }
 `;
 
-const ToggleButton = styled.div`
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    color: #3e9ef6;
-    font-size: 0.9rem;
-    margin-top: 3px;
-
-    & svg {
-        margin-left: 5px;
-    }
-
-    @media (max-width: 768px) {
-        display: inline-flex;
-    }
-
-    @media (min-width: 769px) {
-        display: none;
-    }
-`;
-
 const DescriptionSection = ({anime}) => {
-    const [showDetails, setShowDetails] = useState(!isMobile);
-
-    const handleToggleDetails = () => {
-        setShowDetails(prevState => !prevState);
-    };
-
     return (
         <DescriptionContainer>
-            <Link href={anime.link} target="_blank" rel="noopener noreferrer">
-                <TitleContainer>
-                    <Title>{anime.title}</Title>
-                    <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}/>
-                </TitleContainer>
-                <SubTitle>{anime.englishTitle}</SubTitle>
-            </Link>
+            <HeaderContainer>
+                <Link href={anime.link} target="_blank" rel="noopener noreferrer">
+                    <TitleContainer>
+                        <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : 'lightgreen'}/>
+                        <Title>{anime.title}</Title>
+                    </TitleContainer>
+                    <SubTitle>{anime.englishTitle}</SubTitle>
+                </Link>
+            </HeaderContainer>
             <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
             <Tag>{toTypeLabel(anime.type)}</Tag>
             <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
 
-            <ToggleButton onClick={handleToggleDetails}>
-                {showDetails ? 'Show Less' : 'More Info'}
-                {showDetails ? <FiChevronUp/> : <FiChevronDown/>}
-            </ToggleButton>
-
-            {showDetails &&
-                <AnimeDetails systyle={{display: showDetails ? 'block' : 'none'}}>
-                    {anime.synopsis} <br/> <br/>
-                    <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
-                    <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
-                    <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
-                    <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
-                    <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
-                </AnimeDetails>
-            }
+            <AnimeDetails>
+                {anime.synopsis} <br/> <br/>
+                <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
+                <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
+                <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
+                <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
+                <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
+            </AnimeDetails>
         </DescriptionContainer>
     );
 };
