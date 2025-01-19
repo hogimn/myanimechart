@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {
     capitalizeFirstLetter,
@@ -6,6 +6,7 @@ import {
     toEpisodeLabel,
     toTypeLabel
 } from "../../../../util/strUtil";
+import {isMobile} from 'react-device-detect';
 import {FiChevronDown, FiChevronUp} from "react-icons/fi";
 
 const Tag = styled.div`
@@ -32,7 +33,7 @@ const DescriptionContainer = styled.div`
     padding: 10px;
     overflow-y: auto;
     height: 350px;
-    
+
     @media (max-width: 769px) {
         height: 200px;
     }
@@ -117,7 +118,7 @@ const ToggleButton = styled.div`
 `;
 
 const DescriptionSection = ({anime}) => {
-    const [showDetails, setShowDetails] = useState(false);
+    const [showDetails, setShowDetails] = useState(!isMobile);
 
     const handleToggleDetails = () => {
         setShowDetails(prevState => !prevState);
@@ -141,14 +142,16 @@ const DescriptionSection = ({anime}) => {
                 {showDetails ? <FiChevronUp/> : <FiChevronDown/>}
             </ToggleButton>
 
-            <AnimeDetails systyle={{display: showDetails ? 'block' : 'none'}}>
-                {anime.synopsis} <br /> <br />
-                <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
-                <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
-                <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
-                <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
-                <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
-            </AnimeDetails>
+            {showDetails &&
+                <AnimeDetails systyle={{display: showDetails ? 'block' : 'none'}}>
+                    {anime.synopsis} <br/> <br/>
+                    <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
+                    <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
+                    <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
+                    <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
+                    <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
+                </AnimeDetails>
+            }
         </DescriptionContainer>
     );
 };
