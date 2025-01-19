@@ -85,7 +85,7 @@ const Title = styled.div`
     font-size: 1.3rem;
     font-weight: bold;
     color: #a7ccf1;
-    line-height: 1.1;
+    line-height: 1.0;
 
     @media (max-width: 769px) {
         font-size: 1.1rem;
@@ -146,8 +146,8 @@ const DescriptionSection = ({anime}) => {
                 <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                     <TitleContainer>
                         <Title>{anime.title}</Title>
-                        <SubTitle>{anime.englishTitle}</SubTitle>
                     </TitleContainer>
+                    <SubTitle>{anime.englishTitle}</SubTitle>
                 </Link>
             </HeaderContainer>
             <Box>
