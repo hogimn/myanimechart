@@ -40,11 +40,16 @@ const zoomOptions = {
 };
 
 const StyledResetButton = styled(CommonButton)`
+    background-color: rgba(0, 0, 0, 0.7);
     position: absolute;
-    top: -45px;
-    right: 5px;
+    top: -48px;
+    left: 180px;
     padding: 7px;
     margin: 0;
+    
+    @media (max-width: 768px) {
+        left: 112px;
+    }
 `;
 
 const AnimeStatsGraph = ({animeStats, selectedLegend}) => {

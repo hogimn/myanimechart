@@ -1,20 +1,46 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-    capitalizeFirstLetter,
     toDateLabel,
     toEpisodeLabel,
     toTypeLabel
 } from "../../../../util/strUtil";
 
-const Tag = styled.div`
-    display: inline-block;
-    color: ${(props) => (props.color)};
+const GenresBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(75, 74, 74, 0.22);
     padding: 3px;
-    border: solid 1px rgba(238, 238, 238, 0.52);
-    border-radius: 5px;
-    width: fit-content;
-    font-size: 0.7rem;
+    flex-wrap: wrap;
+
+    .genre {
+        background-color: #353535;
+        border-radius: 8px;
+        padding: 1px 4px;
+        margin: 2px;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.55);
+    }
+`;
+
+const Box = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(44, 44, 44, 0.22);
+    padding: 3px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+
+    span:not(:last-child) {
+        border-right: 1px solid #353535;
+        padding-right: 10px;
+        margin-right: 10px;
+        height: 15px;
+        display: flex;
+        align-items: center;
+    }
 `;
 
 const Dot = styled.div`
@@ -36,16 +62,11 @@ const DescriptionContainer = styled.div`
     @media (max-width: 769px) {
         height: 200px;
     }
-
-    ${Tag} {
-        margin-right: 5px;
-        margin-bottom: 5px;
-    }
 `;
 
 const HeaderContainer = styled.div`
     padding: 5px;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, 0);
     max-height: 87px;
     height: 87px;
     display: flex;
@@ -59,21 +80,12 @@ const HeaderContainer = styled.div`
     }
 `;
 
-const TitleContainer = styled.span`
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-`;
-
 const Title = styled.div`
     display: inline;
     font-size: 1.3rem;
     font-weight: bold;
     color: #a7ccf1;
-    line-height: 1.0;
+    line-height: 1.1;
 
     @media (max-width: 769px) {
         font-size: 1.1rem;
@@ -81,17 +93,27 @@ const Title = styled.div`
 `;
 
 const SubTitle = styled.div`
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: gray;
     display: -webkit-box;
+    line-height: 1.0;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+`;
 
-    @media (max-width: 769px) {
-        font-size: 0.8rem;
+const TitleContainer = styled.span`
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    
+    ${Title} + ${SubTitle} {
+        margin-top: 5px;
     }
 `;
 
@@ -124,22 +146,27 @@ const DescriptionSection = ({anime}) => {
                 <Link href={anime.link} target="_blank" rel="noopener noreferrer">
                     <TitleContainer>
                         <Title>{anime.title}</Title>
+                        <SubTitle>{anime.englishTitle}</SubTitle>
                     </TitleContainer>
-                    <SubTitle>{anime.englishTitle}</SubTitle>
                 </Link>
             </HeaderContainer>
-            <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : '#00ff95'}/>
-            <Tag>{capitalizeFirstLetter(anime.season)} {anime.year}</Tag>
-            <Tag>{toTypeLabel(anime.type)}</Tag>
-            <Tag>{toEpisodeLabel(anime.episodes)} Episodes</Tag> <br/>
+            <Box>
+                <Dot color={anime.airStatus === 'finished_airing' ? '#fd7976' : '#00ff95'}/>
+                <span>{toDateLabel(anime.startDate)}</span>
+                <span>{toEpisodeLabel(anime.episodes)} eps </span>
+                <span>{toTypeLabel(anime.type)}</span>
+            </Box>
+
+            <GenresBox>
+                {anime.genre.map((genre, index) => (
+                    <span key={index} className="genre">{genre}</span>
+                ))}
+            </GenresBox>
 
             <AnimeDetails>
                 {anime.synopsis} <br/> <br/>
                 <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
-                <strong>Genres:</strong> {anime.genre.join(', ')} <br/>
                 <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
-                <strong>StartDate:</strong> {toDateLabel(anime.startDate)} <br/>
-                <strong>EndDate:</strong> {toDateLabel(anime.endDate)} <br/>
             </AnimeDetails>
         </DescriptionContainer>
     );
