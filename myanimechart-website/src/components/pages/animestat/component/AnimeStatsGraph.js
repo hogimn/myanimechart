@@ -20,7 +20,19 @@ import {isMobile} from 'react-device-detect';
 import styled from "styled-components";
 import {MdRestore} from "react-icons/md";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale);
+const plugin = {
+    id: "increase-legend-spacing",
+    beforeInit(chart) {
+        const originalFit = chart.legend.fit;
+
+        chart.legend.fit = function fit() {
+            originalFit.bind(chart.legend)();
+            this.height += 20;
+        }
+    },
+}
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, TimeScale, plugin);
 
 const zoomOptions = {
     zoom: {
@@ -93,39 +105,39 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 ...baseDatasetConfig
             },
             {
-                label: 'ScoringCount',
-                data: animeStats.map(stat => stat.scoringCount),
+                label: 'Members',
+                data: animeStats.map(stat => stat.members),
                 borderColor: 'rgb(94,183,255)',
                 backgroundColor: 'rgb(94,183,255)',
                 pointBackgroundColor: 'rgb(94,183,255)',
-                hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
-                ...baseDatasetConfig
-            },
-            {
-                label: 'Members',
-                data: animeStats.map(stat => stat.members),
-                borderColor: 'rgb(126,109,246)',
-                backgroundColor: 'rgb(126,109,246)',
-                pointBackgroundColor: 'rgb(126,109,246)',
                 hidden: activeLegend && activeLegend !== 'members',
                 ...baseDatasetConfig
             },
             {
                 label: 'Popularity',
                 data: animeStats.map(stat => stat.popularity),
-                borderColor: 'rgb(255,118,237)',
-                backgroundColor: 'rgb(255,118,237)',
-                pointBackgroundColor: 'rgb(255,118,237)',
+                borderColor: 'rgb(126,109,246)',
+                backgroundColor: 'rgb(126,109,246)',
+                pointBackgroundColor: 'rgb(126,109,246)',
                 hidden: activeLegend && activeLegend !== 'popularity',
                 ...baseDatasetConfig
             },
             {
                 label: 'Rank',
                 data: animeStats.map(stat => stat.rank),
+                borderColor: 'rgb(255,118,237)',
+                backgroundColor: 'rgb(255,118,237)',
+                pointBackgroundColor: 'rgb(255,118,237)',
+                hidden: activeLegend && activeLegend !== 'rank',
+                ...baseDatasetConfig
+            },
+            {
+                label: 'ScoringCount',
+                data: animeStats.map(stat => stat.scoringCount),
                 borderColor: 'rgb(253,116,116)',
                 backgroundColor: 'rgb(253,116,116)',
                 pointBackgroundColor: 'rgb(253,116,116)',
-                hidden: activeLegend && activeLegend !== 'rank',
+                hidden: activeLegend && activeLegend.toLowerCase() !== 'scoringcount',
                 ...baseDatasetConfig
             },
         ],
@@ -141,8 +153,10 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                 },
             },
             legend: {
+                position: 'top',
                 labels: {
                     color: '#ffffff',
+                    boxHeight: 9,
                     usePointStyle: true,
                     generateLabels: chart => {
                         const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -152,8 +166,7 @@ const AnimeStatsGraph = ({animeStats, selectedLegend}) => {
                                 label.lineWidth = 0;
                             } else {
                                 label.fontColor = '#c9e0ff';
-                                label.lineWidth = 7;
-                                label.text = " " + label.text;
+                                label.lineWidth = 5;
                             }
                             return label;
                         });

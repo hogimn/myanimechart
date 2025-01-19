@@ -164,7 +164,7 @@ const DescriptionSection = ({anime}) => {
             </GenresBox>
 
             <AnimeDetails>
-                {anime.synopsis} <br/> <br/>
+                {anime.synopsis} <br/> <br />
                 <strong>Japanese:</strong> {anime.japaneseTitle} <br/>
                 <strong>Studios:</strong> {anime.studios.join(', ')} <br/>
             </AnimeDetails>
