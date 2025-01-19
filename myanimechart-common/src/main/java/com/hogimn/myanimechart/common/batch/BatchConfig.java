@@ -9,6 +9,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class BatchConfig {
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(ThreadPoolTaskSchedulerBuilder builder) {
-        return builder.build();
+        return builder
+                .poolSize(2)
+                .threadNamePrefix("batch-")
+                .build();
     }
 }

@@ -78,4 +78,9 @@ public class AnimeService {
         List<AnimeDao> animeDaos = animeRepository.findAllByTitleContaining(keyword);
         return animeDaos.stream().map(Anime::from).collect(Collectors.toList());
     }
+
+    public List<Anime> getAiringAnime() {
+        return animeRepository.findAiringAnime("currently_airing", "finished_airing")
+                .stream().map(Anime::from).collect(Collectors.toList());
+    }
 }

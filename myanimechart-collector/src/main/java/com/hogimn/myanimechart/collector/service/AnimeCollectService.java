@@ -43,6 +43,7 @@ public class AnimeCollectService {
             while (animePaginatedIterator.hasNext()) {
                 try {
                     dev.katsute.mal4j.anime.Anime katsuteAnime = animePaginatedIterator.next();
+                    Thread.sleep(1000);
                     Anime anime = Anime.from(katsuteAnime);
 
                     if (anime.getYear() != year || !Objects.equals(anime.getSeason(), season)) {

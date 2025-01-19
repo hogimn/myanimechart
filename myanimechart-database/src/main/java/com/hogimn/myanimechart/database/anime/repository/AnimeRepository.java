@@ -20,7 +20,10 @@ public interface AnimeRepository extends JpaRepository<AnimeDao, Long> {
                                                                 Integer nextYear, String nextSeason,
                                                                 String currentlyAiring, String finishedAiring);
 
-    List<AnimeDao> findAllByTitleStartingWith(String title);
+    @Query("SELECT a FROM AnimeDao a" +
+            " WHERE a.airStatus = :currentlyAiring OR" +
+            " (a.airStatus = :finishedAiring AND EXTRACT(MONTH FROM a.finishedAt) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP))")
+    List<AnimeDao> findAiringAnime(String currentlyAiring, String finishedAiring);
 
     List<AnimeDao> findAllByTitleContaining(String title);
 }
