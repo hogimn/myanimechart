@@ -65,7 +65,7 @@ public class PollCollectService {
         animeList.forEach(animeDao -> {
             try {
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
-                        .withQuery(animeDao.getTitle() + "Poll Episode Discussion")
+                        .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
                         .searchAll();
 
                 while (forumTopicPaginatedIterator.hasNext()) {
@@ -86,8 +86,20 @@ public class PollCollectService {
                         break;
                     }
 
-                    if (!topicTitle.startsWith(animeDao.getTitle() + " Episode")) {
-                        log.info("Topic name does not start with anime title + episode. topic: {},  anime: {}",
+                    if (checkMangaTopic(topicTitle)) {
+                        log.info("Topic name is manga discussion. topic: {},  anime: {}",
+                                forumTopic.getTitle(), animeDao.getTitle());
+                        break;
+                    }
+
+                    if (!topicTitle.contains(animeDao.getTitle())) {
+                        log.info("Topic name does not contain anime title. topic: {},  anime: {}",
+                                forumTopic.getTitle(), animeDao.getTitle());
+                        break;
+                    }
+
+                    if (!topicTitle.startsWith(animeDao.getTitle())) {
+                        log.info("Topic name does not start with anime title. topic: {},  anime: {}",
                                 forumTopic.getTitle(), animeDao.getTitle());
                         continue;
                     }
@@ -129,5 +141,12 @@ public class PollCollectService {
                 log.error("Failed to forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
             }
         });
+    }
+
+    private boolean checkMangaTopic(String topicTitle) {
+        String regex = "Chapter \\d+ Discussion";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(topicTitle);
+        return matcher.find();
     }
 }
