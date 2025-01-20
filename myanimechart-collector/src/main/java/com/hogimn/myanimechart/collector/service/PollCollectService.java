@@ -65,7 +65,7 @@ public class PollCollectService {
         animeList.forEach(animeDao -> {
             try {
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
-                        .withQuery(animeDao.getTitle() + " Episode")
+                        .withQuery(animeDao.getTitle() + "Poll Episode Discussion")
                         .searchAll();
 
                 while (forumTopicPaginatedIterator.hasNext()) {
@@ -80,8 +80,15 @@ public class PollCollectService {
                     Long topicId = forumTopic.getID();
                     String topicTitle = forumTopic.getTitle();
 
+                    if (!topicTitle.startsWith(animeDao.getTitle().split(" ")[0])) {
+                        log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
+                                forumTopic.getTitle(), animeDao.getTitle());
+                        break;
+                    }
+
                     if (!topicTitle.startsWith(animeDao.getTitle() + " Episode")) {
-                        log.info("Topic name does not start with anime title. topic: {},  anime: {}", forumTopic.getTitle(), animeDao.getTitle());
+                        log.info("Topic name does not start with anime title + episode. topic: {},  anime: {}",
+                                forumTopic.getTitle(), animeDao.getTitle());
                         continue;
                     }
 
@@ -89,6 +96,8 @@ public class PollCollectService {
                         log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
                         continue;
                     }
+
+                    log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
                     dev.katsute.mal4j.forum.property.Poll katsutePoll = forumTopicDetail.getPoll();

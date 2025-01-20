@@ -36,6 +36,6 @@ public class PollCollectorJob {
     }
 
     public void collectPollStat(String batchJobName) {
-//        forumTopicCollectService.collectPollStatistics(batchJobName);
+        forumTopicCollectService.collectPollStatistics(batchJobName);
     }
 }
