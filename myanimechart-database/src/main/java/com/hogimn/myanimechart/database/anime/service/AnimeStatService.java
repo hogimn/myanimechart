@@ -21,12 +21,12 @@ public class AnimeStatService {
         this.animeService = animeService;
     }
 
-    public void saveAnimeStat(AnimeDao anime) {
-        if (anime == null) {
+    public void saveAnimeStat(AnimeDao animeDao) {
+        if (animeDao == null) {
             return;
         }
 
-        AnimeStatDao animeStatDao = AnimeStatDao.from(anime);
+        AnimeStatDao animeStatDao = AnimeStatDao.from(animeDao);
         animeStatRepository.save(animeStatDao);
     }
 

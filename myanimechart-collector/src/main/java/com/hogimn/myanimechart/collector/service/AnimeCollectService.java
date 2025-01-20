@@ -48,7 +48,8 @@ public class AnimeCollectService {
 
                     if (!animeIdSet.contains(anime.getID())) {
                         animeIdSet.add(anime.getID());
-                        animeService.upsertAnime(anime, year, season);
+                        AnimeDao saved = animeService.upsertAnime(anime, year, season);
+                        animeStatService.saveAnimeStat(saved);
                     } else {
                         log.warn("Anime Id Duplicate: {}", anime);
                     }
@@ -100,7 +101,8 @@ public class AnimeCollectService {
         for (AnimeDao animeDao : animeDaos) {
             try {
                 Anime anime = getAnime(animeDao.getId());
-                animeService.upsertAnime(anime, animeDao.getYear(), animeDao.getSeason());
+                AnimeDao saved = animeService.upsertAnime(anime, animeDao.getYear(), animeDao.getSeason());
+                animeStatService.saveAnimeStat(saved);
             } catch (Exception e) {
                 log.error("Failed to collect anime statistics for anime '{}': {}", animeDao.getId(), e.getMessage(), e);
             }

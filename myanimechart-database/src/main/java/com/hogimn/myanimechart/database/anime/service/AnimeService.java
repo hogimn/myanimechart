@@ -22,22 +22,22 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public void upsertAnime(Anime anime, int year, String season) {
+    public AnimeDao upsertAnime(Anime anime, int year, String season) {
         if (anime == null) {
-            return;
+            return null;
         }
 
         AnimeDao animeDao = AnimeDao.from(anime);
         if (animeDao.getYear() != year || !Objects.equals(animeDao.getSeason(), season)) {
             log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
                     animeDao.getTitle(), animeDao.getYear(), year, animeDao.getSeason(), season);
-            return;
+            return null;
         }
 
         if (animeDao.getScore() == 0.0) {
             log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
                     animeDao.getTitle(), animeDao.getScore());
-            return;
+            return null;
         }
 
         Optional<AnimeDao> optional = animeRepository.findById(animeDao.getId());
@@ -48,12 +48,13 @@ public class AnimeService {
             animeDao.setUpdatedAt(DateUtil.now());
             AnimeDao saved = animeRepository.save(animeDao);
             log.info("Updated anime: {}", saved);
-            return;
+            return saved;
         }
 
         animeDao.setCreatedAt(DateUtil.now());
         AnimeDao saved = animeRepository.save(animeDao);
         log.info("Inserted new anime: {}", saved);
+        return saved;
     }
 
     public AnimeDao getAnimeDaoByTitle(String title) {
