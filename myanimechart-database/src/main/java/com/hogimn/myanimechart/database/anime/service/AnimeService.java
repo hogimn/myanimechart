@@ -4,12 +4,10 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
-import dev.katsute.mal4j.anime.Anime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,26 +20,14 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public AnimeDao upsertAnime(Anime anime, int year, String season) {
-        if (anime == null) {
+    public AnimeDao upsertAnime(AnimeDto animeDto) {
+        if (animeDto == null) {
             return null;
         }
 
-        AnimeDao animeDao = AnimeDao.from(anime);
-        if (animeDao.getYear() != year || !Objects.equals(animeDao.getSeason(), season)) {
-            log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
-                    animeDao.getTitle(), animeDao.getYear(), year, animeDao.getSeason(), season);
-            return null;
-        }
-
-        if (animeDao.getScore() == 0.0) {
-            log.info("Skipping anime '{}': Score {} (expected: > 0.0)",
-                    animeDao.getTitle(), animeDao.getScore());
-            return null;
-        }
-
-        Optional<AnimeDao> optional = animeRepository.findById(animeDao.getId());
+        Optional<AnimeDao> optional = animeRepository.findById(animeDto.getId());
         if (optional.isPresent()) {
+            AnimeDao animeDao = optional.get();
             if (animeDao.getFinishedAt() != null) {
                 animeDao.setFinishedAt(null);
             }
@@ -51,6 +37,7 @@ public class AnimeService {
             return saved;
         }
 
+        AnimeDao animeDao = AnimeDao.from(animeDto);
         animeDao.setCreatedAt(DateUtil.now());
         AnimeDao saved = animeRepository.save(animeDao);
         log.info("Inserted new anime: {}", saved);

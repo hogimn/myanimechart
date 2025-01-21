@@ -1,7 +1,10 @@
-package com.hogimn.myanimechart.collector.service;
+package com.hogimn.myanimechart.execute.service;
 
+import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
+import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.PollOptionService;
 import com.hogimn.myanimechart.database.anime.service.PollService;
@@ -10,6 +13,8 @@ import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
+import dev.katsute.mal4j.forum.property.Poll;
+import dev.katsute.mal4j.forum.property.PollOption;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -26,16 +31,20 @@ public class PollCollectService {
     private final MyAnimeList myAnimeList;
     private final PollOptionService pollOptionService;
     private final PollService pollService;
+    private final ServiceRegistryService serviceRegistryService;
 
     public PollCollectService(
             AnimeService animeService,
             MyAnimeList myAnimeList,
             PollOptionService pollOptionService,
-            PollService pollService) {
+            PollService pollService,
+            ServiceRegistryService serviceRegistryService
+    ) {
         this.animeService = animeService;
         this.myAnimeList = myAnimeList;
         this.pollOptionService = pollOptionService;
         this.pollService = pollService;
+        this.serviceRegistryService = serviceRegistryService;
     }
 
     private int getEpisodeFromTopicTitle(String topicTitle) {
@@ -61,8 +70,8 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
-        List<AnimeDao> animeList = animeService.getAiringAnime();
-        animeList.forEach(animeDao -> {
+        List<AnimeDao> animeDaos = animeService.getAiringAnime();
+        animeDaos.forEach(animeDao -> {
             try {
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
                         .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
@@ -112,8 +121,8 @@ public class PollCollectService {
                     log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
-                    dev.katsute.mal4j.forum.property.Poll katsutePoll = forumTopicDetail.getPoll();
-                    dev.katsute.mal4j.forum.property.PollOption[] options = katsutePoll.getOptions();
+                    Poll katsutePoll = forumTopicDetail.getPoll();
+                    PollOption[] options = katsutePoll.getOptions();
 
                     if (options == null || options.length == 0) {
                         log.info("No poll options found for topicId: {}", topicId);
@@ -126,12 +135,21 @@ public class PollCollectService {
                         continue;
                     }
 
-                    for (dev.katsute.mal4j.forum.property.PollOption option : options) {
+                    for (PollOption option : options) {
                         try {
                             int votes = option.getVotes();
                             String text = option.getText();
                             PollOptionDao pollOptionDao = pollOptionService.getPollOptionDao(text);
-                            pollService.upsertPoll(animeDao, pollOptionDao, topicId, topicTitle, votes, episode);
+
+                            PollDto pollDto = new PollDto();
+                            pollDto.setPollId(pollOptionDao.getId());
+                            pollDto.setAnimeId(animeDao.getId());
+                            pollDto.setTopicId(topicId);
+                            pollDto.setTitle(topicTitle);
+                            pollDto.setEpisode(episode);
+                            pollDto.setVotes(votes);
+
+                            serviceRegistryService.send(RegisteredService.EXECUTE, "/poll/savePoll", pollDto);
                         } catch (Exception e) {
                             log.error(e.getMessage(), e);
                         }

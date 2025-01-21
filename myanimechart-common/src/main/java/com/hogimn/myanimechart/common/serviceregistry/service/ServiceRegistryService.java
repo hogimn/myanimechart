@@ -40,8 +40,7 @@ public class ServiceRegistryService {
         }
     }
 
-    public void
-    send(RegisteredService service, String endpoint, String body) {
+    public void send(RegisteredService service, String endpoint, String body) {
         try {
             String serviceUrl = getServiceUrl(service);
             if (serviceUrl != null) {
@@ -51,6 +50,25 @@ public class ServiceRegistryService {
                 headers.setContentType(MediaType.TEXT_PLAIN);
 
                 HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+                restTemplate.exchange(fullUrl, HttpMethod.POST, entity, Void.class);
+                log.info("Data sent to {}: {}", service, body);
+            }
+        } catch (Exception e) {
+            log.error("Error sending data to service {}: {}", service.toString(), e.getMessage(), e);
+        }
+    }
+
+    public void send(RegisteredService service, String endpoint, Object body) {
+        try {
+            String serviceUrl = getServiceUrl(service);
+            if (serviceUrl != null) {
+                String fullUrl = serviceUrl + "/" + endpoint;
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                HttpEntity<Object> entity = new HttpEntity<>(body, headers);
 
                 restTemplate.exchange(fullUrl, HttpMethod.POST, entity, Void.class);
                 log.info("Data sent to {}: {}", service, body);

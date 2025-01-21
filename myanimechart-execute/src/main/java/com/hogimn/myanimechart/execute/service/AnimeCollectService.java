@@ -1,9 +1,11 @@
-package com.hogimn.myanimechart.collector.service;
+package com.hogimn.myanimechart.execute.service;
 
+import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
+import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
-import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
 import com.hogimn.myanimechart.database.batch.aop.annotation.SaveBatchHistory;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
@@ -16,40 +18,57 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
 @Slf4j
 public class AnimeCollectService {
     private final AnimeService animeService;
-    private final AnimeStatService animeStatService;
     private final MyAnimeList myAnimeList;
+    private final ServiceRegistryService serviceRegistryService;
 
     public AnimeCollectService(
             AnimeService animeService,
-            AnimeStatService animeStatService,
-            MyAnimeList myAnimeList) {
+            MyAnimeList myAnimeList,
+            ServiceRegistryService serviceRegistryService
+    ) {
         this.animeService = animeService;
-        this.animeStatService = animeStatService;
         this.myAnimeList = myAnimeList;
+        this.serviceRegistryService = serviceRegistryService;
     }
 
     public void collectAnime(int year, String season) {
         Set<Long> animeIdSet = new HashSet<>();
 
         try {
-            PaginatedIterator<dev.katsute.mal4j.anime.Anime> animePaginatedIterator =
+            PaginatedIterator<Anime> animePaginatedIterator =
                     myAnimeList.getAnimeSeason(year, getSeason(season)).searchAll();
 
             while (animePaginatedIterator.hasNext()) {
                 try {
-                    dev.katsute.mal4j.anime.Anime anime = animePaginatedIterator.next();
+                    Anime anime = animePaginatedIterator.next();
                     Thread.sleep(2000);
+
+                    if (anime.getStartSeason().getYear() != year ||
+                            !Objects.equals(anime.getStartSeason().getSeason().field(), season)) {
+                        log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
+                                anime.getTitle(), anime.getStartSeason().getYear(), year,
+                                anime.getStartSeason().getSeason().field(), season);
+                        continue;
+                    }
+
+                    double score = anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0;
+                    if (anime.getMeanRating() == 0.0) {
+                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)", anime.getTitle(), score);
+                        continue;
+                    }
 
                     if (!animeIdSet.contains(anime.getID())) {
                         animeIdSet.add(anime.getID());
-                        AnimeDao saved = animeService.upsertAnime(anime, year, season);
-                        animeStatService.saveAnimeStat(saved);
+                        AnimeDto animeDto = AnimeDto.from(anime);
+                        serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+                        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeDto);
                     } else {
                         log.warn("Anime Id Duplicate: {}", anime);
                     }
@@ -101,8 +120,9 @@ public class AnimeCollectService {
         for (AnimeDao animeDao : animeDaos) {
             try {
                 Anime anime = getAnime(animeDao.getId());
-                AnimeDao saved = animeService.upsertAnime(anime, animeDao.getYear(), animeDao.getSeason());
-                animeStatService.saveAnimeStat(saved);
+                AnimeDto animeDto = AnimeDto.from(anime);
+                serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+                serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeDto);
             } catch (Exception e) {
                 log.error("Failed to collect anime statistics for anime '{}': {}", animeDao.getId(), e.getMessage(), e);
             }

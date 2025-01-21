@@ -1,6 +1,10 @@
 package com.hogimn.myanimechart.database.anime.dto;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
+import dev.katsute.mal4j.anime.Anime;
+import dev.katsute.mal4j.property.Genre;
+import dev.katsute.mal4j.property.IDN;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -68,4 +73,39 @@ public class AnimeDto {
         return anime;
     }
 
+    public static AnimeDto from(Anime katsuteAnime) {
+        AnimeDto anime = new AnimeDto();
+        anime.setId(katsuteAnime.getID());
+        anime.setTitle(katsuteAnime.getTitle());
+        anime.setSeason(katsuteAnime.getStartSeason().getSeason().field());
+        anime.setImage(katsuteAnime.getMainPicture().getMediumURL());
+        anime.setLink("https://myanimelist.net/anime/" + katsuteAnime.getID());
+        anime.setScore(katsuteAnime.getMeanRating() != null ? katsuteAnime.getMeanRating().doubleValue() : 0.0);
+        anime.setMembers(katsuteAnime.getUserListingCount());
+        anime.setYear(katsuteAnime.getStartSeason().getYear());
+        anime.setSource(katsuteAnime.getSource().field());
+        anime.setGenre(Arrays.stream(katsuteAnime.getGenres()).map(Genre::getName).toList());
+        anime.setStudios(Arrays.stream(katsuteAnime.getStudios()).map(IDN::getName).toList());
+        anime.setRank(katsuteAnime.getRank());
+        anime.setPopularity(katsuteAnime.getPopularity());
+        anime.setScoringCount(katsuteAnime.getUserScoringCount());
+        anime.setEpisodes(katsuteAnime.getEpisodes());
+        anime.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
+                katsuteAnime.getStatus().field() : katsuteAnime.getRawStatus());
+        anime.setTitle(katsuteAnime.getTitle());
+        anime.setType(!Objects.equals(katsuteAnime.getType().field(), "") ?
+                katsuteAnime.getType().field() : katsuteAnime.getRawType());
+
+        if (anime.getAirStatus().equals("finished_airing")) {
+            anime.setFinishedAt(DateUtil.now());
+        }
+
+        anime.setStartDate(katsuteAnime.getStartDate() != null ? katsuteAnime.getStartDate().getDate() : null);
+        anime.setEndDate(katsuteAnime.getEndDate() != null ? katsuteAnime.getEndDate().getDate() : null);
+        anime.setEnglishTitle(katsuteAnime.getAlternativeTitles().getEnglish());
+        anime.setJapaneseTitle(katsuteAnime.getAlternativeTitles().getJapanese());
+        anime.setSynopsis(katsuteAnime.getSynopsis());
+
+        return anime;
+    }
 }

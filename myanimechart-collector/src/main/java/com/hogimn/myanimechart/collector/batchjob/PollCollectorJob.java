@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.collector.batchjob;
 
-import com.hogimn.myanimechart.collector.service.PollCollectService;
+import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
 import com.hogimn.myanimechart.database.batch.domain.Batch;
 import com.hogimn.myanimechart.database.batch.service.BatchService;
 import jakarta.annotation.PostConstruct;
@@ -12,17 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class PollCollectorJob {
-    private final PollCollectService forumTopicCollectService;
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final ServiceRegistryService serviceRegistryService;
 
     public PollCollectorJob(
-            PollCollectService forumCollectService,
             BatchService batchService,
-            ThreadPoolTaskScheduler threadPoolTaskScheduler) {
-        this.forumTopicCollectService = forumCollectService;
+            ThreadPoolTaskScheduler threadPoolTaskScheduler,
+            ServiceRegistryService serviceRegistryService
+    ) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+        this.serviceRegistryService = serviceRegistryService;
     }
 
     @PostConstruct
@@ -36,6 +38,6 @@ public class PollCollectorJob {
     }
 
     public void collectPollStat(String batchJobName) {
-        forumTopicCollectService.collectPollStatistics(batchJobName);
+        serviceRegistryService.send(RegisteredService.EXECUTE, "/collect/collectPollStatistics", batchJobName);
     }
 }

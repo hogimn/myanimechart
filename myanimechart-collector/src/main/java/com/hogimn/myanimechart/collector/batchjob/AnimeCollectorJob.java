@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.collector.batchjob;
 
-import com.hogimn.myanimechart.collector.service.AnimeCollectService;
+import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
 import com.hogimn.myanimechart.database.batch.domain.Batch;
 import com.hogimn.myanimechart.database.batch.service.BatchService;
 import jakarta.annotation.PostConstruct;
@@ -12,17 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AnimeCollectorJob {
-    private final AnimeCollectService animeCollectService;
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final ServiceRegistryService serviceRegistryService;
 
     public AnimeCollectorJob(
-            AnimeCollectService animeCollectService,
             BatchService batchService,
-            ThreadPoolTaskScheduler threadPoolTaskScheduler) {
-        this.animeCollectService = animeCollectService;
+            ThreadPoolTaskScheduler threadPoolTaskScheduler,
+            ServiceRegistryService serviceRegistryService
+    ) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+        this.serviceRegistryService = serviceRegistryService;
     }
 
     @PostConstruct
@@ -36,6 +38,6 @@ public class AnimeCollectorJob {
     }
 
     public void collectAnimeAndAnimeStat(String batchJobName) {
-        animeCollectService.collectAnimeStatistics(batchJobName);
+        serviceRegistryService.send(RegisteredService.EXECUTE, "/collect/collectAnimeStatistics", batchJobName);
     }
 }

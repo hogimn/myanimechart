@@ -24,4 +24,13 @@ public class PollOptionService {
             throw new IllegalArgumentException("PollOption not found (" + text + ")");
         }
     }
+
+    public PollOptionDao getPollOptionDaoById(int id) {
+        Optional<PollOptionDao> option = pollOptionRepository.findById(id);
+        if (option.isPresent()) {
+            return option.get();
+        } else {
+            throw new IllegalArgumentException("PollOption not found (" + id + ")");
+        }
+    }
 }

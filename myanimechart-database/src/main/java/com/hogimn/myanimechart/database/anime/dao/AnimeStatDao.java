@@ -2,7 +2,13 @@ package com.hogimn.myanimechart.database.anime.dao;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.key.AnimeStatId;
-import jakarta.persistence.*;
+import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,7 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "anime_stat")
 @Data
 @IdClass(AnimeStatId.class)
-public class AnimeStatDao {
+public class
+AnimeStatDao {
     @Id
     @ManyToOne
     @JoinColumn(name = "anime_id", referencedColumnName = "id")
@@ -26,15 +33,15 @@ public class AnimeStatDao {
     @Id
     private LocalDateTime recordedAt;
 
-    public static AnimeStatDao from(AnimeDao anime) {
+    public static AnimeStatDao from(AnimeDto animeDto) {
         AnimeStatDao animeDao = new AnimeStatDao();
-        animeDao.anime = anime;
-        animeDao.members = anime.getMembers();
-        animeDao.score = anime.getScore();
+        animeDao.anime = AnimeDao.from(animeDto);
+        animeDao.members = animeDto.getMembers();
+        animeDao.score = animeDto.getScore();
         animeDao.recordedAt = DateUtil.now();
-        animeDao.popularity = anime.getPopularity();
-        animeDao.scoringCount = anime.getScoringCount();
-        animeDao.rank = anime.getRank();
+        animeDao.popularity = animeDto.getPopularity();
+        animeDao.scoringCount = animeDto.getScoringCount();
+        animeDao.rank = animeDto.getRank();
         return animeDao;
     }
 }

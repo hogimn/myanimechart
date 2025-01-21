@@ -22,6 +22,7 @@
         <module>myanimechart-database</module>
         <module>myanimechart-serviceregistry</module>
         <module>myanimechart-gateway</module>
+        <module>myanimechart-execute</module>
     </modules>
 
     <properties>

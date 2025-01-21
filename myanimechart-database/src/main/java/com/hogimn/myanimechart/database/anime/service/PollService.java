@@ -4,6 +4,7 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.PollDao;
 import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
+import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.repository.PollRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,34 +16,45 @@ import java.util.Optional;
 @Slf4j
 public class PollService {
     private final PollRepository pollRepository;
+    private final AnimeService animeService;
+    private final PollOptionService pollOptionService;
 
-    public PollService(PollRepository pollRepository) {
+    public PollService(
+            PollRepository pollRepository,
+            AnimeService animeService,
+            PollOptionService pollOptionService
+    ) {
         this.pollRepository = pollRepository;
+        this.animeService = animeService;
+        this.pollOptionService = pollOptionService;
     }
 
-    public void upsertPoll(AnimeDao animeDao, PollOptionDao pollOptionDao, long topicId, String topicTitle, int votes, int episode) {
-        Optional<PollDao> optional = pollRepository.findByAnimeAndPollOptionAndTopicId(animeDao, pollOptionDao, topicId);
+    public void upsertPoll(PollDto pollDto) {
+        AnimeDao animeDao = animeService.getAnimeDaoById(pollDto.getAnimeId());
+        PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(pollDto.getPollId());
+        Optional<PollDao> optional = pollRepository
+                .findByAnimeAndPollOptionAndTopicId(animeDao, pollOptionDao, pollDto.getTopicId());
         LocalDateTime now = DateUtil.now();
         if (optional.isPresent()) {
             PollDao found = optional.get();
             found.setAnime(animeDao);
             found.setPollOption(pollOptionDao);
-            found.setTopicId(topicId);
-            found.setTitle(topicTitle);
-            found.setVotes(votes);
+            found.setTopicId(pollDto.getTopicId());
+            found.setTitle(pollDto.getTitle());
+            found.setVotes(pollDto.getVotes());
             found.setUpdatedAt(now);
-            found.setEpisode(episode);
+            found.setEpisode(pollDto.getEpisode());
             PollDao save = pollRepository.save(found);
             log.info("Updated existing poll: {}", save);
         } else {
             PollDao newPoll = new PollDao();
             newPoll.setAnime(animeDao);
             newPoll.setPollOption(pollOptionDao);
-            newPoll.setTopicId(topicId);
-            newPoll.setTitle(topicTitle);
-            newPoll.setVotes(votes);
+            newPoll.setTopicId(pollDto.getTopicId());
+            newPoll.setTitle(pollDto.getTitle());
+            newPoll.setVotes(pollDto.getVotes());
             newPoll.setCreatedAt(now);
-            newPoll.setEpisode(episode);
+            newPoll.setEpisode(pollDto.getEpisode());
             PollDao save = pollRepository.save(newPoll);
             log.info("Inserted new poll: {}", save);
         }
