@@ -121,6 +121,7 @@ public class AnimeCollectService {
         for (AnimeDao animeDao : animeDaos) {
             try {
                 Anime anime = getAnime(animeDao.getId());
+                Thread.sleep(2000);
                 AnimeDto animeDto = AnimeDto.from(anime);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeDto);
