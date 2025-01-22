@@ -59,7 +59,7 @@ public class AnimeCollectService {
                     }
 
                     double score = anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0;
-                    if (anime.getMeanRating() == 0.0) {
+                    if (score == 0.0) {
                         log.info("Skipping anime '{}': Score {} (expected: > 0.0)", anime.getTitle(), score);
                         continue;
                     }
@@ -100,7 +100,6 @@ public class AnimeCollectService {
         };
     }
 
-    @Transactional
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {

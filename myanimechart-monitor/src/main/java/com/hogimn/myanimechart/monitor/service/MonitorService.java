@@ -28,7 +28,6 @@ public class MonitorService {
         this.alarmServices = alarmServices;
     }
 
-    @Transactional
     @SaveBatchHistory(value = "#batchJobName", saveDirectly = true)
     @SchedulerLock(name = "checkBatchNotExecuted")
     public void checkBatchNotExecuted(String batchJobName) {

@@ -5,6 +5,7 @@ import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeStatRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class AnimeStatService {
         this.animeService = animeService;
     }
 
+    @Transactional
     public void saveAnimeStat(AnimeDto animeDto) {
         if (animeDto == null) {
             return;

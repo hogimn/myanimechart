@@ -66,14 +66,15 @@ public class AnimeDao {
         animeDao.setEpisodes(anime.getEpisodes());
         animeDao.setAirStatus(!Objects.equals(anime.getStatus().field(), "") ?
                 anime.getStatus().field() : anime.getRawStatus());
-        animeDao.setTitle(anime.getTitle());
-        animeDao.setType(!Objects.equals(anime.getType().field(), "") ?
-                anime.getType().field() : anime.getRawType());
 
-        if (animeDao.getAirStatus().equals("finished_airing")) {
+        if (animeDao.getAirStatus() != null &&
+                animeDao.getAirStatus().equals("finished_airing")) {
             animeDao.setFinishedAt(DateUtil.now());
         }
 
+        animeDao.setTitle(anime.getTitle());
+        animeDao.setType(!Objects.equals(anime.getType().field(), "") ?
+                anime.getType().field() : anime.getRawType());
         animeDao.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
         animeDao.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
         animeDao.setEnglishTitle(anime.getAlternativeTitles().getEnglish());

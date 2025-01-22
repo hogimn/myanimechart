@@ -66,7 +66,6 @@ public class PollCollectService {
         }
     }
 
-    @Transactional
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {

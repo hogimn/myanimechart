@@ -4,6 +4,7 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,10 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public AnimeDao upsertAnime(AnimeDto animeDto) {
+    @Transactional
+    public void upsertAnime(AnimeDto animeDto) {
         if (animeDto == null) {
-            return null;
+            return;
         }
 
         Optional<AnimeDao> optional = animeRepository.findById(animeDto.getId());
@@ -34,14 +36,12 @@ public class AnimeService {
             animeDao.setUpdatedAt(DateUtil.now());
             AnimeDao saved = animeRepository.save(animeDao);
             log.info("Updated anime: {}", saved);
-            return saved;
         }
 
         AnimeDao animeDao = AnimeDao.from(animeDto);
         animeDao.setCreatedAt(DateUtil.now());
         AnimeDao saved = animeRepository.save(animeDao);
         log.info("Inserted new anime: {}", saved);
-        return saved;
     }
 
     public AnimeDao getAnimeDaoByTitle(String title) {

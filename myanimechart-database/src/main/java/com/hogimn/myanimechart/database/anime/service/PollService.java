@@ -6,6 +6,7 @@ import com.hogimn.myanimechart.database.anime.dao.PollDao;
 import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.repository.PollRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class PollService {
         this.pollOptionService = pollOptionService;
     }
 
+    @Transactional
     public void upsertPoll(PollDto pollDto) {
         AnimeDao animeDao = animeService.getAnimeDaoById(pollDto.getAnimeId());
         PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(pollDto.getPollOptionId());
