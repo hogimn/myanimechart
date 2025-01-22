@@ -99,4 +99,9 @@ public class AnimeService {
     public List<AnimeDao> getAiringAnime() {
         return animeRepository.findAiringAnime("currently_airing", "finished_airing");
     }
+
+    @Transactional
+    public AnimeDao getAnimeDaoByIdWithLock(Long animeId) {
+        return animeRepository.findByIdWithLock(animeId);
+    }
 }

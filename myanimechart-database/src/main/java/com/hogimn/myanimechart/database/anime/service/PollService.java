@@ -32,7 +32,7 @@ public class PollService {
 
     @Transactional
     public void upsertPoll(PollDto pollDto) {
-        AnimeDao animeDao = animeService.getAnimeDaoById(pollDto.getAnimeId());
+        AnimeDao animeDao = animeService.getAnimeDaoByIdWithLock(pollDto.getAnimeId());
         PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(pollDto.getPollOptionId());
         Optional<PollDao> optional = pollRepository
                 .findByAnimeAndPollOptionAndTopicId(animeDao, pollOptionDao, pollDto.getTopicId());
@@ -48,17 +48,18 @@ public class PollService {
             found.setEpisode(pollDto.getEpisode());
             PollDao save = pollRepository.save(found);
             log.info("Updated existing poll: {}", save);
-        } else {
-            PollDao newPoll = new PollDao();
-            newPoll.setAnime(animeDao);
-            newPoll.setPollOption(pollOptionDao);
-            newPoll.setTopicId(pollDto.getTopicId());
-            newPoll.setTitle(pollDto.getTitle());
-            newPoll.setVotes(pollDto.getVotes());
-            newPoll.setCreatedAt(now);
-            newPoll.setEpisode(pollDto.getEpisode());
-            PollDao save = pollRepository.save(newPoll);
-            log.info("Inserted new poll: {}", save);
+            return;
         }
+
+        PollDao newPoll = new PollDao();
+        newPoll.setAnime(animeDao);
+        newPoll.setPollOption(pollOptionDao);
+        newPoll.setTopicId(pollDto.getTopicId());
+        newPoll.setTitle(pollDto.getTitle());
+        newPoll.setVotes(pollDto.getVotes());
+        newPoll.setCreatedAt(now);
+        newPoll.setEpisode(pollDto.getEpisode());
+        PollDao save = pollRepository.save(newPoll);
+        log.info("Inserted new poll: {}", save);
     }
 }
