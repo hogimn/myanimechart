@@ -23,7 +23,7 @@ public class PollDao {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "poll_id", referencedColumnName = "id")
+    @JoinColumn(name = "poll_option_id", referencedColumnName = "id")
     private PollOptionDao pollOption;
 
     @Id

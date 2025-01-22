@@ -1,0 +1,1 @@
+ALTER TABLE poll RENAME COLUMN poll_id TO poll_option_id;

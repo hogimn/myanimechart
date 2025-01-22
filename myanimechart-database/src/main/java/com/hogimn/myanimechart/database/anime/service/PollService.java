@@ -31,7 +31,7 @@ public class PollService {
 
     public void upsertPoll(PollDto pollDto) {
         AnimeDao animeDao = animeService.getAnimeDaoById(pollDto.getAnimeId());
-        PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(pollDto.getPollId());
+        PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(pollDto.getPollOptionId());
         Optional<PollDao> optional = pollRepository
                 .findByAnimeAndPollOptionAndTopicId(animeDao, pollOptionDao, pollDto.getTopicId());
         LocalDateTime now = DateUtil.now();

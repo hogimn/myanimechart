@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PollDto {
     private Long animeId;
-    private Integer pollId;
+    private Integer pollOptionId;
     private Long topicId;
     private Integer episode;
     private String title;

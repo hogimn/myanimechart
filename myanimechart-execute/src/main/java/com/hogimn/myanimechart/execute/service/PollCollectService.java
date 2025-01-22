@@ -142,7 +142,7 @@ public class PollCollectService {
                             PollOptionDao pollOptionDao = pollOptionService.getPollOptionDao(text);
 
                             PollDto pollDto = new PollDto();
-                            pollDto.setPollId(pollOptionDao.getId());
+                            pollDto.setPollOptionId(pollOptionDao.getId());
                             pollDto.setAnimeId(animeDao.getId());
                             pollDto.setTopicId(topicId);
                             pollDto.setTitle(topicTitle);
