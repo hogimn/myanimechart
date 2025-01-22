@@ -75,4 +75,31 @@ public class AnimeDao {
         anime.setSynopsis(animeDto.getSynopsis());
         return anime;
     }
+
+    public void setFrom(AnimeDto animeDto) {
+        this.setId(animeDto.getId());
+        this.setTitle(animeDto.getTitle());
+        this.setSeason(animeDto.getSeason());
+        this.setImage(animeDto.getImage());
+        this.setLink(animeDto.getLink());
+        this.setScore(animeDto.getScore());
+        this.setMembers(animeDto.getMembers());
+        this.setYear(animeDto.getYear());
+        this.setSource(animeDto.getSource());
+        this.setGenre(String.join(", ", animeDto.getGenre()));
+        this.setStudios(String.join(", ", animeDto.getStudios()));
+        this.setRank(animeDto.getRank());
+        this.setPopularity(animeDto.getPopularity());
+        this.setScoringCount(animeDto.getScoringCount());
+        this.setEpisodes(animeDto.getEpisodes());
+        this.setAirStatus(animeDto.getAirStatus());
+        this.setFinishedAt(animeDto.getFinishedAt());
+        this.setTitle(animeDto.getTitle());
+        this.setType(animeDto.getType());
+        this.setStartDate(animeDto.getStartDate());
+        this.setEndDate(animeDto.getEndDate());
+        this.setEnglishTitle(animeDto.getEnglishTitle());
+        this.setJapaneseTitle(animeDto.getJapaneseTitle());
+        this.setSynopsis(animeDto.getSynopsis());
+    }
 }

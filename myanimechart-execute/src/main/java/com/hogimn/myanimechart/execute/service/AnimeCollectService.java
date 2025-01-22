@@ -123,8 +123,9 @@ public class AnimeCollectService {
                 Anime anime = getAnime(animeDao.getId());
                 Thread.sleep(2000);
                 AnimeDto animeDto = AnimeDto.from(anime);
+                AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
-                serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeDto);
+                serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
             } catch (Exception e) {
                 log.error("Failed to collect anime statistics for anime '{}': {}", animeDao.getId(), e.getMessage(), e);
             }
