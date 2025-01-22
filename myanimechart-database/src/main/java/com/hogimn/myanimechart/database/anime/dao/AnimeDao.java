@@ -47,43 +47,6 @@ public class AnimeDao {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static AnimeDao from(Anime anime) {
-        AnimeDao animeDao = new AnimeDao();
-        animeDao.setId(anime.getID());
-        animeDao.setTitle(anime.getTitle());
-        animeDao.setSeason(anime.getStartSeason().getSeason().field());
-        animeDao.setImage(anime.getMainPicture().getMediumURL());
-        animeDao.setLink("https://myanimelist.net/anime/" + anime.getID());
-        animeDao.setScore(anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0);
-        animeDao.setMembers(anime.getUserListingCount());
-        animeDao.setYear(anime.getStartSeason().getYear());
-        animeDao.setSource(anime.getSource().field());
-        animeDao.setGenre(String.join(", ", Arrays.stream(anime.getGenres()).map(Genre::getName).toList()));
-        animeDao.setStudios(String.join(", ", Arrays.stream(anime.getStudios()).map(IDN::getName).toList()));
-        animeDao.setRank(anime.getRank());
-        animeDao.setPopularity(anime.getPopularity());
-        animeDao.setScoringCount(anime.getUserScoringCount());
-        animeDao.setEpisodes(anime.getEpisodes());
-        animeDao.setAirStatus(!Objects.equals(anime.getStatus().field(), "") ?
-                anime.getStatus().field() : anime.getRawStatus());
-
-        if (animeDao.getAirStatus() != null &&
-                animeDao.getAirStatus().equals("finished_airing")) {
-            animeDao.setFinishedAt(DateUtil.now());
-        }
-
-        animeDao.setTitle(anime.getTitle());
-        animeDao.setType(!Objects.equals(anime.getType().field(), "") ?
-                anime.getType().field() : anime.getRawType());
-        animeDao.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
-        animeDao.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
-        animeDao.setEnglishTitle(anime.getAlternativeTitles().getEnglish());
-        animeDao.setJapaneseTitle(anime.getAlternativeTitles().getJapanese());
-        animeDao.setSynopsis(anime.getSynopsis());
-
-        return animeDao;
-    }
-
     public static AnimeDao from(AnimeDto animeDto) {
         AnimeDao anime = new AnimeDao();
         anime.setId(animeDto.getId());
@@ -101,20 +64,15 @@ public class AnimeDao {
         anime.setPopularity(animeDto.getPopularity());
         anime.setScoringCount(animeDto.getScoringCount());
         anime.setEpisodes(animeDto.getEpisodes());
-        anime.setAirStatus(anime.getAirStatus());
+        anime.setAirStatus(animeDto.getAirStatus());
+        anime.setFinishedAt(animeDto.getFinishedAt());
         anime.setTitle(animeDto.getTitle());
         anime.setType(animeDto.getType());
-
-        if (anime.getAirStatus().equals("finished_airing")) {
-            anime.setFinishedAt(DateUtil.now());
-        }
-
         anime.setStartDate(animeDto.getStartDate());
         anime.setEndDate(animeDto.getEndDate());
         anime.setEnglishTitle(animeDto.getEnglishTitle());
         anime.setJapaneseTitle(animeDto.getJapaneseTitle());
         anime.setSynopsis(animeDto.getSynopsis());
-
         return anime;
     }
 }

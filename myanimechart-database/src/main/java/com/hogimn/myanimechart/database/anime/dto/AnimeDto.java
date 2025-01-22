@@ -74,38 +74,38 @@ public class AnimeDto {
     }
 
     public static AnimeDto from(Anime katsuteAnime) {
-        AnimeDto anime = new AnimeDto();
-        anime.setId(katsuteAnime.getID());
-        anime.setTitle(katsuteAnime.getTitle());
-        anime.setSeason(katsuteAnime.getStartSeason().getSeason().field());
-        anime.setImage(katsuteAnime.getMainPicture().getMediumURL());
-        anime.setLink("https://myanimelist.net/anime/" + katsuteAnime.getID());
-        anime.setScore(katsuteAnime.getMeanRating() != null ? katsuteAnime.getMeanRating().doubleValue() : 0.0);
-        anime.setMembers(katsuteAnime.getUserListingCount());
-        anime.setYear(katsuteAnime.getStartSeason().getYear());
-        anime.setSource(katsuteAnime.getSource().field());
-        anime.setGenre(Arrays.stream(katsuteAnime.getGenres()).map(Genre::getName).toList());
-        anime.setStudios(Arrays.stream(katsuteAnime.getStudios()).map(IDN::getName).toList());
-        anime.setRank(katsuteAnime.getRank());
-        anime.setPopularity(katsuteAnime.getPopularity());
-        anime.setScoringCount(katsuteAnime.getUserScoringCount());
-        anime.setEpisodes(katsuteAnime.getEpisodes());
-        anime.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
+        AnimeDto animeDto = new AnimeDto();
+        animeDto.setId(katsuteAnime.getID());
+        animeDto.setTitle(katsuteAnime.getTitle());
+        animeDto.setSeason(katsuteAnime.getStartSeason().getSeason().field());
+        animeDto.setImage(katsuteAnime.getMainPicture().getMediumURL());
+        animeDto.setLink("https://myanimelist.net/anime/" + katsuteAnime.getID());
+        animeDto.setScore(katsuteAnime.getMeanRating() != null ? katsuteAnime.getMeanRating().doubleValue() : 0.0);
+        animeDto.setMembers(katsuteAnime.getUserListingCount());
+        animeDto.setYear(katsuteAnime.getStartSeason().getYear());
+        animeDto.setSource(katsuteAnime.getSource().field());
+        animeDto.setGenre(Arrays.stream(katsuteAnime.getGenres()).map(Genre::getName).toList());
+        animeDto.setStudios(Arrays.stream(katsuteAnime.getStudios()).map(IDN::getName).toList());
+        animeDto.setRank(katsuteAnime.getRank());
+        animeDto.setPopularity(katsuteAnime.getPopularity());
+        animeDto.setScoringCount(katsuteAnime.getUserScoringCount());
+        animeDto.setEpisodes(katsuteAnime.getEpisodes());
+        animeDto.setAirStatus(!Objects.equals(katsuteAnime.getStatus().field(), "") ?
                 katsuteAnime.getStatus().field() : katsuteAnime.getRawStatus());
-        anime.setTitle(katsuteAnime.getTitle());
-        anime.setType(!Objects.equals(katsuteAnime.getType().field(), "") ?
+        animeDto.setTitle(katsuteAnime.getTitle());
+        animeDto.setType(!Objects.equals(katsuteAnime.getType().field(), "") ?
                 katsuteAnime.getType().field() : katsuteAnime.getRawType());
 
-        if (anime.getAirStatus().equals("finished_airing")) {
-            anime.setFinishedAt(DateUtil.now());
+        if (Objects.equals(animeDto.getAirStatus(), "finished_airing")) {
+            animeDto.setFinishedAt(DateUtil.now());
         }
 
-        anime.setStartDate(katsuteAnime.getStartDate() != null ? katsuteAnime.getStartDate().getDate() : null);
-        anime.setEndDate(katsuteAnime.getEndDate() != null ? katsuteAnime.getEndDate().getDate() : null);
-        anime.setEnglishTitle(katsuteAnime.getAlternativeTitles().getEnglish());
-        anime.setJapaneseTitle(katsuteAnime.getAlternativeTitles().getJapanese());
-        anime.setSynopsis(katsuteAnime.getSynopsis());
+        animeDto.setStartDate(katsuteAnime.getStartDate() != null ? katsuteAnime.getStartDate().getDate() : null);
+        animeDto.setEndDate(katsuteAnime.getEndDate() != null ? katsuteAnime.getEndDate().getDate() : null);
+        animeDto.setEnglishTitle(katsuteAnime.getAlternativeTitles().getEnglish());
+        animeDto.setJapaneseTitle(katsuteAnime.getAlternativeTitles().getJapanese());
+        animeDto.setSynopsis(katsuteAnime.getSynopsis());
 
-        return anime;
+        return animeDto;
     }
 }
