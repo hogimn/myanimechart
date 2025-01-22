@@ -32,12 +32,12 @@ public class AnimeStatService {
         AnimeDao animeDao = animeService.getAnimeDaoById(animeStatDto.getAnimeId());
         AnimeStatDao animeStatDao = new AnimeStatDao();
         animeStatDao.setAnime(animeDao);
-        animeStatDao.setMembers(animeDao.getMembers());
-        animeStatDao.setScore(animeDao.getScore());
-        animeStatDao.setRecordedAt(DateUtil.now());
-        animeStatDao.setPopularity(animeDao.getPopularity());
-        animeStatDao.setScoringCount(animeDao.getScoringCount());
-        animeStatDao.setRank(animeDao.getRank());
+        animeStatDao.setMembers(animeStatDto.getMembers());
+        animeStatDao.setScore(animeStatDto.getScore());
+        animeStatDao.setRecordedAt(animeStatDto.getRecordedAt());
+        animeStatDao.setPopularity(animeStatDto.getPopularity());
+        animeStatDao.setScoringCount(animeStatDto.getScoringCount());
+        animeStatDao.setRank(animeStatDto.getRank());
 
         animeStatRepository.save(animeStatDao);
     }
