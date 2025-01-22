@@ -40,8 +40,6 @@ public class AnimeCollectService {
     }
 
     public void collectAnime(int year, String season) {
-        Set<Long> animeIdSet = new HashSet<>();
-
         try {
             PaginatedIterator<Anime> animePaginatedIterator =
                     myAnimeList.getAnimeSeason(year, getSeason(season)).searchAll();
@@ -49,7 +47,7 @@ public class AnimeCollectService {
             while (animePaginatedIterator.hasNext()) {
                 try {
                     Anime anime = animePaginatedIterator.next();
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
 
                     if (anime.getStartSeason().getYear() != year ||
                             !Objects.equals(anime.getStartSeason().getSeason().field(), season)) {
@@ -65,15 +63,10 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    if (!animeIdSet.contains(anime.getID())) {
-                        animeIdSet.add(anime.getID());
-                        AnimeDto animeDto = AnimeDto.from(anime);
-                        AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
-                        serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
-                        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
-                    } else {
-                        log.warn("Anime Id Duplicate: {}", anime);
-                    }
+                    AnimeDto animeDto = AnimeDto.from(anime);
+                    AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
+                    serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+                    serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }
@@ -121,7 +114,7 @@ public class AnimeCollectService {
         for (AnimeDao animeDao : animeDaos) {
             try {
                 Anime anime = getAnime(animeDao.getId());
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 AnimeDto animeDto = AnimeDto.from(anime);
                 AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);

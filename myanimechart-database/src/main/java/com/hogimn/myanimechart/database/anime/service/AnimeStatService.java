@@ -38,6 +38,7 @@ public class AnimeStatService {
         animeStatDao.setPopularity(animeStatDto.getPopularity());
         animeStatDao.setScoringCount(animeStatDto.getScoringCount());
         animeStatDao.setRank(animeStatDto.getRank());
+        animeStatDto.setRecordedAt(DateUtil.now());
 
         animeStatRepository.save(animeStatDao);
     }

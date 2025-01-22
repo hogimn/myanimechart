@@ -75,7 +75,7 @@ public class PollCollectService {
                     ForumTopic forumTopic;
                     try {
                         forumTopic = forumTopicPaginatedIterator.next();
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         continue;
@@ -115,7 +115,7 @@ public class PollCollectService {
                     log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     Poll katsutePoll = forumTopicDetail.getPoll();
                     PollOption[] options = katsutePoll.getOptions();
 

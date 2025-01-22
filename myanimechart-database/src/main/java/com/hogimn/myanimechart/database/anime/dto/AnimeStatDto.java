@@ -40,7 +40,6 @@ public class AnimeStatDto {
         animeStatDto.setPopularity(animeDto.getPopularity());
         animeStatDto.setScoringCount(animeDto.getScoringCount());
         animeStatDto.setMembers(animeDto.getMembers());
-        animeStatDto.setRecordedAt(DateUtil.now());
         return animeStatDto;
     }
 }
