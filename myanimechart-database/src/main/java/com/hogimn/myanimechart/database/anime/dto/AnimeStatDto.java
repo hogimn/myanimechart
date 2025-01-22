@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.database.anime.dto;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,17 @@ public class AnimeStatDto {
         animeStat.setScoringCount(animeStatDao.getScoringCount());
         animeStat.setRank(animeStatDao.getRank());
         return animeStat;
+    }
+
+    public static AnimeStatDto from(AnimeDto animeDto) {
+        AnimeStatDto animeStatDto = new AnimeStatDto();
+        animeStatDto.setAnimeId(animeDto.getId());
+        animeStatDto.setScore(animeDto.getScore());
+        animeStatDto.setRank(animeDto.getRank());
+        animeStatDto.setPopularity(animeDto.getPopularity());
+        animeStatDto.setScoringCount(animeDto.getScoringCount());
+        animeStatDto.setMembers(animeDto.getMembers());
+        animeStatDto.setRecordedAt(DateUtil.now());
+        return animeStatDto;
     }
 }

@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.database.anime.service;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
@@ -23,12 +24,21 @@ public class AnimeStatService {
     }
 
     @Transactional
-    public void saveAnimeStat(AnimeDto animeDto) {
-        if (animeDto == null) {
+    public void saveAnimeStat(AnimeStatDto animeStatDto) {
+        if (animeStatDto == null) {
             return;
         }
 
-        AnimeStatDao animeStatDao = AnimeStatDao.from(animeDto);
+        AnimeDao animeDao = animeService.getAnimeDaoById(animeStatDto.getAnimeId());
+        AnimeStatDao animeStatDao = new AnimeStatDao();
+        animeStatDao.setAnime(animeDao);
+        animeStatDao.setMembers(animeDao.getMembers());
+        animeStatDao.setScore(animeDao.getScore());
+        animeStatDao.setRecordedAt(DateUtil.now());
+        animeStatDao.setPopularity(animeDao.getPopularity());
+        animeStatDao.setScoringCount(animeDao.getScoringCount());
+        animeStatDao.setRank(animeDao.getRank());
+
         animeStatRepository.save(animeStatDao);
     }
 

@@ -33,15 +33,15 @@ AnimeStatDao {
     @Id
     private LocalDateTime recordedAt;
 
-    public static AnimeStatDao from(AnimeDto animeDto) {
-        AnimeStatDao animeDao = new AnimeStatDao();
-        animeDao.anime = AnimeDao.from(animeDto);
-        animeDao.members = animeDto.getMembers();
-        animeDao.score = animeDto.getScore();
-        animeDao.recordedAt = DateUtil.now();
-        animeDao.popularity = animeDto.getPopularity();
-        animeDao.scoringCount = animeDto.getScoringCount();
-        animeDao.rank = animeDto.getRank();
-        return animeDao;
+    public static AnimeStatDao from(AnimeDao animeDao) {
+        AnimeStatDao animeStatDao = new AnimeStatDao();
+        animeStatDao.anime = animeDao;
+        animeStatDao.members = animeDao.getMembers();
+        animeStatDao.score = animeDao.getScore();
+        animeStatDao.recordedAt = DateUtil.now();
+        animeStatDao.popularity = animeDao.getPopularity();
+        animeStatDao.scoringCount = animeDao.getScoringCount();
+        animeStatDao.rank = animeDao.getRank();
+        return animeStatDao;
     }
 }

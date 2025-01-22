@@ -5,6 +5,7 @@ import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistrySer
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
+import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.batch.aop.annotation.SaveBatchHistory;
 import dev.katsute.mal4j.MyAnimeList;
@@ -67,8 +68,9 @@ public class AnimeCollectService {
                     if (!animeIdSet.contains(anime.getID())) {
                         animeIdSet.add(anime.getID());
                         AnimeDto animeDto = AnimeDto.from(anime);
+                        AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                         serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
-                        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeDto);
+                        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
                     } else {
                         log.warn("Anime Id Duplicate: {}", anime);
                     }
