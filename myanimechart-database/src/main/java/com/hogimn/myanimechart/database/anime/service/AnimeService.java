@@ -30,9 +30,6 @@ public class AnimeService {
         Optional<AnimeDao> optional = animeRepository.findById(animeDto.getId());
         if (optional.isPresent()) {
             AnimeDao animeDao = optional.get();
-            if (animeDao.getFinishedAt() != null) {
-                animeDao.setFinishedAt(null);
-            }
             animeDao.setFrom(animeDto);
             animeDao.setUpdatedAt(DateUtil.now());
             AnimeDao saved = animeRepository.save(animeDao);
