@@ -37,6 +37,7 @@ public class AnimeService {
             animeDao.setUpdatedAt(DateUtil.now());
             AnimeDao saved = animeRepository.save(animeDao);
             log.info("Updated anime: {}", saved);
+            return;
         }
 
         AnimeDao animeDao = AnimeDao.from(animeDto);
