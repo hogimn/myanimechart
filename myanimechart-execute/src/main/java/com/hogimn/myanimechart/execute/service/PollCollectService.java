@@ -7,7 +7,6 @@ import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.PollOptionService;
-import com.hogimn.myanimechart.database.anime.service.PollService;
 import com.hogimn.myanimechart.database.batch.aop.annotation.SaveBatchHistory;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
@@ -15,7 +14,6 @@ import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
 import dev.katsute.mal4j.forum.property.PollOption;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -30,20 +28,17 @@ public class PollCollectService {
     private final AnimeService animeService;
     private final MyAnimeList myAnimeList;
     private final PollOptionService pollOptionService;
-    private final PollService pollService;
     private final ServiceRegistryService serviceRegistryService;
 
     public PollCollectService(
             AnimeService animeService,
             MyAnimeList myAnimeList,
             PollOptionService pollOptionService,
-            PollService pollService,
             ServiceRegistryService serviceRegistryService
     ) {
         this.animeService = animeService;
         this.myAnimeList = myAnimeList;
         this.pollOptionService = pollOptionService;
-        this.pollService = pollService;
         this.serviceRegistryService = serviceRegistryService;
     }
 
@@ -120,6 +115,7 @@ public class PollCollectService {
                     log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
+                    Thread.sleep(2000);
                     Poll katsutePoll = forumTopicDetail.getPoll();
                     PollOption[] options = katsutePoll.getOptions();
 
