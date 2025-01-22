@@ -5,6 +5,7 @@ import com.hogimn.myanimechart.database.batch.dao.BatchDao;
 import com.hogimn.myanimechart.database.batch.dao.BatchHistoryDao;
 import com.hogimn.myanimechart.database.batch.domain.Batch;
 import com.hogimn.myanimechart.database.batch.repository.BatchHistoryRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class BatchHistoryService {
         this.batchService = batchService;
     }
 
+    @Transactional
     public void saveBatchHistory(String name) {
         Batch batch = batchService.getBatchByName(name);
         batchHistoryRepository.save(BatchHistoryDao.from(batch));
