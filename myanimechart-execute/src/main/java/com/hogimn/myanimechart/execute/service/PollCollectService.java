@@ -151,7 +151,7 @@ public class PollCollectService {
                     }
                 }
             } catch (Exception e) {
-                log.error("Failed to forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
+                log.error("Failed to get forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
             }
         });
     }
