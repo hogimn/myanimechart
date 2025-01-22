@@ -29,7 +29,7 @@ public class AnimeStatService {
             return;
         }
 
-        AnimeDao animeDao = animeService.getAnimeDaoById(animeStatDto.getAnimeId());
+        AnimeDao animeDao = animeService.getAnimeDaoByIdWithLock(animeStatDto.getAnimeId());
         AnimeStatDao animeStatDao = new AnimeStatDao();
         animeStatDao.setAnime(animeDao);
         animeStatDao.setMembers(animeStatDto.getMembers());

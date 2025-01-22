@@ -1,6 +1,5 @@
 package com.hogimn.myanimechart.execute.controller;
 
-import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
 import lombok.extern.slf4j.Slf4j;
