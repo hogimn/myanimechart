@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,6 +67,8 @@ public class PollCollectService {
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
         List<AnimeDao> animeDaos = animeService.getAiringAnime();
+        Set<Integer> uniqueEpisodes = new HashSet<>();
+
         animeDaos.forEach(animeDao -> {
             try {
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
@@ -89,27 +93,15 @@ public class PollCollectService {
                         break;
                     }
 
+                    if (!topicTitle.endsWith("Discussion")) {
+                        log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
+                        break;
+                    }
+
                     if (checkMangaTopic(topicTitle)) {
                         log.info("Topic name is manga discussion. topic: {},  anime: {}",
                                 forumTopic.getTitle(), animeDao.getTitle());
                         break;
-                    }
-
-                    if (!topicTitle.contains(animeDao.getTitle())) {
-                        log.info("Topic name does not contain anime title. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeDao.getTitle());
-                        break;
-                    }
-
-                    if (!topicTitle.startsWith(animeDao.getTitle())) {
-                        log.info("Topic name does not start with anime title. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeDao.getTitle());
-                        continue;
-                    }
-
-                    if (!topicTitle.endsWith("Discussion")) {
-                        log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
-                        continue;
                     }
 
                     log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
@@ -121,14 +113,21 @@ public class PollCollectService {
 
                     if (options == null || options.length == 0) {
                         log.info("No poll options found for topicId: {}", topicId);
-                        continue;
+                        break;
                     }
 
                     int episode = getEpisodeFromTopicTitle(topicTitle);
                     if (episode == -1) {
                         log.error("Failed to get episode from topic title: {}", topicTitle);
-                        continue;
+                        break;
                     }
+
+                    if (uniqueEpisodes.contains(episode)) {
+                        log.info("Episode {} already exists in uniqueEpisodes", episode);
+                        uniqueEpisodes.clear();
+                        break;
+                    }
+                    uniqueEpisodes.add(episode);
 
                     for (PollOption option : options) {
                         try {
