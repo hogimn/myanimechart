@@ -106,7 +106,7 @@ public class PollCollectService {
                         break;
                     }
 
-                    if (checkTitleSame(topicTitle, animeDao.getTitle())) {
+                    if (!checkTitleSame(topicTitle, animeDao.getTitle())) {
                         log.info("Topic name is far different from anime name. topic: {},  anime: {}",
                                 forumTopic.getTitle(), animeDao.getTitle());
                         break;
