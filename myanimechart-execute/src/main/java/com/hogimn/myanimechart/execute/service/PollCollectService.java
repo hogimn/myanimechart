@@ -67,10 +67,10 @@ public class PollCollectService {
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
         List<AnimeDao> animeDaos = animeService.getAiringAnime();
-        Set<Integer> uniqueEpisodes = new HashSet<>();
 
         animeDaos.forEach(animeDao -> {
             try {
+                Set<Integer> uniqueEpisodes = new HashSet<>();
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
                         .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
                         .searchAll();
@@ -124,7 +124,6 @@ public class PollCollectService {
 
                     if (uniqueEpisodes.contains(episode)) {
                         log.info("Episode {} already exists in uniqueEpisodes", episode);
-                        uniqueEpisodes.clear();
                         break;
                     }
                     uniqueEpisodes.add(episode);
