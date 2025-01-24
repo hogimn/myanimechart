@@ -70,9 +70,9 @@ public class PollCollectService {
 
         animeDaos.forEach(animeDao -> {
             try {
-                Set<Integer> uniqueEpisodes = new HashSet<>();
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
                         .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
+                        .withLimit(50)
                         .searchAll();
 
                 while (forumTopicPaginatedIterator.hasNext()) {
@@ -104,6 +104,12 @@ public class PollCollectService {
                         break;
                     }
 
+                    if (checkTitleSame(topicTitle, animeDao.getTitle())) {
+                        log.info("Topic name is far different from anime name. topic: {},  anime: {}",
+                                forumTopic.getTitle(), animeDao.getTitle());
+                        break;
+                    }
+
                     log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
@@ -121,12 +127,6 @@ public class PollCollectService {
                         log.error("Failed to get episode from topic title: {}", topicTitle);
                         break;
                     }
-
-                    if (uniqueEpisodes.contains(episode)) {
-                        log.info("Episode {} already exists in uniqueEpisodes", episode);
-                        break;
-                    }
-                    uniqueEpisodes.add(episode);
 
                     for (PollOption option : options) {
                         try {
@@ -152,6 +152,30 @@ public class PollCollectService {
                 log.error("Failed to get forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
             }
         });
+    }
+
+    private boolean checkTitleSame(String topicTitle, String animeTitle) {
+        topicTitle = topicTitle
+                .toLowerCase()
+                .replace(".", "")
+                .replace(" ", "")
+                .replace(":", "")
+                .replace(";", "")
+                .replace("-", "")
+                .replace("!", "")
+                .replace("?", "");
+
+        animeTitle = animeTitle
+                .toLowerCase()
+                .replace(".", "")
+                .replace(" ", "")
+                .replace(":", "")
+                .replace(";", "")
+                .replace("-", "")
+                .replace("!", "")
+                .replace("?", "");
+
+        return topicTitle.startsWith(animeTitle);
     }
 
     private boolean checkMangaTopic(String topicTitle) {
