@@ -155,6 +155,10 @@ public class PollCollectService {
     }
 
     private boolean checkTitleSame(String topicTitle, String animeTitle) {
+        if (topicTitle == null || animeTitle == null) {
+            return false;
+        }
+
         topicTitle = topicTitle
                 .toLowerCase()
                 .replace(".", "")
@@ -164,6 +168,14 @@ public class PollCollectService {
                 .replace("-", "")
                 .replace("!", "")
                 .replace("?", "");
+
+        int indexOfEpisode = topicTitle.toLowerCase().lastIndexOf("episode");
+
+        if (indexOfEpisode == -1) {
+            return false;
+        }
+
+        topicTitle = topicTitle.substring(0, indexOfEpisode);
 
         animeTitle = animeTitle
                 .toLowerCase()
@@ -175,7 +187,7 @@ public class PollCollectService {
                 .replace("!", "")
                 .replace("?", "");
 
-        return topicTitle.startsWith(animeTitle);
+        return topicTitle.equals(animeTitle);
     }
 
     private boolean checkMangaTopic(String topicTitle) {
