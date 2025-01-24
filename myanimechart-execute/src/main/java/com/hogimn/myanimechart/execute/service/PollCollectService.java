@@ -70,6 +70,8 @@ public class PollCollectService {
 
         animeDaos.forEach(animeDao -> {
             try {
+                log.info("Collecting poll statistics for anime: {}", animeDao.getTitle());
+
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
                         .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
                         .withLimit(50)
@@ -109,8 +111,6 @@ public class PollCollectService {
                                 forumTopic.getTitle(), animeDao.getTitle());
                         break;
                     }
-
-                    log.info("Collecting poll statistics for topic: {} {}", topicId, topicTitle);
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
                     Thread.sleep(1000);
@@ -159,33 +159,16 @@ public class PollCollectService {
             return false;
         }
 
-        topicTitle = topicTitle
-                .toLowerCase()
-                .replace(".", "")
-                .replace(" ", "")
-                .replace(":", "")
-                .replace(";", "")
-                .replace("-", "")
-                .replace("!", "")
-                .replace("?", "");
 
-        int indexOfEpisode = topicTitle.toLowerCase().lastIndexOf("episode");
+        topicTitle = topicTitle.toLowerCase().replaceAll("[. :;\\-!?]", "");
+        animeTitle = animeTitle.toLowerCase().replaceAll("[. :;\\-!?]", "");
 
+        int indexOfEpisode = topicTitle.lastIndexOf("episode");
         if (indexOfEpisode == -1) {
             return false;
         }
 
         topicTitle = topicTitle.substring(0, indexOfEpisode);
-
-        animeTitle = animeTitle
-                .toLowerCase()
-                .replace(".", "")
-                .replace(" ", "")
-                .replace(":", "")
-                .replace(";", "")
-                .replace("-", "")
-                .replace("!", "")
-                .replace("?", "");
 
         return topicTitle.equals(animeTitle);
     }
