@@ -56,8 +56,12 @@ const Dot = styled.div`
 const DescriptionContainer = styled.div`
   flex: 2;
   background-color: rgba(0, 0, 0, 0.24);
-  overflow-y: auto;
+  overflow-y: hidden;
   height: 350px;
+
+  &:hover {
+    overflow-y: auto;
+  }
 
   @media (max-width: 769px) {
     height: 200px;

@@ -41,9 +41,9 @@ const AnimeStatWrapper = styled(CommonCol)`
 
 const AnimeStatSubWrapper = styled.article`
   background-color: rgba(0, 0, 0, 0.25);
-  border: rgba(255, 254, 254, 0.62) 1px solid;
-  border-radius: 5px;
-  margin: 5px;
+  border: rgba(131, 125, 125, 0.51) 1px solid;
+  border-radius: 10px;
+  margin: 10px;
 `;
 
 const AnimeWrapper = styled.section`
@@ -72,7 +72,7 @@ const OverlayBox = styled.div`
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -86,7 +86,7 @@ const OverlayBox = styled.div`
 const ImageWrapper = styled.div`
   display: inline-block;
   cursor: pointer;
-  border-radius: 8px;
+  border-top-left-radius: 9px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
