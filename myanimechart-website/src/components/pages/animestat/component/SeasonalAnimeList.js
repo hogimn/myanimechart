@@ -9,7 +9,7 @@ import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import styled from "styled-components";
 import { toScoreLabel } from "../../../../util/strUtil";
-import { FaStar, FaTrophy, FaUserFriends } from "react-icons/fa";
+import { FaStar, FaTrophy, FaUserFriends, FaVoteYea } from "react-icons/fa";
 import { MdTrendingUp } from "react-icons/md";
 import AnimeImage from "./AnimeImage";
 
@@ -140,6 +140,9 @@ const SeasonalAnimeList = ({
   useEffect(() => {
     const sortAnimeStats = (data, criterion) => {
       return [...data].sort((a, b) => {
+        if (criterion == "votes") {
+          criterion = "scoringCount";
+        }
         const aValue = a[criterion] ?? null;
         const bValue = b[criterion] ?? null;
 
@@ -149,7 +152,7 @@ const SeasonalAnimeList = ({
         if (
           criterion === "score" ||
           criterion === "members" ||
-          criterion === "votes"
+          criterion === "scoringCount"
         ) {
           return bValue - aValue;
         } else if (criterion === "rank" || criterion === "popularity") {
@@ -226,19 +229,23 @@ const SeasonalAnimeList = ({
                   <AnimeImage alt={anime.title} src={anime.image} />
                   <OverlayBox>
                     <span>
-                      <FaStar />
+                      <FaStar title="Score" />
                       {toScoreLabel(anime.score)}
                     </span>
                     <span>
-                      <FaUserFriends />
-                      {anime.members.toLocaleString()}
+                      <FaVoteYea title="Votes" />
+                      {anime.scoringCount}
                     </span>
                     <span>
-                      <FaTrophy />
+                      <FaTrophy title="Rank" />
                       {anime.rank}
                     </span>
                     <span>
-                      <MdTrendingUp />
+                      <FaUserFriends title="Members" />
+                      {anime.members.toLocaleString()}
+                    </span>
+                    <span>
+                      <MdTrendingUp title="Popularity" />
                       {anime.popularity}
                     </span>
                   </OverlayBox>
