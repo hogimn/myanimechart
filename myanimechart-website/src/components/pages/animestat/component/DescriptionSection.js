@@ -5,6 +5,7 @@ import {
   toEpisodeLabel,
   toTypeLabel,
 } from "../../../../util/strUtil";
+import { isMobile } from "react-device-detect";
 
 const GenresBox = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ const Dot = styled.div`
 const DescriptionContainer = styled.div`
   flex: 2;
   background-color: rgba(0, 0, 0, 0.24);
-  overflow-y: hidden;
+  overflow-y: ${isMobile ? "auto" : "hidden"};
   height: 350px;
 
   &:hover {
