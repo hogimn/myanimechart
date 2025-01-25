@@ -74,7 +74,7 @@ public class PollCollectService {
 
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
                         .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
-                        .withLimit(200)
+                        .withLimit(50)
                         .searchAll();
 
                 while (forumTopicPaginatedIterator.hasNext()) {
