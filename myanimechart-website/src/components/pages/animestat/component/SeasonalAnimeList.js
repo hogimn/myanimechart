@@ -12,6 +12,7 @@ import { toScoreLabel } from "../../../../util/strUtil";
 import { FaStar, FaTrophy, FaUserFriends, FaVoteYea } from "react-icons/fa";
 import { MdTrendingUp } from "react-icons/md";
 import AnimeImage from "./AnimeImage";
+import AnimePollGraph from "./AnimePollGraph";
 
 const StyledSpin = styled(CommonSpin)`
   display: flex;
@@ -53,7 +54,7 @@ const AnimeWrapper = styled.section`
 
 const GraphWrapper = styled.section`
   width: 100%;
-  height: 300px;
+  height: 250px;
   margin-bottom: 15px;
 
   canvas {
@@ -269,6 +270,9 @@ const SeasonalAnimeList = ({
                     animeStats={anime.animeStats}
                     selectedLegend={sortBy}
                   />
+                </GraphWrapper>
+                <GraphWrapper>
+                  <AnimePollGraph polls={anime.polls} />
                 </GraphWrapper>
               </CommonCol>
             </AnimeStatSubWrapper>
