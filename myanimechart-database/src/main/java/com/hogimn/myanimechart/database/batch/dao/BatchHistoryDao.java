@@ -2,7 +2,7 @@ package com.hogimn.myanimechart.database.batch.dao;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.batch.dao.key.BatchHistoryId;
-import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -26,9 +26,9 @@ public class BatchHistoryDao {
     @Id
     private LocalDateTime recordedAt;
 
-    public static BatchHistoryDao from(Batch batch) {
+    public static BatchHistoryDao from(BatchDto batchDto) {
         BatchHistoryDao batchHistoryDao = new BatchHistoryDao();
-        batchHistoryDao.setBatch(BatchDao.from(batch));
+        batchHistoryDao.setBatch(BatchDao.from(batchDto));
         batchHistoryDao.setRecordedAt(DateUtil.now());
         return batchHistoryDao;
     }

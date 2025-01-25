@@ -2,7 +2,7 @@ package com.hogimn.myanimechart.collector.batchjob;
 
 import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
-import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.service.BatchService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,12 @@ public class PollCollectorJob {
 
     @PostConstruct
     public void schedulePollCollectionTask() {
-        Batch batch = batchService
-                .getBatchByName(this.getClass().getSimpleName());
+        BatchDto batchDto = batchService
+                .getBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectPollStat(batch.getName()),
-                new CronTrigger(batch.getCron()));
+                () -> collectPollStat(batchDto.getName()),
+                new CronTrigger(batchDto.getCron()));
     }
 
     public void collectPollStat(String batchJobName) {

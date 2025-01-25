@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.monitor.batchjob;
 
-import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.service.BatchService;
 import com.hogimn.myanimechart.monitor.service.MonitorService;
 import jakarta.annotation.PostConstruct;
@@ -26,11 +26,11 @@ public class BatchMonitorJob {
 
     @PostConstruct
     public void scheduleBatchMonitorTask() {
-        Batch batch = batchService.getBatchByName(this.getClass().getSimpleName());
+        BatchDto batchDto = batchService.getBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> checkBatchNotExecuted(batch.getName()),
-                new CronTrigger(batch.getCron()));
+                () -> checkBatchNotExecuted(batchDto.getName()),
+                new CronTrigger(batchDto.getCron()));
     }
 
     public void checkBatchNotExecuted(String batchJobName) {

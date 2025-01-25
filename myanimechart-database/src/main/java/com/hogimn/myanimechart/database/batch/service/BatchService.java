@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.database.batch.service;
 
 import com.hogimn.myanimechart.database.batch.dao.BatchDao;
-import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.repository.BatchRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,15 @@ public class BatchService {
         this.batchRepository = batchRepository;
     }
 
-    public Batch getBatchByName(String name) {
+    public BatchDto getBatchDtoByName(String name) {
         Optional<BatchDao> optional = batchRepository.findById(name);
         if (optional.isPresent()) {
-            return Batch.from(optional.get());
+            return BatchDto.from(optional.get());
         }
         throw new IllegalArgumentException("Batch not found (" + name + ")");
     }
 
-    public List<Batch> getAll() {
-        return batchRepository.findAll().stream().map(Batch::from).collect(Collectors.toList());
+    public List<BatchDto> getAllBatchDtos() {
+        return batchRepository.findAll().stream().map(BatchDto::from).collect(Collectors.toList());
     }
 }

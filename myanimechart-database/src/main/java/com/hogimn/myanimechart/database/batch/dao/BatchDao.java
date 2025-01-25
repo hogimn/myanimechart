@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.database.batch.dao;
 
-import com.hogimn.myanimechart.database.batch.domain.Batch;
+import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,10 +15,10 @@ public class BatchDao {
 
     private String cron;
 
-    public static BatchDao from(Batch batch) {
+    public static BatchDao from(BatchDto batchDto) {
         BatchDao batchDao = new BatchDao();
-        batchDao.setName(batch.getName());
-        batchDao.setCron(batch.getCron());
+        batchDao.setName(batchDto.getName());
+        batchDao.setCron(batchDto.getCron());
         return batchDao;
     }
 }
