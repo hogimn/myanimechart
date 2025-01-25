@@ -1,7 +1,5 @@
 const Footer = () => {
-    return (
-        <footer style={{ height: '40px' }}></footer>
-    );
-}
+  return <footer style={{ height: "40px" }}></footer>;
+};
 
 export default Footer;
