@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,11 +129,21 @@ public class PollCollectService {
                         break;
                     }
 
+                    Set<Integer> voteZeroOptions = new HashSet<>();
+                    voteZeroOptions.add(1);
+                    voteZeroOptions.add(2);
+                    voteZeroOptions.add(3);
+                    voteZeroOptions.add(4);
+                    voteZeroOptions.add(5);
+
                     for (PollOption option : options) {
                         try {
                             int votes = option.getVotes();
                             String text = option.getText();
                             PollOptionDao pollOptionDao = pollOptionService.getPollOptionDao(text);
+
+                            Integer optionId = pollOptionDao.getId();
+                            voteZeroOptions.remove(optionId);
 
                             PollDto pollDto = new PollDto();
                             pollDto.setPollOptionId(pollOptionDao.getId());
@@ -147,6 +158,19 @@ public class PollCollectService {
                             log.error(e.getMessage(), e);
                         }
                     }
+
+                    voteZeroOptions.forEach((optionId) -> {
+                        PollDto pollDto = new PollDto();
+                        PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(optionId);
+                        pollDto.setPollOptionId(pollOptionDao.getId());
+                        pollDto.setAnimeId(animeDao.getId());
+                        pollDto.setTopicId(topicId);
+                        pollDto.setTitle(topicTitle);
+                        pollDto.setEpisode(episode);
+                        pollDto.setVotes(0);
+
+                        serviceRegistryService.send(RegisteredService.EXECUTE, "/poll/savePoll", pollDto);
+                    });
                 }
             } catch (Exception e) {
                 log.error("Failed to get forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
