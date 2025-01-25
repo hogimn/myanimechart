@@ -115,8 +115,8 @@ public class PollCollectService {
 
                     ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
                     Thread.sleep(1000);
-                    Poll katsutePoll = forumTopicDetail.getPoll();
-                    PollOption[] options = katsutePoll.getOptions();
+                    Poll poll = forumTopicDetail.getPoll();
+                    PollOption[] options = poll.getOptions();
 
                     if (options == null || options.length == 0) {
                         log.info("No poll options found for topicId: {}", topicId);
