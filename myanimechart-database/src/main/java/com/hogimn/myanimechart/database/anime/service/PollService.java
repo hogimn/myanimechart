@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,5 +62,14 @@ public class PollService {
         newPoll.setEpisode(pollDto.getEpisode());
         PollDao save = pollRepository.save(newPoll);
         log.info("Inserted new poll: {}", save);
+    }
+
+    private List<PollDao> getPollDaosByAnime(AnimeDao animeDao) {
+        return pollRepository.findByAnimeOrderByEpisodeAscPollOptionAsc(animeDao);
+    }
+
+    public List<PollDto> getPollDtosByAnime(AnimeDao animeDao) {
+        List<PollDao> pollDaos = getPollDaosByAnime(animeDao);
+        return pollDaos.stream().map(PollDto::from).toList();
     }
 }

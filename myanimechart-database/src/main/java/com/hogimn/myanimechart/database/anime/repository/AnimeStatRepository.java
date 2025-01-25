@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface AnimeStatRepository extends JpaRepository<AnimeStatDao, AnimeStatId> {
     List<AnimeStatDao> findByAnime(AnimeDao anime);
+    List<AnimeStatDao> findByAnimeOrderByRecordedAtAsc(AnimeDao anime);
 }

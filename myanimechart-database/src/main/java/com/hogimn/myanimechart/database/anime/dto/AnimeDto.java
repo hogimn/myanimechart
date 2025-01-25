@@ -30,7 +30,6 @@ public class AnimeDto {
     private String source;
     private Integer year;
     private String season;
-    private List<AnimeStatDto> animeStats;
     private Integer rank;
     private Integer popularity;
     private Integer scoringCount;
@@ -43,6 +42,9 @@ public class AnimeDto {
     private String englishTitle;
     private String japaneseTitle;
     private String synopsis;
+
+    private List<AnimeStatDto> animeStats;
+    private List<PollDto> polls;
 
     public static AnimeDto from(AnimeDao animeDao) {
         AnimeDto anime = new AnimeDto();

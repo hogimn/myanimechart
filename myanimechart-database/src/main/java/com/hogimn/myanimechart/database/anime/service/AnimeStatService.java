@@ -3,8 +3,10 @@ package com.hogimn.myanimechart.database.anime.service;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
 import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
+import com.hogimn.myanimechart.database.anime.dao.PollDao;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
+import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.repository.AnimeStatRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +19,15 @@ import java.util.List;
 public class AnimeStatService {
     private final AnimeStatRepository animeStatRepository;
     private final AnimeService animeService;
+    private final PollService pollService;
 
-    public AnimeStatService(AnimeStatRepository animeStatRepository, AnimeService animeService) {
+    public AnimeStatService(
+            AnimeStatRepository animeStatRepository,
+            AnimeService animeService,
+            PollService pollService) {
         this.animeStatRepository = animeStatRepository;
         this.animeService = animeService;
+        this.pollService = pollService;
     }
 
     @Transactional
@@ -43,11 +50,11 @@ public class AnimeStatService {
         animeStatRepository.save(animeStatDao);
     }
 
-    public List<AnimeStatDao> getAnimeStatDaosByAnime(AnimeDao animeDao) {
-        return animeStatRepository.findByAnime(animeDao);
+    private List<AnimeStatDao> getAnimeStatDaosByAnime(AnimeDao animeDao) {
+        return animeStatRepository.findByAnimeOrderByRecordedAtAsc(animeDao);
     }
 
-    public List<AnimeStatDto> getAnimeStatDtosByAnime(AnimeDao animeDao) {
+    private List<AnimeStatDto> getAnimeStatDtosByAnime(AnimeDao animeDao) {
         List<AnimeStatDao> animeStatDaos = getAnimeStatDaosByAnime(animeDao);
         return animeStatDaos.stream().map(AnimeStatDto::from).toList();
     }
@@ -60,6 +67,8 @@ public class AnimeStatService {
             AnimeDto animeDto = animeDtos.get(i);
             List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
             animeDto.setAnimeStats(animeStat);
+            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+            animeDto.setPolls(pollDtos);
         }
 
         return animeDtos;
@@ -70,6 +79,8 @@ public class AnimeStatService {
         AnimeDto animeDto = AnimeDto.from(animeDao);
         List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
         animeDto.setAnimeStats(animeStat);
+        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+        animeDto.setPolls(pollDtos);
         return animeDto;
     }
 
@@ -78,6 +89,8 @@ public class AnimeStatService {
         AnimeDto animeDto = AnimeDto.from(animeService.getAnimeDaoById(id));
         List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
         animeDto.setAnimeStats(animeStat);
+        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+        animeDto.setPolls(pollDtos);
         return animeDto;
     }
 
@@ -89,6 +102,8 @@ public class AnimeStatService {
             AnimeDto animeDto = animeDtos.get(i);
             List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
             animeDto.setAnimeStats(animeStat);
+            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+            animeDto.setPolls(pollDtos);
         }
         return animeDtos;
     }
