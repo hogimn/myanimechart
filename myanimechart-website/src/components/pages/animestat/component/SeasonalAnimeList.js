@@ -141,7 +141,7 @@ const SeasonalAnimeList = ({
   useEffect(() => {
     const sortAnimeStats = (data, criterion) => {
       return [...data].sort((a, b) => {
-        if (criterion == "votes") {
+        if (criterion === "votes") {
           criterion = "scoringCount";
         }
         const aValue = a[criterion] ?? null;

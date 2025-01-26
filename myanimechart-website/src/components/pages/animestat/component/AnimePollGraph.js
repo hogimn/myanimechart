@@ -98,7 +98,7 @@ const AnimePollGraph = ({ polls }) => {
         ...baseDatasetConfig,
       },
       {
-        label: `☆1.0`,
+        label: `★1.0`,
         data: dataPerEpisode.map((data) => data.optionVotes[0]),
         borderColor: "rgb(145, 118, 163)",
         backgroundColor: "rgb(145, 118, 163)",
@@ -107,7 +107,7 @@ const AnimePollGraph = ({ polls }) => {
         ...baseDatasetConfig,
       },
       {
-        label: `☆2.0`,
+        label: `★2.0`,
         data: dataPerEpisode.map((data) => data.optionVotes[1]),
         borderColor: "rgb(58, 53, 104)",
         backgroundColor: "rgb(58, 53, 104)",
@@ -116,7 +116,7 @@ const AnimePollGraph = ({ polls }) => {
         ...baseDatasetConfig,
       },
       {
-        label: `☆3.0`,
+        label: `★3.0`,
         data: dataPerEpisode.map((data) => data.optionVotes[2]),
         borderColor: "rgb(116, 110, 194)",
         backgroundColor: "rgb(116, 110, 194)",
@@ -125,7 +125,7 @@ const AnimePollGraph = ({ polls }) => {
         ...baseDatasetConfig,
       },
       {
-        label: `☆4.0`,
+        label: `★4.0`,
         data: dataPerEpisode.map((data) => data.optionVotes[3]),
         borderColor: "rgb(158, 165, 228)",
         backgroundColor: "rgb(158, 165, 228)",
@@ -134,7 +134,7 @@ const AnimePollGraph = ({ polls }) => {
         ...baseDatasetConfig,
       },
       {
-        label: `☆5.0`,
+        label: `★5.0`,
         data: dataPerEpisode.map((data) => data.optionVotes[4]),
         borderColor: "rgb(205, 208, 250)",
         backgroundColor: "rgb(205, 208, 250)",
