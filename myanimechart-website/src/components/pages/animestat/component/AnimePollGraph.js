@@ -60,6 +60,7 @@ const AnimePollGraph = ({ polls }) => {
     return {
       episode,
       totalVotes,
+      topicId: pollsForEpisode[0]?.topicId,
       optionVotes: pollOptions.map((optionId) => {
         const pollOption = pollsForEpisode.find(
           (poll) => poll.pollOptionId === optionId
@@ -241,6 +242,18 @@ const AnimePollGraph = ({ polls }) => {
     },
     animation: {
       duration: 0,
+    },
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const element = elements[0];
+        const episodeIndex = element.index;
+        const topicId = dataPerEpisode[episodeIndex]?.topicId;
+
+        if (topicId) {
+          const url = `https://myanimelist.net/forum/?topicid=${topicId}`;
+          window.open(url, "_blank");
+        }
+      }
     },
   };
 
