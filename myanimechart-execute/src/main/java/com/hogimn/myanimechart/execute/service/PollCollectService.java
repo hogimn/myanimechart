@@ -78,6 +78,7 @@ public class PollCollectService {
                         .withLimit(50)
                         .searchAll();
 
+                int firstWordDiffCnt = 0;
                 while (forumTopicPaginatedIterator.hasNext()) {
                     ForumTopic forumTopic;
                     try {
@@ -93,7 +94,12 @@ public class PollCollectService {
                     if (!topicTitle.startsWith(animeDao.getTitle().split(" ")[0])) {
                         log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
                                 forumTopic.getTitle(), animeDao.getTitle());
-                        break;
+                        firstWordDiffCnt++;
+                        if (firstWordDiffCnt > 10) {
+                            break;
+                        } else {
+                            continue;
+                        }
                     }
 
                     if (!topicTitle.endsWith("Discussion")) {
