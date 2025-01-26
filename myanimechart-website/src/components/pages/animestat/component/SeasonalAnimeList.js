@@ -177,7 +177,7 @@ const SeasonalAnimeList = ({
     setSortedAndFilteredStats(updatedAnimeStats);
 
     setPage(1);
-  }, [animeStats, sortBy, filterBy, animeList]);
+  }, [animeStats, sortBy, filterBy, animeList, setPage]);
 
   useEffect(() => {
     const startIndex = (page - 1) * pageSize;
