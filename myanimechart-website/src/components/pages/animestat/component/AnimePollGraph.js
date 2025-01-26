@@ -155,13 +155,13 @@ const AnimePollGraph = ({ polls }) => {
             const datasetLabel = context.dataset.label || "";
             const value = context.raw;
 
-            if (datasetLabel.includes("Average")) {
+            if (datasetLabel.includes("Avg.")) {
               return `${datasetLabel}: ${value.toFixed(2)}`;
             }
 
             const episodeIndex = context.dataIndex;
             const optionIndex = pollOptions.indexOf(
-              parseInt(datasetLabel.replace("☆", "").replace(".0", ""))
+              parseInt(datasetLabel.replace("★", "").replace(".0", ""))
             );
 
             if (optionIndex !== -1) {
