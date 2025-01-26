@@ -176,7 +176,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
                 label.fontColor = "rgba(255, 255, 255, 0.2)";
                 label.lineWidth = 0;
               } else {
-                label.fontColor = "#c9e0ff";
+                label.fontColor = "rgba(255, 255, 255, 0.8)";
                 label.lineWidth = 5;
               }
               return label;
