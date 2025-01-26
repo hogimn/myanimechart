@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   toDateLabel,
   toEpisodeLabel,
   toTypeLabel,
 } from "../../../../util/strUtil";
-import { isMobile } from "react-device-detect";
 
 const GenresBox = styled.div`
   display: flex;
@@ -57,15 +56,30 @@ const Dot = styled.div`
 const DescriptionContainer = styled.div`
   flex: 2;
   background-color: rgba(0, 0, 0, 0.24);
-  overflow-y: ${isMobile ? "auto" : "hidden"};
   height: 350px;
-
-  &:hover {
-    overflow-y: auto;
-  }
+  overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
+  position: relative;
 
   @media (max-width: 769px) {
     height: 200px;
+  }
+`;
+
+const SeeMoreButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: 0.9rem;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.9);
   }
 `;
 
@@ -145,8 +159,14 @@ const AnimeDetails = styled.div`
 `;
 
 const DescriptionSection = ({ anime }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <DescriptionContainer>
+    <DescriptionContainer expanded={expanded}>
       <HeaderContainer>
         <Link href={anime.link} target="_blank" rel="noopener noreferrer">
           <TitleContainer>
@@ -177,6 +197,10 @@ const DescriptionSection = ({ anime }) => {
         <strong>Japanese:</strong> {anime.japaneseTitle} <br />
         <strong>Studios:</strong> {anime.studios.join(", ")} <br />
       </AnimeDetails>
+
+      {!expanded && (
+        <SeeMoreButton onClick={toggleExpanded}>Enable Scrolling</SeeMoreButton>
+      )}
     </DescriptionContainer>
   );
 };

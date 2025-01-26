@@ -54,7 +54,7 @@ const AnimeWrapper = styled.section`
 
 const GraphWrapper = styled.section`
   width: 100%;
-  height: 250px;
+  height: 225px;
   margin-bottom: 15px;
 
   canvas {
@@ -62,7 +62,7 @@ const GraphWrapper = styled.section`
   }
 
   @media (max-width: 768px) {
-    height: 250px;
+    height: 225px;
   }
 `;
 
