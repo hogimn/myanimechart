@@ -99,7 +99,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     pointRadius: 0,
     borderWidth: 2.0,
     pointHoverRadius: 5,
-    pointHitRadius: 50,
+    pointHitRadius: 5,
   };
 
   const chartData = {

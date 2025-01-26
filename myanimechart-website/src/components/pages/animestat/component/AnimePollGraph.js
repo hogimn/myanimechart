@@ -239,6 +239,9 @@ const AnimePollGraph = ({ polls }) => {
         },
       },
     },
+    animation: {
+      duration: 0,
+    },
   };
 
   return <Bar options={options} data={chartData} />;

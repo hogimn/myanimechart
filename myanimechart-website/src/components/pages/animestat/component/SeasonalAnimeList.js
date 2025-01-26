@@ -13,6 +13,7 @@ import { FaStar, FaTrophy, FaUserFriends, FaVoteYea } from "react-icons/fa";
 import { MdTrendingUp } from "react-icons/md";
 import AnimeImage from "./AnimeImage";
 import AnimePollGraph from "./AnimePollGraph";
+import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
 
 const StyledSpin = styled(CommonSpin)`
   display: flex;
@@ -50,20 +51,6 @@ const AnimeStatSubWrapper = styled.article`
 const AnimeWrapper = styled.section`
   display: flex;
   margin-bottom: 8px;
-`;
-
-const GraphWrapper = styled.section`
-  width: 100%;
-  height: 225px;
-  margin-bottom: 15px;
-
-  canvas {
-    touch-action: pan-y !important;
-  }
-
-  @media (max-width: 768px) {
-    height: 225px;
-  }
 `;
 
 const OverlayBox = styled.div`
@@ -265,15 +252,15 @@ const SeasonalAnimeList = ({
                   alignItems: "flex-start",
                 }}
               >
-                <GraphWrapper>
+                <LazyGraphWrapper>
                   <AnimeStatGraph
                     animeStats={anime.animeStats}
                     selectedLegend={sortBy}
                   />
-                </GraphWrapper>
-                <GraphWrapper>
+                </LazyGraphWrapper>
+                <LazyGraphWrapper>
                   <AnimePollGraph polls={anime.polls} />
-                </GraphWrapper>
+                </LazyGraphWrapper>
               </CommonCol>
             </AnimeStatSubWrapper>
           </AnimeStatWrapper>
