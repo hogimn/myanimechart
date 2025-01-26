@@ -45,6 +45,14 @@ const zoomOptions = {
   },
 };
 
+const StyledTotalVotes = styled.div`
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3b82f6;
+  text-align: center;
+`;
+
 const VoteList = styled.ul`
   margin: 0;
   padding: 0;
@@ -319,6 +327,9 @@ const AnimePollGraph = ({ polls }) => {
           footer={null}
           centered
         >
+          <StyledTotalVotes>
+            Total Votes: {modalData.totalVotes}
+          </StyledTotalVotes>
           <VoteList>
             {[...modalData.votesBreakdown]
               .reverse()
