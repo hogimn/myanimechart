@@ -227,7 +227,7 @@ const AnimePollGraph = ({ polls }) => {
         position: "left",
         title: {
           display: false,
-          text: "Average Score",
+          text: "Avg. Score",
           color: "#ffffff",
         },
         ticks: {
