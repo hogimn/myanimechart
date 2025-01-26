@@ -317,6 +317,7 @@ const AnimePollGraph = ({ polls }) => {
           open={isModalOpen}
           onCancel={() => setIsModalOpen(false)}
           footer={null}
+          centered
         >
           <VoteList>
             {[...modalData.votesBreakdown]
