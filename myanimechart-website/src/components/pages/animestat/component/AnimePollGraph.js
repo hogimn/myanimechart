@@ -88,7 +88,7 @@ const AnimePollGraph = ({ polls }) => {
     labels: episodes.map((ep) => `ep ${ep}`),
     datasets: [
       {
-        label: "Average Score",
+        label: "Avg. Score",
         type: "line",
         data: averageScores,
         borderColor: "rgb(104,255,242)",
