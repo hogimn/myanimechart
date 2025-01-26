@@ -73,8 +73,14 @@ public class PollCollectService {
             try {
                 log.info("Collecting poll statistics for anime: {}", animeDao.getTitle());
 
+                // TODO: Create keyword mapping table in database for irregular search keyword
+                String keyword = animeDao.getTitle() + " Poll Episode Discussion";
+                if (animeDao.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
+                    keyword = "Touhai: Ura Rate Mahjong Touhai Roku" + " Poll Episode Discussion";
+                }
+
                 PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
-                        .withQuery(animeDao.getTitle() + " Poll Episode Discussion")
+                        .withQuery(keyword)
                         .withLimit(50)
                         .searchAll();
 
