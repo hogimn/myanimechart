@@ -3,7 +3,6 @@ import { Line } from "react-chartjs-2";
 import {
   CategoryScale,
   Chart as ChartJS,
-  Chart,
   Legend,
   LinearScale,
   LineElement,
@@ -171,7 +170,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
           usePointStyle: true,
           generateLabels: (chart) => {
             const labels =
-              Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
             return labels.map((label) => {
               if (label.hidden) {
                 label.fontColor = "rgba(255, 255, 255, 0.2)";

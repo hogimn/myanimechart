@@ -7,40 +7,23 @@ import {
   LinearScale,
   LineElement,
   PointElement,
-  TimeScale,
   Title,
   Tooltip,
   BarElement,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
-import "chartjs-adapter-date-fns";
 import { isMobile } from "react-device-detect";
-
-const plugin = {
-  id: "increase-legend-spacing",
-  beforeInit(chart) {
-    const originalFit = chart.legend.fit;
-
-    chart.legend.fit = function fit() {
-      originalFit.bind(chart.legend)();
-      this.height += 20;
-    };
-  },
-};
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
+  BarElement,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
-  zoomPlugin,
-  TimeScale,
-  plugin,
-  BarElement,
-  CategoryScale
+  zoomPlugin
 );
 
 const zoomOptions = {
@@ -59,6 +42,7 @@ const zoomOptions = {
     mode: "x",
   },
 };
+
 const AnimePollGraph = ({ polls }) => {
   const episodes = Array.from(new Set(polls.map((poll) => poll.episode))).sort(
     (a, b) => a - b
@@ -72,6 +56,7 @@ const AnimePollGraph = ({ polls }) => {
       (sum, poll) => sum + poll.votes,
       0
     );
+
     return {
       episode,
       totalVotes,
@@ -80,13 +65,6 @@ const AnimePollGraph = ({ polls }) => {
           (poll) => poll.pollOptionId === optionId
         );
         return pollOption ? pollOption.votes : 0;
-      }),
-      optionPercentages: pollOptions.map((optionId) => {
-        const pollOption = pollsForEpisode.find(
-          (poll) => poll.pollOptionId === optionId
-        );
-        const votes = pollOption ? pollOption.votes : 0;
-        return totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(1) : "0.0";
       }),
     };
   });
@@ -99,16 +77,16 @@ const AnimePollGraph = ({ polls }) => {
     return weightedSum / data.totalVotes;
   });
 
+  const baseDatasetConfig = {
+    tension: 0.1,
+    pointRadius: 0,
+    pointHoverRadius: 5,
+    pointHitRadius: 5,
+  };
+
   const chartData = {
     labels: episodes.map((ep) => `ep ${ep}`),
     datasets: [
-      ...pollOptions.map((optionId, index) => ({
-        label: `☆${optionId}.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[index]),
-        backgroundColor: `rgba(${50 + index * 40}, ${
-          100 + index * 30
-        }, 255, 0.6)`,
-      })),
       {
         label: "Average Score",
         type: "line",
@@ -116,8 +94,53 @@ const AnimePollGraph = ({ polls }) => {
         borderColor: "rgb(104,255,242)",
         backgroundColor: "rgb(104,255,242)",
         pointBackgroundColor: "rgb(104,255,242)",
-        tension: 0.4,
         yAxisID: "y1",
+        ...baseDatasetConfig,
+      },
+      {
+        label: `☆1.0`,
+        data: dataPerEpisode.map((data) => data.optionVotes[0]),
+        borderColor: "rgb(231, 88, 148)",
+        backgroundColor: "rgb(231, 88, 148)",
+        pointBackgroundColor: "rgb(231, 88, 148)",
+        stack: "Stack 0",
+        ...baseDatasetConfig,
+      },
+      {
+        label: `☆2.0`,
+        data: dataPerEpisode.map((data) => data.optionVotes[1]),
+        borderColor: "hsl(282, 70.20%, 81.60%)",
+        backgroundColor: "hsl(282, 70.20%, 81.60%)",
+        pointBackgroundColor: "hsl(282, 70.20%, 81.60%)",
+        stack: "Stack 0",
+        ...baseDatasetConfig,
+      },
+      {
+        label: `☆3.0`,
+        data: dataPerEpisode.map((data) => data.optionVotes[2]),
+        borderColor: "rgb(87, 68, 170)",
+        backgroundColor: "rgb(87, 68, 170)",
+        pointBackgroundColor: "rgb(87, 68, 170)",
+        stack: "Stack 0",
+        ...baseDatasetConfig,
+      },
+      {
+        label: `☆4.0`,
+        data: dataPerEpisode.map((data) => data.optionVotes[3]),
+        borderColor: "rgb(90, 115, 224)",
+        backgroundColor: "rgb(90, 115, 224)",
+        pointBackgroundColor: "rgb(90, 115, 224)",
+        stack: "Stack 0",
+        ...baseDatasetConfig,
+      },
+      {
+        label: `☆5.0`,
+        data: dataPerEpisode.map((data) => data.optionVotes[4]),
+        borderColor: "rgb(150, 194, 252)",
+        backgroundColor: "rgb(150, 194, 252)",
+        pointBackgroundColor: "rgb(150, 194, 252)",
+        stack: "Stack 0",
+        ...baseDatasetConfig,
       },
     ],
   };
@@ -142,9 +165,10 @@ const AnimePollGraph = ({ polls }) => {
             );
 
             if (optionIndex !== -1) {
-              const percentage =
-                dataPerEpisode[episodeIndex].optionPercentages[optionIndex];
-              return `${datasetLabel}: ${value} votes (${percentage}%)`;
+              const totalVotes = dataPerEpisode[episodeIndex].totalVotes;
+              const votes = value;
+              const percentage = ((votes / totalVotes) * 100).toFixed(1);
+              return `${datasetLabel}: ${votes} votes (${percentage}%)`;
             }
 
             return `${datasetLabel}: ${value} votes`;
@@ -154,30 +178,60 @@ const AnimePollGraph = ({ polls }) => {
       legend: {
         position: "top",
         labels: {
+          color: "#ffffff",
+          boxHeight: 9,
           usePointStyle: true,
+          generateLabels: (chart) => {
+            const labels =
+              ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
+            return labels.map((label) => {
+              if (label.hidden) {
+                label.fontColor = "rgba(255, 255, 255, 0.2)";
+                label.lineWidth = 0;
+              } else {
+                label.fontColor = "#c9e0ff";
+                label.lineWidth = 5;
+              }
+              return label;
+            });
+          },
         },
       },
       zoom: zoomOptions,
     },
     scales: {
       x: {
+        stacked: true,
         title: {
           display: false,
           text: "Episode",
+          color: "#ffffff",
+        },
+        ticks: {
+          color: "#ffffff",
         },
       },
       y: {
+        position: "right",
+        stacked: true,
         title: {
           display: false,
           text: "Votes",
+          color: "#ffffff",
         },
-        beginAtZero: true,
+        ticks: {
+          color: "#ffffff",
+        },
       },
       y1: {
-        position: "right",
+        position: "left",
         title: {
           display: false,
           text: "Average Score",
+          color: "#ffffff",
+        },
+        ticks: {
+          color: "#ffffff",
         },
         beginAtZero: false,
         grid: {
