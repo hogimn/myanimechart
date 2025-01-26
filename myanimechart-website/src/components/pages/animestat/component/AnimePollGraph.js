@@ -131,9 +131,11 @@ const AnimePollGraph = ({ polls }) => {
 
   const baseDatasetConfig = {
     tension: 0.1,
-    pointRadius: 0,
-    pointHoverRadius: 5,
+    pointRadius: 4,
     pointHitRadius: 5,
+    borderRadius: 8,
+    borderWith: 2,
+    borderDash: [8, 4],
   };
 
   const chartData = {
@@ -143,57 +145,24 @@ const AnimePollGraph = ({ polls }) => {
         label: "Avg. Score",
         type: "line",
         data: averageScores,
-        borderColor: "rgb(104,255,242)",
-        backgroundColor: "rgb(104,255,242)",
-        pointBackgroundColor: "rgb(104,255,242)",
+        borderColor: "rgba(38, 194, 229, 0.4)",
+        backgroundColor: "rgba(38, 194, 229, 0.4)",
+        pointBackgroundColor: "rgba(38, 194, 229, 1)",
         yAxisID: "y1",
         ...baseDatasetConfig,
       },
-      {
-        label: `★1.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[0]),
-        borderColor: "rgb(145, 118, 163)",
-        backgroundColor: "rgb(145, 118, 163)",
-        pointBackgroundColor: "rgb(145, 118, 163)",
+      ...pollOptions.map((option, index) => ({
+        label: `★${option}`,
+        data: dataPerEpisode.map((data) => data.optionVotes[index]),
+        backgroundColor: `rgba(${(index + 1) * 50}, ${
+          (index + 1) * 100
+        }, 255, 0.4)`,
+        pointBackgroundColor: `rgba(${(index + 1) * 50}, ${
+          (index + 1) * 100
+        }, 255, 1)`,
         stack: "Stack 0",
         ...baseDatasetConfig,
-      },
-      {
-        label: `★2.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[1]),
-        borderColor: "rgb(58, 53, 104)",
-        backgroundColor: "rgb(58, 53, 104)",
-        pointBackgroundColor: "rgb(58, 53, 104)",
-        stack: "Stack 0",
-        ...baseDatasetConfig,
-      },
-      {
-        label: `★3.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[2]),
-        borderColor: "rgb(116, 110, 194)",
-        backgroundColor: "rgb(116, 110, 194)",
-        pointBackgroundColor: "rgb(116, 110, 194)",
-        stack: "Stack 0",
-        ...baseDatasetConfig,
-      },
-      {
-        label: `★4.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[3]),
-        borderColor: "rgb(158, 165, 228)",
-        backgroundColor: "rgb(158, 165, 228)",
-        pointBackgroundColor: "rgb(158, 165, 228)",
-        stack: "Stack 0",
-        ...baseDatasetConfig,
-      },
-      {
-        label: `★5.0`,
-        data: dataPerEpisode.map((data) => data.optionVotes[4]),
-        borderColor: "rgb(205, 208, 250)",
-        backgroundColor: "rgb(205, 208, 250)",
-        pointBackgroundColor: "rgb(205, 208, 250)",
-        stack: "Stack 0",
-        ...baseDatasetConfig,
-      },
+      })),
     ],
   };
 
@@ -292,7 +261,7 @@ const AnimePollGraph = ({ polls }) => {
       },
     },
     animation: {
-      duration: 0,
+      duration: 600,
     },
     onClick: (event, elements) => {
       if (elements.length > 0) {
