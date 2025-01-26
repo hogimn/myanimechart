@@ -75,7 +75,7 @@ const StyledResetButton = styled(CommonButton)`
   }
 `;
 
-const AnimeStatsGraph = ({ animeStats, selectedLegend }) => {
+const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const [activeLegend, setActiveLegend] = useState("");
   const chartRef = useRef(null);
 
@@ -225,4 +225,4 @@ const AnimeStatsGraph = ({ animeStats, selectedLegend }) => {
   );
 };
 
-export default AnimeStatsGraph;
+export default AnimeStatGraph;
