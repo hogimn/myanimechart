@@ -113,16 +113,6 @@ public class PollCollectService {
                         continue;
                     }
 
-                    ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
-                    Thread.sleep(1000);
-                    Poll poll = forumTopicDetail.getPoll();
-                    PollOption[] options = poll.getOptions();
-
-                    if (options == null || options.length == 0) {
-                        log.info("No poll options found for topicId: {}", topicId);
-                        break;
-                    }
-
                     int episode = getEpisodeFromTopicTitle(topicTitle);
                     if (episode == -1) {
                         log.error("Failed to get episode from topic title: {}", topicTitle);
@@ -135,6 +125,11 @@ public class PollCollectService {
                     voteZeroOptions.add(3);
                     voteZeroOptions.add(4);
                     voteZeroOptions.add(5);
+
+                    ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
+                    Thread.sleep(1000);
+                    Poll poll = forumTopicDetail.getPoll();
+                    PollOption[] options = poll.getOptions();
 
                     for (PollOption option : options) {
                         try {
