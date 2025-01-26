@@ -255,7 +255,7 @@ const SeasonalAnimeList = ({
                 <LazyGraphWrapper>
                   <AnimeStatGraph
                     animeStats={anime.animeStats}
-                    selectedLegend={sortBy}
+                    selectedLegend={"score"}
                   />
                 </LazyGraphWrapper>
                 <LazyGraphWrapper>
