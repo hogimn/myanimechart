@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.database.batch.service;
 
-import com.hogimn.myanimechart.database.batch.dao.BatchDao;
+import com.hogimn.myanimechart.database.batch.entity.BatchEntity;
 import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.repository.BatchRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class BatchService {
     }
 
     public BatchDto getBatchDtoByName(String name) {
-        Optional<BatchDao> optional = batchRepository.findById(name);
+        Optional<BatchEntity> optional = batchRepository.findById(name);
         if (optional.isPresent()) {
             return BatchDto.from(optional.get());
         }

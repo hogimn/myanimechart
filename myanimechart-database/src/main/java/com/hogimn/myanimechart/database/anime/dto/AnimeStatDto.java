@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.database.anime.dto;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
+import com.hogimn.myanimechart.database.anime.entity.AnimeStatEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +19,15 @@ public class AnimeStatDto {
     private Integer rank;
     private LocalDateTime recordedAt;
 
-    public static AnimeStatDto from(AnimeStatDao animeStatDao) {
+    public static AnimeStatDto from(AnimeStatEntity animeStatEntity) {
         AnimeStatDto animeStat = new AnimeStatDto();
-        animeStat.setAnimeId(animeStatDao.getAnime().getId());
-        animeStat.setScore(animeStatDao.getScore());
-        animeStat.setMembers(animeStatDao.getMembers());
-        animeStat.setRecordedAt(animeStatDao.getRecordedAt());
-        animeStat.setPopularity(animeStatDao.getPopularity());
-        animeStat.setScoringCount(animeStatDao.getScoringCount());
-        animeStat.setRank(animeStatDao.getRank());
+        animeStat.setAnimeId(animeStatEntity.getAnime().getId());
+        animeStat.setScore(animeStatEntity.getScore());
+        animeStat.setMembers(animeStatEntity.getMembers());
+        animeStat.setRecordedAt(animeStatEntity.getRecordedAt());
+        animeStat.setPopularity(animeStatEntity.getPopularity());
+        animeStat.setScoringCount(animeStatEntity.getScoringCount());
+        animeStat.setRank(animeStatEntity.getRank());
         return animeStat;
     }
 

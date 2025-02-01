@@ -1,7 +1,6 @@
 package com.hogimn.myanimechart.database.anime.dto;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
+import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.property.Genre;
 import dev.katsute.mal4j.property.IDN;
@@ -46,32 +45,32 @@ public class AnimeDto {
     private List<AnimeStatDto> animeStats;
     private List<PollDto> polls;
 
-    public static AnimeDto from(AnimeDao animeDao) {
+    public static AnimeDto from(AnimeEntity animeEntity) {
         AnimeDto anime = new AnimeDto();
-        anime.setId(animeDao.getId());
-        anime.setTitle(animeDao.getTitle());
-        anime.setSeason(animeDao.getSeason());
-        anime.setImage(animeDao.getImage());
-        anime.setLink(animeDao.getLink());
-        anime.setScore(animeDao.getScore());
-        anime.setMembers(animeDao.getMembers());
-        anime.setYear(animeDao.getYear());
-        anime.setSource(animeDao.getSource());
-        anime.setGenre(Arrays.asList(animeDao.getGenre().split(",")));
-        anime.setStudios(Arrays.asList(animeDao.getStudios().split(",")));
-        anime.setRank(animeDao.getRank());
-        anime.setPopularity(animeDao.getPopularity());
-        anime.setScoringCount(animeDao.getScoringCount());
-        anime.setEpisodes(animeDao.getEpisodes());
-        anime.setAirStatus(animeDao.getAirStatus());
-        anime.setTitle(animeDao.getTitle());
-        anime.setType(animeDao.getType());
-        anime.setFinishedAt(animeDao.getFinishedAt());
-        anime.setStartDate(animeDao.getStartDate());
-        anime.setEndDate(animeDao.getEndDate());
-        anime.setEnglishTitle(animeDao.getEnglishTitle());
-        anime.setJapaneseTitle(animeDao.getJapaneseTitle());
-        anime.setSynopsis(animeDao.getSynopsis());
+        anime.setId(animeEntity.getId());
+        anime.setTitle(animeEntity.getTitle());
+        anime.setSeason(animeEntity.getSeason());
+        anime.setImage(animeEntity.getImage());
+        anime.setLink(animeEntity.getLink());
+        anime.setScore(animeEntity.getScore());
+        anime.setMembers(animeEntity.getMembers());
+        anime.setYear(animeEntity.getYear());
+        anime.setSource(animeEntity.getSource());
+        anime.setGenre(Arrays.asList(animeEntity.getGenre().split(",")));
+        anime.setStudios(Arrays.asList(animeEntity.getStudios().split(",")));
+        anime.setRank(animeEntity.getRank());
+        anime.setPopularity(animeEntity.getPopularity());
+        anime.setScoringCount(animeEntity.getScoringCount());
+        anime.setEpisodes(animeEntity.getEpisodes());
+        anime.setAirStatus(animeEntity.getAirStatus());
+        anime.setTitle(animeEntity.getTitle());
+        anime.setType(animeEntity.getType());
+        anime.setFinishedAt(animeEntity.getFinishedAt());
+        anime.setStartDate(animeEntity.getStartDate());
+        anime.setEndDate(animeEntity.getEndDate());
+        anime.setEnglishTitle(animeEntity.getEnglishTitle());
+        anime.setJapaneseTitle(animeEntity.getJapaneseTitle());
+        anime.setSynopsis(animeEntity.getSynopsis());
         return anime;
     }
 

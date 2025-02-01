@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.anime.dao.key;
+package com.hogimn.myanimechart.database.batch.entity.key;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnimeStatId implements Serializable {
-    private Long anime;
+public class BatchHistoryId implements Serializable {
+    private String batch;
     private LocalDateTime recordedAt;
 }

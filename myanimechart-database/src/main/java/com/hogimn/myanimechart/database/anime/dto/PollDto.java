@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.database.anime.dto;
 
-import com.hogimn.myanimechart.database.anime.dao.PollDao;
+import com.hogimn.myanimechart.database.anime.entity.PollEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,16 +20,16 @@ public class PollDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static PollDto from(PollDao pollDao) {
+    public static PollDto from(PollEntity pollEntity) {
         PollDto pollDto = new PollDto();
-        pollDto.setAnimeId(pollDao.getAnime().getId());
-        pollDto.setPollOptionId(pollDao.getPollOption().getId());
-        pollDto.setTopicId(pollDao.getTopicId());
-        pollDto.setEpisode(pollDao.getEpisode());
-        pollDto.setTitle(pollDao.getTitle());
-        pollDto.setVotes(pollDao.getVotes());
-        pollDto.setCreatedAt(pollDao.getCreatedAt());
-        pollDto.setUpdatedAt(pollDao.getUpdatedAt());
+        pollDto.setAnimeId(pollEntity.getAnime().getId());
+        pollDto.setPollOptionId(pollEntity.getPollOption().getId());
+        pollDto.setTopicId(pollEntity.getTopicId());
+        pollDto.setEpisode(pollEntity.getEpisode());
+        pollDto.setTitle(pollEntity.getTitle());
+        pollDto.setVotes(pollEntity.getVotes());
+        pollDto.setCreatedAt(pollEntity.getCreatedAt());
+        pollDto.setUpdatedAt(pollEntity.getUpdatedAt());
         return pollDto;
     }
 }

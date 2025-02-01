@@ -2,8 +2,8 @@ package com.hogimn.myanimechart.execute.service;
 
 import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
-import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
-import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
+import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
+import com.hogimn.myanimechart.database.anime.entity.PollOptionEntity;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.PollOptionService;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,15 +66,15 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
-        List<AnimeDao> animeDaos = animeService.getAiringAnime();
+        List<AnimeEntity> animeEntities = animeService.getAiringAnimeEntities();
 
-        animeDaos.forEach(animeDao -> {
+        animeEntities.forEach(animeEntity -> {
             try {
-                log.info("Collecting poll statistics for anime: {}", animeDao.getTitle());
+                log.info("Collecting poll statistics for anime: {}", animeEntity.getTitle());
 
                 // TODO: Create keyword mapping table in database for irregular search keyword
-                String keyword = animeDao.getTitle() + " Poll Episode Discussion";
-                if (animeDao.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
+                String keyword = animeEntity.getTitle() + " Poll Episode Discussion";
+                if (animeEntity.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
                     keyword = "Touhai: Ura Rate Mahjong Touhai Roku" + " Poll Episode Discussion";
                 }
 
@@ -97,9 +96,9 @@ public class PollCollectService {
                     Long topicId = forumTopic.getID();
                     String topicTitle = forumTopic.getTitle();
 
-                    if (!topicTitle.startsWith(animeDao.getTitle().split(" ")[0])) {
+                    if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0])) {
                         log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeDao.getTitle());
+                                forumTopic.getTitle(), animeEntity.getTitle());
                         firstWordDiffCnt++;
                         if (firstWordDiffCnt > 10) {
                             break;
@@ -115,13 +114,13 @@ public class PollCollectService {
 
                     if (checkMangaTopic(topicTitle)) {
                         log.info("Topic name is manga discussion. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeDao.getTitle());
+                                forumTopic.getTitle(), animeEntity.getTitle());
                         break;
                     }
 
-                    if (!checkTitleSame(topicTitle, animeDao.getTitle())) {
+                    if (!checkTitleSame(topicTitle, animeEntity.getTitle())) {
                         log.info("Topic name is far different from anime name. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeDao.getTitle());
+                                forumTopic.getTitle(), animeEntity.getTitle());
                         continue;
                     }
 
@@ -131,16 +130,16 @@ public class PollCollectService {
                         break;
                     }
 
-                    savePoll(topicId, topicTitle, episode, animeDao);
+                    savePoll(topicId, topicTitle, episode, animeEntity);
                 }
             } catch (Exception e) {
-                log.error("Failed to get forumTopic  '{} {}': {}", animeDao.getId(), animeDao.getTitle(), e.getMessage(), e);
+                log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
             }
         });
     }
 
     private void savePoll(
-            Long topicId, String topicTitle, int episode, AnimeDao animeDao)
+            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity)
             throws InterruptedException {
         Set<Integer> voteZeroOptions = new HashSet<>();
         voteZeroOptions.add(1);
@@ -158,14 +157,14 @@ public class PollCollectService {
             try {
                 int votes = option.getVotes();
                 String text = option.getText();
-                PollOptionDao pollOptionDao = pollOptionService.getPollOptionDao(text);
+                PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntity(text);
 
-                Integer optionId = pollOptionDao.getId();
+                Integer optionId = pollOptionEntity.getId();
                 voteZeroOptions.remove(optionId);
 
                 PollDto pollDto = new PollDto();
-                pollDto.setPollOptionId(pollOptionDao.getId());
-                pollDto.setAnimeId(animeDao.getId());
+                pollDto.setPollOptionId(pollOptionEntity.getId());
+                pollDto.setAnimeId(animeEntity.getId());
                 pollDto.setTopicId(topicId);
                 pollDto.setTitle(topicTitle);
                 pollDto.setEpisode(episode);
@@ -179,9 +178,9 @@ public class PollCollectService {
 
         voteZeroOptions.forEach((optionId) -> {
             PollDto pollDto = new PollDto();
-            PollOptionDao pollOptionDao = pollOptionService.getPollOptionDaoById(optionId);
-            pollDto.setPollOptionId(pollOptionDao.getId());
-            pollDto.setAnimeId(animeDao.getId());
+            PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntityById(optionId);
+            pollDto.setPollOptionId(pollOptionEntity.getId());
+            pollDto.setAnimeId(animeEntity.getId());
             pollDto.setTopicId(topicId);
             pollDto.setTitle(topicTitle);
             pollDto.setEpisode(episode);

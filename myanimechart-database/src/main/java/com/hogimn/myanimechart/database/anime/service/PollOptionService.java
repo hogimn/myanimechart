@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.database.anime.service;
 
-import com.hogimn.myanimechart.database.anime.dao.PollOptionDao;
+import com.hogimn.myanimechart.database.anime.entity.PollOptionEntity;
 import com.hogimn.myanimechart.database.anime.repository.PollOptionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ public class PollOptionService {
         this.pollOptionRepository = pollOptionRepository;
     }
 
-    public PollOptionDao getPollOptionDao(String text) {
-        Optional<PollOptionDao> option = pollOptionRepository.findByText(text);
+    public PollOptionEntity getPollOptionEntity(String text) {
+        Optional<PollOptionEntity> option = pollOptionRepository.findByText(text);
         if (option.isPresent()) {
             return option.get();
         } else {
@@ -25,8 +25,8 @@ public class PollOptionService {
         }
     }
 
-    public PollOptionDao getPollOptionDaoById(int id) {
-        Optional<PollOptionDao> option = pollOptionRepository.findById(id);
+    public PollOptionEntity getPollOptionEntityById(int id) {
+        Optional<PollOptionEntity> option = pollOptionRepository.findById(id);
         if (option.isPresent()) {
             return option.get();
         } else {

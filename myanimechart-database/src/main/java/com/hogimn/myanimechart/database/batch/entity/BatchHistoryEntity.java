@@ -1,7 +1,7 @@
-package com.hogimn.myanimechart.database.batch.dao;
+package com.hogimn.myanimechart.database.batch.entity;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.batch.dao.key.BatchHistoryId;
+import com.hogimn.myanimechart.database.batch.entity.key.BatchHistoryId;
 import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,19 +17,19 @@ import java.time.LocalDateTime;
 @Table(name = "batch_history")
 @Data
 @IdClass(BatchHistoryId.class)
-public class BatchHistoryDao {
+public class BatchHistoryEntity {
     @Id
     @ManyToOne
     @JoinColumn(name = "name", referencedColumnName = "name")
-    private BatchDao batch;
+    private BatchEntity batch;
 
     @Id
     private LocalDateTime recordedAt;
 
-    public static BatchHistoryDao from(BatchDto batchDto) {
-        BatchHistoryDao batchHistoryDao = new BatchHistoryDao();
-        batchHistoryDao.setBatch(BatchDao.from(batchDto));
-        batchHistoryDao.setRecordedAt(DateUtil.now());
-        return batchHistoryDao;
+    public static BatchHistoryEntity from(BatchDto batchDto) {
+        BatchHistoryEntity batchHistoryEntity = new BatchHistoryEntity();
+        batchHistoryEntity.setBatch(BatchEntity.from(batchDto));
+        batchHistoryEntity.setRecordedAt(DateUtil.now());
+        return batchHistoryEntity;
     }
 }

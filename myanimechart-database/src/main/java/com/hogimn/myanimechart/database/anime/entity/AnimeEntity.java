@@ -1,24 +1,18 @@
-package com.hogimn.myanimechart.database.anime.dao;
+package com.hogimn.myanimechart.database.anime.entity;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
-import dev.katsute.mal4j.anime.Anime;
-import dev.katsute.mal4j.property.Genre;
-import dev.katsute.mal4j.property.IDN;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "anime")
 @Data
-public class AnimeDao {
+public class AnimeEntity {
     @Id
     private Long id;
 
@@ -47,8 +41,8 @@ public class AnimeDao {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static AnimeDao from(AnimeDto animeDto) {
-        AnimeDao anime = new AnimeDao();
+    public static AnimeEntity from(AnimeDto animeDto) {
+        AnimeEntity anime = new AnimeEntity();
         anime.setId(animeDto.getId());
         anime.setTitle(animeDto.getTitle());
         anime.setSeason(animeDto.getSeason());

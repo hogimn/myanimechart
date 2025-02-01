@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.anime.dao;
+package com.hogimn.myanimechart.database.anime.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,7 +8,7 @@ import lombok.Data;
 @Entity
 @Table(name = "poll_option")
 @Data
-public class PollOptionDao {
+public class PollOptionEntity {
     @Id
     private Integer id;
     private String text;

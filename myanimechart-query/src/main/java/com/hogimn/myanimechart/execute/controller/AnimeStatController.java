@@ -21,23 +21,23 @@ public class AnimeStatController {
         this.animeStatService = animeStatService;
     }
 
-    @GetMapping("/getAnimeStatsById")
-    public AnimeDto getAnimeStatsById(@RequestParam("id") Long id) {
-        return animeStatService.getAnimeStatsById(id);
+    @GetMapping("/getAnimeStatById")
+    public AnimeDto getAnimeStatById(@RequestParam("id") Long id) {
+        return animeStatService.getAnimeStatDtoById(id);
     }
 
-    @GetMapping("/getAnimeStatsByTitle")
-    public AnimeDto getAnimeStatsByTitle(@RequestParam("title") String title) {
-        return animeStatService.getAnimeStatsByTitle(title);
+    @GetMapping("/getAnimeStatByTitle")
+    public AnimeDto getAnimeStatByTitle(@RequestParam("title") String title) {
+        return animeStatService.getAnimeStatDtoByTitle(title);
     }
 
-    @GetMapping("/getAnimeStatsByKeyword")
-    public List<AnimeDto> getAnimeStatsByKeyword(@RequestParam("keyword") String keyword) {
-        return animeStatService.getAnimeStatsByKeyword(keyword);
+    @GetMapping("/getAnimeStatByKeyword")
+    public List<AnimeDto> getAnimeStatByKeyword(@RequestParam("keyword") String keyword) {
+        return animeStatService.getAnimeStatDtoByKeyword(keyword);
     }
 
     @GetMapping("/{year}/{season}")
     public List<AnimeDto> getAnimeStats(@PathVariable Integer year, @PathVariable String season) {
-        return animeStatService.getAnimeStats(year, season);
+        return animeStatService.getAnimeStatDtos(year, season);
     }
 }

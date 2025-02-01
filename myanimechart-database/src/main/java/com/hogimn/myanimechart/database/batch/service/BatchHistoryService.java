@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.database.batch.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.batch.dao.BatchDao;
-import com.hogimn.myanimechart.database.batch.dao.BatchHistoryDao;
+import com.hogimn.myanimechart.database.batch.entity.BatchEntity;
+import com.hogimn.myanimechart.database.batch.entity.BatchHistoryEntity;
 import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.repository.BatchHistoryRepository;
 import jakarta.transaction.Transactional;
@@ -26,16 +26,16 @@ public class BatchHistoryService {
     @Transactional
     public void saveBatchHistory(String name) {
         BatchDto batchDto = batchService.getBatchDtoByName(name);
-        batchHistoryRepository.save(BatchHistoryDao.from(batchDto));
+        batchHistoryRepository.save(BatchHistoryEntity.from(batchDto));
     }
 
     public boolean checkBatchExecutedWithinPeriod(String name, long seconds) {
         LocalDateTime now = DateUtil.now();
         LocalDateTime beforePeriod = now.minusSeconds(seconds + seconds / 6);
         BatchDto batchDto = batchService.getBatchDtoByName(name);
-        List<BatchHistoryDao> batchHistoryDaoList = batchHistoryRepository
-                .findByBatchAndRecordedAtBetween(BatchDao.from(batchDto), beforePeriod, now);
+        List<BatchHistoryEntity> batchHistoryEntityList = batchHistoryRepository
+                .findByBatchAndRecordedAtBetween(BatchEntity.from(batchDto), beforePeriod, now);
 
-        return !batchHistoryDaoList.isEmpty();
+        return !batchHistoryEntityList.isEmpty();
     }
 }

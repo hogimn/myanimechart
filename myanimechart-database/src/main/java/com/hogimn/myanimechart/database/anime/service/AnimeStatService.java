@@ -1,9 +1,8 @@
 package com.hogimn.myanimechart.database.anime.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
-import com.hogimn.myanimechart.database.anime.dao.AnimeStatDao;
-import com.hogimn.myanimechart.database.anime.dao.PollDao;
+import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
+import com.hogimn.myanimechart.database.anime.entity.AnimeStatEntity;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
@@ -36,73 +35,73 @@ public class AnimeStatService {
             return;
         }
 
-        AnimeDao animeDao = animeService.getAnimeDaoByIdWithLock(animeStatDto.getAnimeId());
-        AnimeStatDao animeStatDao = new AnimeStatDao();
-        animeStatDao.setAnime(animeDao);
-        animeStatDao.setMembers(animeStatDto.getMembers());
-        animeStatDao.setScore(animeStatDto.getScore());
-        animeStatDao.setRecordedAt(animeStatDto.getRecordedAt());
-        animeStatDao.setPopularity(animeStatDto.getPopularity());
-        animeStatDao.setScoringCount(animeStatDto.getScoringCount());
-        animeStatDao.setRank(animeStatDto.getRank());
+        AnimeEntity animeEntity = animeService.getAnimeEntityByIdWithLock(animeStatDto.getAnimeId());
+        AnimeStatEntity animeStatEntity = new AnimeStatEntity();
+        animeStatEntity.setAnime(animeEntity);
+        animeStatEntity.setMembers(animeStatDto.getMembers());
+        animeStatEntity.setScore(animeStatDto.getScore());
+        animeStatEntity.setRecordedAt(animeStatDto.getRecordedAt());
+        animeStatEntity.setPopularity(animeStatDto.getPopularity());
+        animeStatEntity.setScoringCount(animeStatDto.getScoringCount());
+        animeStatEntity.setRank(animeStatDto.getRank());
         animeStatDto.setRecordedAt(DateUtil.now());
 
-        animeStatRepository.save(animeStatDao);
+        animeStatRepository.save(animeStatEntity);
     }
 
-    private List<AnimeStatDao> getAnimeStatDaosByAnime(AnimeDao animeDao) {
-        return animeStatRepository.findByAnimeOrderByRecordedAtAsc(animeDao);
+    private List<AnimeStatEntity> getAnimeStatEntitiesByAnime(AnimeEntity animeEntity) {
+        return animeStatRepository.findByAnimeOrderByRecordedAtAsc(animeEntity);
     }
 
-    private List<AnimeStatDto> getAnimeStatDtosByAnime(AnimeDao animeDao) {
-        List<AnimeStatDao> animeStatDaos = getAnimeStatDaosByAnime(animeDao);
-        return animeStatDaos.stream().map(AnimeStatDto::from).toList();
+    private List<AnimeStatDto> getAnimeStatDtosByAnime(AnimeEntity animeEntity) {
+        List<AnimeStatEntity> animeStatEntities = getAnimeStatEntitiesByAnime(animeEntity);
+        return animeStatEntities.stream().map(AnimeStatDto::from).toList();
     }
 
-    public List<AnimeDto> getAnimeStats(Integer year, String season) {
-        List<AnimeDao> animeDaos = animeService.getAnimeDaosByYearAndSeason(year, season);
-        List<AnimeDto> animeDtos = animeDaos.stream().map(AnimeDto::from).toList();
+    public List<AnimeDto> getAnimeStatDtos(Integer year, String season) {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByYearAndSeason(year, season);
+        List<AnimeDto> animeDtos = animeEntities.stream().map(AnimeDto::from).toList();
         for (int i = 0; i < animeDtos.size(); i++) {
-            AnimeDao animeDao = animeDaos.get(i);
+            AnimeEntity animeEntity = animeEntities.get(i);
             AnimeDto animeDto = animeDtos.get(i);
-            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeEntity);
             animeDto.setAnimeStats(animeStat);
-            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeEntity);
             animeDto.setPolls(pollDtos);
         }
 
         return animeDtos;
     }
 
-    public AnimeDto getAnimeStatsByTitle(String title) {
-        AnimeDao animeDao = animeService.getAnimeDaoByTitle(title);
-        AnimeDto animeDto = AnimeDto.from(animeDao);
-        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+    public AnimeDto getAnimeStatDtoByTitle(String title) {
+        AnimeEntity animeEntity = animeService.getAnimeEntityByTitle(title);
+        AnimeDto animeDto = AnimeDto.from(animeEntity);
+        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeEntity);
         animeDto.setAnimeStats(animeStat);
-        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeEntity);
         animeDto.setPolls(pollDtos);
         return animeDto;
     }
 
-    public AnimeDto getAnimeStatsById(Long id) {
-        AnimeDao animeDao = animeService.getAnimeDaoById(id);
-        AnimeDto animeDto = AnimeDto.from(animeService.getAnimeDaoById(id));
-        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+    public AnimeDto getAnimeStatDtoById(Long id) {
+        AnimeEntity animeEntity = animeService.getAnimeEntityById(id);
+        AnimeDto animeDto = AnimeDto.from(animeService.getAnimeEntityById(id));
+        List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeEntity);
         animeDto.setAnimeStats(animeStat);
-        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+        List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeEntity);
         animeDto.setPolls(pollDtos);
         return animeDto;
     }
 
-    public List<AnimeDto> getAnimeStatsByKeyword(String keyword) {
-        List<AnimeDao> animeDaos = animeService.getAnimeDaosByKeyword(keyword);
+    public List<AnimeDto> getAnimeStatDtoByKeyword(String keyword) {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByKeyword(keyword);
         List<AnimeDto> animeDtos = animeService.getAnimeDtosByKeyword(keyword);
         for (int i = 0; i < animeDtos.size(); i++) {
-            AnimeDao animeDao = animeDaos.get(i);
+            AnimeEntity animeEntity = animeEntities.get(i);
             AnimeDto animeDto = animeDtos.get(i);
-            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeDao);
+            List<AnimeStatDto> animeStat = getAnimeStatDtosByAnime(animeEntity);
             animeDto.setAnimeStats(animeStat);
-            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeDao);
+            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeEntity);
             animeDto.setPolls(pollDtos);
         }
         return animeDtos;

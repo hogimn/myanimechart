@@ -5,7 +5,7 @@ const AnimeApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/animeStat/getAnimeStatsByKeyword`,
+        `${gatewayUrl}/query/animeStat/getAnimeStatByKeyword`,
         {
           params: { keyword },
         }

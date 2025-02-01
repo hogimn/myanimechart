@@ -1,6 +1,6 @@
-package com.hogimn.myanimechart.database.anime.dao;
+package com.hogimn.myanimechart.database.anime.entity;
 
-import com.hogimn.myanimechart.database.anime.dao.key.PollId;
+import com.hogimn.myanimechart.database.anime.entity.key.PollId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @Table(name = "poll")
 @Data
 @IdClass(PollId.class)
-public class PollDao {
+public class PollEntity {
     @Id
     @ManyToOne
     @JoinColumn(name = "anime_id", referencedColumnName = "id")
-    private AnimeDao anime;
+    private AnimeEntity anime;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "poll_option_id", referencedColumnName = "id")
-    private PollOptionDao pollOption;
+    private PollOptionEntity pollOption;
 
     @Id
     private Long topicId;

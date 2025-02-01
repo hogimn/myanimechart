@@ -3,7 +3,7 @@ package com.hogimn.myanimechart.execute.service;
 import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.dao.AnimeDao;
+import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
@@ -12,15 +12,12 @@ import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -108,19 +105,19 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeStatisticsOldSeasonCurrentlyAiring() {
-        List<AnimeDao> animeDaos = animeService.getAiringAnimeExcludingCurrentAndNextSeason(
+        List<AnimeEntity> animeEntities = animeService.getAiringAnimeEntitiesExcludingCurrentAndNextSeason(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        for (AnimeDao animeDao : animeDaos) {
+        for (AnimeEntity animeEntity : animeEntities) {
             try {
-                Anime anime = getAnime(animeDao.getId());
+                Anime anime = getAnime(animeEntity.getId());
                 Thread.sleep(1000);
                 AnimeDto animeDto = AnimeDto.from(anime);
                 AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
             } catch (Exception e) {
-                log.error("Failed to collect anime statistics for anime '{}': {}", animeDao.getId(), e.getMessage(), e);
+                log.error("Failed to collect anime statistics for anime '{}': {}", animeEntity.getId(), e.getMessage(), e);
             }
         }
     }
