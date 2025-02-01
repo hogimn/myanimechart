@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,12 @@ public class AnimeService {
             AnimeDao animeDao = optional.get();
             animeDao.setFrom(animeDto);
             animeDao.setUpdatedAt(DateUtil.now());
+
+            if (Objects.equals(animeDto.getAirStatus(), "finished_airing")
+                    && animeDao.getFinishedAt() != null) {
+                animeDto.setFinishedAt(DateUtil.now());
+            }
+
             AnimeDao saved = animeRepository.save(animeDao);
             log.info("Updated anime: {}", saved);
             return;
@@ -39,6 +46,11 @@ public class AnimeService {
 
         AnimeDao animeDao = AnimeDao.from(animeDto);
         animeDao.setCreatedAt(DateUtil.now());
+
+        if (Objects.equals(animeDto.getAirStatus(), "finished_airing")) {
+            animeDto.setFinishedAt(DateUtil.now());
+        }
+
         AnimeDao saved = animeRepository.save(animeDao);
         log.info("Inserted new anime: {}", saved);
     }

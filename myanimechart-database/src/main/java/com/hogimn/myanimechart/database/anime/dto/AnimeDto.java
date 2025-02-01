@@ -98,10 +98,6 @@ public class AnimeDto {
         animeDto.setType(!Objects.equals(anime.getType().field(), "") ?
                 anime.getType().field() : anime.getRawType());
 
-        if (Objects.equals(animeDto.getAirStatus(), "finished_airing")) {
-            animeDto.setFinishedAt(DateUtil.now());
-        }
-
         animeDto.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
         animeDto.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
         animeDto.setEnglishTitle(anime.getAlternativeTitles().getEnglish());
