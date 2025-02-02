@@ -130,12 +130,12 @@ const AnimePollGraph = ({ polls }) => {
   });
 
   const baseDatasetConfig = {
-    tension: 0.1,
-    pointRadius: 4,
-    pointHitRadius: 5,
-    borderRadius: 8,
-    borderWith: 2,
-    borderDash: [8, 4],
+    tension: 0.3,
+    pointRadius: 3.0,
+    pointHitRadius: 6,
+    borderRadius: 7,
+    borderWidth: 1.5,
+    borderDash: [4, 2],
   };
 
   const chartData = {
@@ -145,21 +145,36 @@ const AnimePollGraph = ({ polls }) => {
         label: "Avg. Score",
         type: "line",
         data: averageScores,
-        borderColor: "rgba(38, 194, 229, 0.4)",
-        backgroundColor: "rgba(38, 194, 229, 0.4)",
-        pointBackgroundColor: "rgba(38, 194, 229, 1)",
+        borderColor: "rgb(174, 209, 241)",
+        backgroundColor: "rgba(118, 165, 211, 0.2)",
+        pointBackgroundColor: "rgb(92, 111, 131)",
         yAxisID: "y1",
         ...baseDatasetConfig,
       },
       ...pollOptions.map((option, index) => ({
         label: `★${option}`,
         data: dataPerEpisode.map((data) => data.optionVotes[index]),
-        backgroundColor: `rgba(${(index + 1) * 50}, ${
-          (index + 1) * 100
-        }, 255, 0.4)`,
-        pointBackgroundColor: `rgba(${(index + 1) * 50}, ${
-          (index + 1) * 100
-        }, 255, 1)`,
+        borderColor: [
+          "rgba(163, 48, 80, 1)",
+          "rgba(139, 63, 124, 1)",
+          "rgba(114, 83, 166, 1)",
+          "rgba(88, 120, 198, 1)",
+          "rgba(74, 144, 226, 1)",
+        ][index],
+        backgroundColor: [
+          "rgba(163, 48, 80, 0.25)",
+          "rgba(139, 63, 124, 0.25)",
+          "rgba(114, 83, 166, 0.25)",
+          "rgba(88, 120, 198, 0.25)",
+          "rgba(74, 144, 226, 0.25)",
+        ][index],
+        pointBackgroundColor: [
+          "rgba(163, 48, 80, 1)",
+          "rgba(139, 63, 124, 1)",
+          "rgba(114, 83, 166, 1)",
+          "rgba(88, 120, 198, 1)",
+          "rgba(74, 144, 226, 1)",
+        ][index],
         stack: "Stack 0",
         ...baseDatasetConfig,
       })),
@@ -205,7 +220,7 @@ const AnimePollGraph = ({ polls }) => {
           generateLabels: (chart) => {
             const labels =
               ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
-            return labels.map((label) => {
+            return labels.reverse().map((label) => {
               if (label.hidden) {
                 label.fontColor = "rgba(255, 255, 255, 0.2)";
                 label.lineWidth = 0;
