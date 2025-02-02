@@ -134,7 +134,7 @@ const AnimePollGraph = ({ polls }) => {
     pointRadius: 3.0,
     pointHitRadius: 6,
     borderRadius: 7,
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderDash: [4, 2],
   };
 
