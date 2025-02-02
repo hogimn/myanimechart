@@ -79,7 +79,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const baseDatasetConfig = {
     tension: 0.5,
     pointRadius: 0,
-    pointHoverRadius: 4,
+    pointHoverRadius: 6,
     pointHitRadius: 8,
     borderRadius: 8,
     borderWidth: 1.5,
@@ -142,6 +142,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     maintainAspectRatio: false,
     plugins: {
       tooltip: {
+        yAlign: "bottom",
         callbacks: {
           label: (context) => `${context.dataset.label}: ${context.raw}`,
         },

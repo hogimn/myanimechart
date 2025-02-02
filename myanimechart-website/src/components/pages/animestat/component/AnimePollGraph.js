@@ -151,6 +151,7 @@ const AnimePollGraph = ({ polls }) => {
   const baseDatasetConfig = {
     tension: 0.3,
     pointRadius: 3.0,
+    pointHoverRadius: 8,
     pointHitRadius: 6,
     borderRadius: 7,
     borderWidth: 2,
@@ -205,6 +206,7 @@ const AnimePollGraph = ({ polls }) => {
     maintainAspectRatio: false,
     plugins: {
       tooltip: {
+        yAlign: "bottom",
         callbacks: {
           label: (context) => {
             const datasetLabel = context.dataset.label || "";
