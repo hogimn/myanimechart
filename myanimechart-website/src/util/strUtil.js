@@ -1,7 +1,7 @@
 export const toTypeLabel = (str) => {
   switch (str) {
     case "all":
-      return "ALL";
+      return "All";
     case "tv":
       return "TV";
     case "ona":
@@ -22,7 +22,7 @@ export const toTypeLabel = (str) => {
 export const toAirStatusLabel = (str) => {
   switch (str) {
     case "all":
-      return "ALL";
+      return "All";
     case "currently_airing":
       return "Airing";
     case "finished_airing":

@@ -130,7 +130,7 @@ const SeasonalTabs = () => {
               value={`Type: ${toTypeLabel(filterBy.type)}`}
               onChange={(value) => setFilterBy({ ...filterBy, type: value })}
             >
-              <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+              <CommonSelect.Option value="all">All</CommonSelect.Option>
               <CommonSelect.Option value="tv">TV</CommonSelect.Option>
               <CommonSelect.Option value="ona">ONA</CommonSelect.Option>
               <CommonSelect.Option value="movie">Movie</CommonSelect.Option>
@@ -148,7 +148,7 @@ const SeasonalTabs = () => {
                 setFilterBy({ ...filterBy, airStatus: value })
               }
             >
-              <CommonSelect.Option value="all">ALL</CommonSelect.Option>
+              <CommonSelect.Option value="all">All</CommonSelect.Option>
               <CommonSelect.Option value="currently_airing">
                 Airing
               </CommonSelect.Option>
