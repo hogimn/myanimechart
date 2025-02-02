@@ -157,7 +157,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
               ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
             return labels.map((label) => {
               if (label.hidden) {
-                label.fontColor = "rgba(255, 255, 255, 0.2)";
+                label.fontColor = "rgba(255, 255, 255, 0.4)";
                 label.lineWidth = 0;
               } else {
                 label.fontColor = "rgba(255, 255, 255, 0.8)";
