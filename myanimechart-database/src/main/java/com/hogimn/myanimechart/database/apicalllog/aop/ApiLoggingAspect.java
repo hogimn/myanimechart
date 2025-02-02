@@ -1,6 +1,6 @@
-package com.hogimn.myanimechart.database.apicall.aop;
+package com.hogimn.myanimechart.database.apicalllog.aop;
 
-import com.hogimn.myanimechart.database.apicall.service.ApiCallLogService;
+import com.hogimn.myanimechart.database.apicalllog.service.ApiCallLogService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,11 +25,30 @@ public class ApiLoggingAspect {
 
         String endpoint = request.getRequestURI();
         String method = request.getMethod();
-        String ip = request.getRemoteAddr();
+        String ip = getClientIpAddr(request);
         String country = request.getLocale().getCountry();
 
         apiCallLogService.saveLog(endpoint, method, ip, country);
 
         return joinPoint.proceed();
+    }
+
+    public static String getClientIpAddr(HttpServletRequest request) {
+        String[] headers = {
+                "X-Forwarded-For",
+                "Proxy-Client-IP",
+                "WL-Proxy-Client-IP",
+                "HTTP_CLIENT_IP",
+                "HTTP_X_FORWARDED_FOR"
+        };
+
+        for (String header : headers) {
+            String ip = request.getHeader(header);
+            if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+                return ip;
+            }
+        }
+
+        return request.getRemoteAddr();
     }
 }

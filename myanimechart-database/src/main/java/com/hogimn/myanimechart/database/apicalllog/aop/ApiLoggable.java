@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.apicall.aop;
+package com.hogimn.myanimechart.database.apicalllog.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

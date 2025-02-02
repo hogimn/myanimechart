@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.database.apicall.entity;
+package com.hogimn.myanimechart.database.apicalllog.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

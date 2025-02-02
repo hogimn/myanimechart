@@ -1,8 +1,8 @@
-package com.hogimn.myanimechart.database.apicall.service;
+package com.hogimn.myanimechart.database.apicalllog.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.apicall.entity.ApiCallLog;
-import com.hogimn.myanimechart.database.apicall.repository.ApiCallLogRepository;
+import com.hogimn.myanimechart.database.apicalllog.entity.ApiCallLog;
+import com.hogimn.myanimechart.database.apicalllog.repository.ApiCallLogRepository;
 import org.springframework.stereotype.Service;
 
 @Service
