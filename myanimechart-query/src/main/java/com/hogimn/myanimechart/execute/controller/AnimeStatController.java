@@ -2,6 +2,7 @@ package com.hogimn.myanimechart.execute.controller;
 
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.service.AnimeStatService;
+import com.hogimn.myanimechart.database.apicall.aop.ApiLoggable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class AnimeStatController {
         return animeStatService.getAnimeStatDtoByKeyword(keyword);
     }
 
+    @ApiLoggable
     @GetMapping("/{year}/{season}")
     public List<AnimeDto> getAnimeStats(@PathVariable Integer year, @PathVariable String season) {
         return animeStatService.getAnimeStatDtos(year, season);
