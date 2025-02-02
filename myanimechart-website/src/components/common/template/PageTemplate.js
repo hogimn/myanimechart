@@ -10,6 +10,7 @@ const PageWrapper = styled.div`
 const MidWrapper = styled.div`
   min-height: 100vh;
   color: white;
+  width: 100%;
 `;
 
 const MainWrapper = styled.main``;
