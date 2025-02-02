@@ -15,8 +15,7 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { isMobile } from "react-device-detect";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
-import { MdRestore } from "react-icons/md";
-import StyledResetButton from "../../../common/styled/StyledResetButton";
+import StyledZoomButton from "../../../common/button/ZoomButton";
 
 const plugin = {
   id: "increase-legend-spacing",
@@ -47,7 +46,6 @@ const zoomOptions = {
   zoom: {
     wheel: {
       enabled: true,
-      modifierKey: "ctrl",
     },
     pinch: {
       enabled: true,
@@ -107,14 +105,14 @@ const StyledButton = styled.button`
 `;
 
 const AnimePollGraph = ({ polls }) => {
-  const [modalData, setModalData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const chartRef = useRef(null);
 
-  const handleResetZoom = () => {
-    if (chartRef.current) {
-      chartRef.current.resetZoom();
-    }
+  const [modalData, setModalData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [zoomEnabled, setZoomEnabled] = useState(false);
+
+  const handleZoomToggle = () => {
+    setZoomEnabled((prev) => !prev);
   };
 
   const episodes = Array.from(new Set(polls.map((poll) => poll.episode))).sort(
@@ -323,9 +321,11 @@ const AnimePollGraph = ({ polls }) => {
 
   return (
     <>
-      <StyledResetButton top={"250px"} onClick={handleResetZoom}>
-        <MdRestore />
-      </StyledResetButton>
+      <StyledZoomButton
+        zoomEnabled={zoomEnabled}
+        top={"260px"}
+        onClick={handleZoomToggle}
+      />
       <Bar ref={chartRef} options={options} data={chartData} />
 
       {isModalOpen && modalData && (

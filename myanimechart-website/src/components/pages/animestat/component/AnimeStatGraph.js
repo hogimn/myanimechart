@@ -14,9 +14,7 @@ import {
 import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
 import { parseISO } from "date-fns";
-import { isMobile } from "react-device-detect";
-import { MdRestore } from "react-icons/md";
-import StyledResetButton from "../../../common/styled/StyledResetButton";
+import ZoomButton from "../../../common/button/ZoomButton";
 
 const plugin = {
   id: "increase-legend-spacing",
@@ -43,27 +41,31 @@ ChartJS.register(
   plugin
 );
 
-const zoomOptions = {
-  zoom: {
-    wheel: {
-      enabled: true,
-      modifierKey: "ctrl",
-    },
-    pinch: {
-      enabled: true,
-    },
-    mode: "x",
-  },
-  pan: {
-    enabled: !isMobile,
-    mode: "x",
-  },
-};
-
 const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
-  const [activeLegend, setActiveLegend] = useState("");
   const chartRef = useRef(null);
 
+  const [activeLegend, setActiveLegend] = useState("");
+  const [zoomEnabled, setZoomEnabled] = useState(false);
+
+  const handleZoomToggle = () => {
+    setZoomEnabled((prev) => !prev);
+  };
+
+  const zoomOptions = {
+    zoom: {
+      wheel: {
+        enabled: zoomEnabled,
+      },
+      pinch: {
+        enabled: zoomEnabled,
+      },
+      mode: "x",
+    },
+    pan: {
+      enabled: zoomEnabled,
+      mode: "x",
+    },
+  };
   useEffect(() => {
     if (selectedLegend === "startDate") {
       const val = localStorage.getItem("selectedLegend");
@@ -73,12 +75,6 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       localStorage.setItem("selectedLegend", selectedLegend);
     }
   }, [selectedLegend]);
-
-  const handleResetZoom = () => {
-    if (chartRef.current) {
-      chartRef.current.resetZoom();
-    }
-  };
 
   const baseDatasetConfig = {
     tension: 0.5,
@@ -204,9 +200,11 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
 
   return (
     <>
-      <StyledResetButton top={"37px"} onClick={handleResetZoom}>
-        <MdRestore />
-      </StyledResetButton>
+      <ZoomButton
+        zoomEnabled={zoomEnabled}
+        top={"33px"}
+        onClick={handleZoomToggle}
+      />
       <Line ref={chartRef} data={chartData} options={options} />
     </>
   );
