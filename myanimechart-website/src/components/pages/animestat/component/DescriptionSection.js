@@ -60,7 +60,7 @@ const DescriptionContainer = styled.div`
   overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
   position: relative;
 
-  @media (max-width: 769px) {
+  @media (max-width: 768px) {
     height: 200px;
   }
 `;
@@ -93,7 +93,7 @@ const HeaderContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 769px) {
+  @media (max-width: 768px) {
     max-height: 70px;
     height: 70px;
   }
@@ -106,7 +106,7 @@ const Title = styled.div`
   color: #a7ccf1;
   line-height: 1;
 
-  @media (max-width: 769px) {
+  @media (max-width: 768px) {
     font-size: 1.1rem;
   }
 `;

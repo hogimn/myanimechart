@@ -79,7 +79,7 @@ const ImageWrapper = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
 
-  @media (max-width: 769px) {
+  @media (max-width: 768px) {
     height: 200px;
   }
 `;
@@ -207,10 +207,9 @@ const SeasonalAnimeList = ({
       <CommonRow>
         {currentAnimeStats.map((anime) => (
           <AnimeStatWrapper
-            xs={24}
-            md={12}
-            lg={12}
-            xl={8}
+            lg={24}
+            xl={12}
+            xxl={8}
             key={`anime-card-${anime.id}`}
           >
             <AnimeStatSubWrapper>
@@ -244,9 +243,6 @@ const SeasonalAnimeList = ({
               </AnimeWrapper>
 
               <CommonCol
-                xs={24}
-                sm={24}
-                md={12}
                 key={`anime-graph-${anime.id}`}
                 style={{
                   display: "flex",
