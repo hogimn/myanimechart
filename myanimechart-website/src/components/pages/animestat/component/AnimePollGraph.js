@@ -12,7 +12,6 @@ import {
   BarElement,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
-import { isMobile } from "react-device-detect";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
@@ -41,22 +40,6 @@ ChartJS.register(
   zoomPlugin,
   plugin
 );
-
-const zoomOptions = {
-  zoom: {
-    wheel: {
-      enabled: true,
-    },
-    pinch: {
-      enabled: true,
-    },
-    mode: "x",
-  },
-  pan: {
-    enabled: !isMobile,
-    mode: "x",
-  },
-};
 
 const StyledTotalVotes = styled.div`
   margin-bottom: 1rem;
@@ -113,6 +96,22 @@ const AnimePollGraph = ({ polls }) => {
 
   const handleZoomToggle = () => {
     setZoomEnabled((prev) => !prev);
+  };
+
+  const zoomOptions = {
+    zoom: {
+      wheel: {
+        enabled: zoomEnabled,
+      },
+      pinch: {
+        enabled: zoomEnabled,
+      },
+      mode: "x",
+    },
+    pan: {
+      enabled: zoomEnabled,
+      mode: "x",
+    },
   };
 
   const episodes = Array.from(new Set(polls.map((poll) => poll.episode))).sort(
