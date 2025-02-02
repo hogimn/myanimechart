@@ -59,10 +59,6 @@ const DescriptionContainer = styled.div`
   height: 350px;
   overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
   position: relative;
-
-  @media (max-width: 768px) {
-    height: 200px;
-  }
 `;
 
 const SeeMoreButton = styled.button`
@@ -86,21 +82,14 @@ const SeeMoreButton = styled.button`
 const HeaderContainer = styled.div`
   padding: 10px;
   background-color: rgba(0, 0, 0, 0);
-  max-height: 87px;
-  height: 87px;
   display: flex;
   align-content: center;
   align-items: center;
   justify-content: center;
-
-  @media (max-width: 768px) {
-    max-height: 70px;
-    height: 70px;
-  }
 `;
 
 const Title = styled.div`
-  display: inline;
+  display: block;
   font-size: 1.3rem;
   font-weight: bold;
   color: #a7ccf1;
@@ -112,27 +101,42 @@ const Title = styled.div`
 `;
 
 const SubTitle = styled.div`
-  font-size: 0.8rem;
-  color: gray;
-  display: -webkit-box;
+  display: block;
+  font-size: 0.9rem;
+  color: rgb(190, 183, 183);
   line-height: 1;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const TitleContainer = styled.span`
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  padding: 15px 0;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-overflow: ellipsis;
   text-align: center;
+  overflow: hidden;
 
   ${Title} + ${SubTitle} {
-    margin-top: 5px;
+    margin-top: 10px;
+
+    @media (max-width: 768px) {
+      margin-top: 7px;
+    }
+  }
+  ${SubTitle} + ${SubTitle} {
+    margin-top: 10px;
+
+    @media (max-width: 768px) {
+      margin-top: 7px;
+    }
   }
 `;
 
@@ -171,8 +175,9 @@ const DescriptionSection = ({ anime }) => {
         <Link href={anime.link} target="_blank" rel="noopener noreferrer">
           <TitleContainer>
             <Title>{anime.title}</Title>
+            <SubTitle>{anime.englishTitle}</SubTitle>
+            <SubTitle>{anime.japaneseTitle}</SubTitle>
           </TitleContainer>
-          <SubTitle>{anime.englishTitle}</SubTitle>
         </Link>
       </HeaderContainer>
       <Box>
@@ -194,8 +199,9 @@ const DescriptionSection = ({ anime }) => {
 
       <AnimeDetails>
         {anime.synopsis} <br /> <br />
-        <strong>Japanese:</strong> {anime.japaneseTitle} <br />
-        <strong>Studios:</strong> {anime.studios.join(", ")} <br />
+        <strong>Studios:</strong>{" "}
+        {anime.studios.join(", ") ? anime.studios.join(", ") : "None found"}{" "}
+        <br />
       </AnimeDetails>
 
       {!expanded && (
