@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   CategoryScale,
@@ -15,6 +15,20 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { isMobile } from "react-device-detect";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
+import { MdRestore } from "react-icons/md";
+import StyledResetButton from "../../../common/styled/StyledResetButton";
+
+const plugin = {
+  id: "increase-legend-spacing",
+  beforeInit(chart) {
+    const originalFit = chart.legend.fit;
+
+    chart.legend.fit = function fit() {
+      originalFit.bind(chart.legend)();
+      this.height += 50;
+    };
+  },
+};
 
 ChartJS.register(
   CategoryScale,
@@ -25,7 +39,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  zoomPlugin
+  zoomPlugin,
+  plugin
 );
 
 const zoomOptions = {
@@ -94,6 +109,13 @@ const StyledButton = styled.button`
 const AnimePollGraph = ({ polls }) => {
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const chartRef = useRef(null);
+
+  const handleResetZoom = () => {
+    if (chartRef.current) {
+      chartRef.current.resetZoom();
+    }
+  };
 
   const episodes = Array.from(new Set(polls.map((poll) => poll.episode))).sort(
     (a, b) => a - b
@@ -301,7 +323,10 @@ const AnimePollGraph = ({ polls }) => {
 
   return (
     <>
-      <Bar options={options} data={chartData} />
+      <StyledResetButton top={"250px"} onClick={handleResetZoom}>
+        <MdRestore />
+      </StyledResetButton>
+      <Bar ref={chartRef} options={options} data={chartData} />
 
       {isModalOpen && modalData && (
         <CommonModal

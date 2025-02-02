@@ -14,10 +14,9 @@ import {
 import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
 import { parseISO } from "date-fns";
-import CommonButton from "../../../common/basic/CommonButton";
 import { isMobile } from "react-device-detect";
-import styled from "styled-components";
 import { MdRestore } from "react-icons/md";
+import StyledResetButton from "../../../common/styled/StyledResetButton";
 
 const plugin = {
   id: "increase-legend-spacing",
@@ -26,7 +25,7 @@ const plugin = {
 
     chart.legend.fit = function fit() {
       originalFit.bind(chart.legend)();
-      this.height += 20;
+      this.height += 50;
     };
   },
 };
@@ -60,25 +59,6 @@ const zoomOptions = {
     mode: "x",
   },
 };
-
-const StyledResetButton = styled(CommonButton)`
-  background-color: rgba(0, 0, 0, 0.6);
-  position: absolute;
-  top: -48px;
-  left: 180px;
-  padding: 7px;
-  margin: 0;
-  border-radius: 8px;
-  color: #fff;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  @media (max-width: 768px) {
-    left: 112px;
-  }
-`;
 
 const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const [activeLegend, setActiveLegend] = useState("");
@@ -224,7 +204,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
 
   return (
     <>
-      <StyledResetButton onClick={handleResetZoom}>
+      <StyledResetButton top={"37px"} onClick={handleResetZoom}>
         <MdRestore />
       </StyledResetButton>
       <Line ref={chartRef} data={chartData} options={options} />
