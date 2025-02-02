@@ -38,7 +38,7 @@ export const capitalizeFirstLetter = (str) => {
 
 export const toEpisodeLabel = (str) => {
   if (str === 0) {
-    return "Unknown";
+    return "?";
   }
   return str;
 };

@@ -21,6 +21,10 @@ const GenresBox = styled.div`
     margin: 2px;
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.55);
+
+    @media (max-width: 768px) {
+      font-size: 0.6rem;
+    }
   }
 `;
 
@@ -29,9 +33,12 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(44, 44, 44, 0.22);
-  padding: 3px;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.55);
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 
   span:not(:last-child) {
     border-right: 1px solid #353535;
@@ -59,6 +66,10 @@ const DescriptionContainer = styled.div`
   height: 350px;
   overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
   position: relative;
+
+  @media (max-width: 768px) {
+    height: 200px;
+  }
 `;
 
 const SeeMoreButton = styled.button`
@@ -66,7 +77,7 @@ const SeeMoreButton = styled.button`
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(5, 11, 58, 0.7);
   color: #ffffff;
   font-size: 0.9rem;
   border: none;
@@ -74,8 +85,12 @@ const SeeMoreButton = styled.button`
   cursor: pointer;
   text-align: center;
 
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+
   &:hover {
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(4, 8, 43, 0.8);
   }
 `;
 
@@ -86,6 +101,10 @@ const HeaderContainer = styled.div`
   align-content: center;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 0 10px;
+  }
 `;
 
 const Title = styled.div`
@@ -96,7 +115,7 @@ const Title = styled.div`
   line-height: 1;
 
   @media (max-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 `;
 
@@ -152,6 +171,10 @@ const Link = styled.a`
 const AnimeDetails = styled.div`
   padding: 10px;
   font-size: 0.9rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 
   & strong {
     font-weight: bold;
