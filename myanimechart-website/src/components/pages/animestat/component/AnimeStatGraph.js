@@ -193,6 +193,10 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         ticks: {
           color: "#ffffff",
         },
+        grid: {
+          color: "rgba(255, 255, 255, 0.2)",
+          lineWidth: 1,
+        },
       },
     },
     animation: {
