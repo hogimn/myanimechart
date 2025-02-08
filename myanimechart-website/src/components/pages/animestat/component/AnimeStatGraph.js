@@ -217,7 +217,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
           unit: "day",
         },
         ticks: {
-          color: "#ffffff",
+          color: "rgba(192, 192, 192, 0.57)",
           stepSize: 7,
           callback: function (value, index) {
             return format(new Date(value), "MM/dd");
@@ -226,7 +226,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       },
       y: {
         ticks: {
-          color: "#ffffff",
+          color: "rgba(192, 192, 192, 0.57)",
           callback: function (value, index, values) {
             const datasetIndex = this.chart.data.datasets.findIndex(
               (dataset) => dataset.label === "Score"

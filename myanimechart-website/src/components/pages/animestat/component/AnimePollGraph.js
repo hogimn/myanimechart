@@ -123,7 +123,7 @@ const AnimePollGraph = ({ polls }) => {
   };
 
   const chartData = {
-    labels: episodes.map((ep) => `ep ${ep}`),
+    labels: episodes.map((ep) => `ep${ep}`),
     datasets: [
       {
         label: "Avg. Score",
@@ -223,36 +223,21 @@ const AnimePollGraph = ({ polls }) => {
     scales: {
       x: {
         stacked: true,
-        title: {
-          display: false,
-          text: "Episode",
-          color: "#ffffff",
-        },
         ticks: {
-          color: "#ffffff",
+          color: "rgba(192, 192, 192, 0.57)",
         },
       },
       y: {
         position: "right",
         stacked: true,
-        title: {
-          display: false,
-          text: "Votes",
-          color: "#ffffff",
-        },
         ticks: {
-          color: "#ffffff",
+          color: "rgba(192, 192, 192, 0.57)",
         },
       },
       y1: {
         position: "left",
-        title: {
-          display: false,
-          text: "Avg. Score",
-          color: "#ffffff",
-        },
         ticks: {
-          color: "#ffffff",
+          color: "rgba(192, 192, 192, 0.57)",
         },
         beginAtZero: false,
         grid: {
