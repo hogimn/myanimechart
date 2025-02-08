@@ -6,16 +6,22 @@ import {
   toTypeLabel,
 } from "../../../../util/strUtil";
 
-const GenresBox = styled.div`
+const ListBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(75, 74, 74, 0.22);
+  background-color: ${(props) =>
+    props.category === "genre"
+      ? "rgba(75, 74, 74, 0.22)"
+      : "rgba(74, 92, 116, 0.22)"};
   padding: 3px;
   flex-wrap: wrap;
 
-  .genre {
-    background-color: #353535;
+  span {
+    background-color: ${(props) =>
+      props.category === "genre"
+        ? "rgba(122, 120, 120, 0.22)"
+        : "rgba(151, 182, 218, 0.22)"};
     border-radius: 8px;
     padding: 1px 4px;
     margin: 2px;
@@ -212,20 +218,19 @@ const DescriptionSection = ({ anime }) => {
         <span>{toTypeLabel(anime.type)}</span>
       </Box>
 
-      <GenresBox>
+      <ListBox category="genre">
         {anime.genre.map((genre, index) => (
-          <span key={index} className="genre">
-            {genre}
-          </span>
+          <span key={index}>{genre}</span>
         ))}
-      </GenresBox>
+      </ListBox>
 
-      <AnimeDetails>
-        {anime.synopsis} <br /> <br />
-        <strong>Studios:</strong>{" "}
-        {anime.studios.join(", ") ? anime.studios.join(", ") : "None found"}{" "}
-        <br />
-      </AnimeDetails>
+      <ListBox category="studio">
+        {anime.studios.map((studio, index) => (
+          <span key={index}>{studio}</span>
+        ))}
+      </ListBox>
+
+      <AnimeDetails>{anime.synopsis}</AnimeDetails>
 
       {!expanded && (
         <SeeMoreButton onClick={toggleExpanded}>Enable Scrolling</SeeMoreButton>
