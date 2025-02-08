@@ -14,6 +14,8 @@ import { MdTrendingUp } from "react-icons/md";
 import AnimeImage from "./AnimeImage";
 import AnimePollGraph from "./AnimePollGraph";
 import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
+import CommonModal from "../../../common/basic/CommonModal";
+import { isMobile } from "react-device-detect";
 
 const StyledSpin = styled(CommonSpin)`
   display: flex;
@@ -104,6 +106,15 @@ const SeasonalAnimeList = ({
   const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (src) => {
+    setSelectedImage(src);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
     if (!selected) {
@@ -218,7 +229,7 @@ const SeasonalAnimeList = ({
           >
             <AnimeStatSubWrapper>
               <AnimeWrapper>
-                <ImageWrapper>
+                <ImageWrapper onClick={() => handleImageClick(anime.image)}>
                   <AnimeImage alt={anime.title} src={anime.image} />
                   <OverlayBox>
                     <span>
@@ -280,6 +291,25 @@ const SeasonalAnimeList = ({
         style={{ marginTop: "16px", textAlign: "center" }}
         showSizeChanger={false}
       />
+
+      <CommonModal
+        open={!!selectedImage}
+        onCancel={closeModal}
+        footer={null}
+        centered
+        width={isMobile ? "90%" : "30%"}
+      >
+        <img
+          src={selectedImage}
+          alt="Anime"
+          style={{
+            width: "100%",
+            height: "auto",
+            maxHeight: "80vh",
+            objectFit: "contain",
+          }}
+        />
+      </CommonModal>
     </>
   );
 };
