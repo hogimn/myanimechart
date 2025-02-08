@@ -115,8 +115,13 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         intersect: false,
         yAlign: "bottom",
         callbacks: {
-          label: (context) =>
-            `${context.dataset.label}: ${context.raw.toFixed(2)}`,
+          label: (context) => {
+            if (context.dataset.label.includes("Score")) {
+              return `${context.dataset.label}: ${context.raw.toFixed(2)}`;
+            } else {
+              return `${context.dataset.label}: ${context.raw}`;
+            }
+          },
         },
       },
       legend: {
@@ -165,7 +170,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         ticks: {
           color: "#ffffff",
           callback: function (value) {
-            return value.toFixed(2);
+            return value % 1 === 0 ? value : value.toFixed(2);
           },
         },
         grid: {
