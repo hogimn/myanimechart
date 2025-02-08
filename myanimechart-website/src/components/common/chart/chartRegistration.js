@@ -9,6 +9,7 @@ import {
   TimeScale,
   BarElement,
   Chart,
+  Filler,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 
@@ -70,6 +71,7 @@ export const registerCharts = () => {
     zoomPlugin,
     TimeScale,
     BarElement,
+    Filler,
     increaseLegendSpacing,
     verticalHoverLine
   );

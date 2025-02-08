@@ -7,7 +7,6 @@ import ZoomButton from "../../../common/button/ZoomButton";
 
 const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const chartRef = useRef(null);
-
   const [activeLegend, setActiveLegend] = useState("");
   const [zoomEnabled, setZoomEnabled] = useState(false);
 
@@ -49,6 +48,15 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     borderRadius: 8,
     borderWidth: 1.5,
     borderDash: [],
+    fill: true,
+  };
+
+  const createGradient = (ctx, chartArea, colorStart, colorEnd) => {
+    const { top, bottom } = chartArea;
+    const gradient = ctx.createLinearGradient(0, top, 0, bottom);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    return gradient;
   };
 
   const chartData = {
@@ -58,7 +66,17 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         label: "Score",
         data: animeStats.map((stat) => stat.score),
         borderColor: "#6EA8FE",
-        backgroundColor: "rgba(110, 168, 254, 0.15)",
+        backgroundColor: (ctx) => {
+          const { chartArea } = ctx.chart;
+          if (!chartArea) return;
+          const ctxRef = ctx.chart.ctx;
+          return createGradient(
+            ctxRef,
+            chartArea,
+            "rgba(110, 168, 254, 0.5)",
+            "rgba(110, 168, 254, 0.0)"
+          );
+        },
         pointBackgroundColor: "#6EA8FE",
         hidden: activeLegend && activeLegend !== "score",
         ...baseDatasetConfig,
@@ -67,7 +85,17 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         label: "Votes",
         data: animeStats.map((stat) => stat.scoringCount),
         borderColor: "#4C79FF",
-        backgroundColor: "rgba(76, 121, 255, 0.15)",
+        backgroundColor: (ctx) => {
+          const { chartArea } = ctx.chart;
+          if (!chartArea) return;
+          const ctxRef = ctx.chart.ctx;
+          return createGradient(
+            ctxRef,
+            chartArea,
+            "rgba(76, 121, 255, 0.5)",
+            "rgba(76, 121, 255, 0.0)"
+          );
+        },
         pointBackgroundColor: "#4C79FF",
         hidden: activeLegend && activeLegend.toLowerCase() !== "votes",
         ...baseDatasetConfig,
@@ -76,7 +104,17 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         label: "Rank",
         data: animeStats.map((stat) => stat.rank),
         borderColor: "#6D5DFF",
-        backgroundColor: "rgba(109, 93, 255, 0.15)",
+        backgroundColor: (ctx) => {
+          const { chartArea } = ctx.chart;
+          if (!chartArea) return;
+          const ctxRef = ctx.chart.ctx;
+          return createGradient(
+            ctxRef,
+            chartArea,
+            "rgba(109, 93, 255, 0.5)",
+            "rgba(109, 93, 255, 0.0)"
+          );
+        },
         pointBackgroundColor: "#6D5DFF",
         hidden: activeLegend && activeLegend !== "rank",
         ...baseDatasetConfig,
@@ -85,7 +123,17 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         label: "Members",
         data: animeStats.map((stat) => stat.members),
         borderColor: "#B95EFF",
-        backgroundColor: "rgba(185, 94, 255, 0.15)",
+        backgroundColor: (ctx) => {
+          const { chartArea } = ctx.chart;
+          if (!chartArea) return;
+          const ctxRef = ctx.chart.ctx;
+          return createGradient(
+            ctxRef,
+            chartArea,
+            "rgba(185, 94, 255, 0.5)",
+            "rgba(185, 94, 255, 0.0)"
+          );
+        },
         pointBackgroundColor: "#B95EFF",
         hidden: activeLegend && activeLegend !== "members",
         ...baseDatasetConfig,
@@ -94,7 +142,17 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         label: "Popularity",
         data: animeStats.map((stat) => stat.popularity),
         borderColor: "#FF6584",
-        backgroundColor: "rgba(255, 101, 132, 0.15)",
+        backgroundColor: (ctx) => {
+          const { chartArea } = ctx.chart;
+          if (!chartArea) return;
+          const ctxRef = ctx.chart.ctx;
+          return createGradient(
+            ctxRef,
+            chartArea,
+            "rgba(255, 101, 132, 0.5)",
+            "rgba(255, 101, 132, 0.0)"
+          );
+        },
         pointBackgroundColor: "#FF6584",
         hidden: activeLegend && activeLegend !== "popularity",
         ...baseDatasetConfig,
@@ -106,7 +164,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: "index'",
+      mode: "index",
       intersect: false,
     },
     plugins: {
