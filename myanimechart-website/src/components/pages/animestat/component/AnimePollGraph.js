@@ -225,6 +225,9 @@ const AnimePollGraph = ({ polls }) => {
         stacked: true,
         ticks: {
           color: "rgba(192, 192, 192, 0.57)",
+          autoSkipPadding: 10,
+          maxRotation: 0,
+          minRotation: 0,
         },
       },
       y: {
