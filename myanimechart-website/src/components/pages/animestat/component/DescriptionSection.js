@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   toDateLabel,
@@ -193,13 +193,32 @@ const AnimeDetails = styled.div`
 
 const DescriptionSection = ({ anime }) => {
   const [expanded, setExpanded] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const containerRef = useRef(null);
+
+  const checkOverflow = () => {
+    requestAnimationFrame(() => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.clientHeight;
+        const totalContentHeight = Array.from(
+          containerRef.current.children
+        ).reduce((acc, child) => acc + child.offsetHeight, 0);
+
+        setShowScrollButton(totalContentHeight > containerHeight);
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkOverflow();
+  }, [anime, expanded]);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
   return (
-    <DescriptionContainer expanded={expanded}>
+    <DescriptionContainer ref={containerRef} expanded={expanded}>
       <HeaderContainer>
         <Link href={anime.link} target="_blank" rel="noopener noreferrer">
           <TitleContainer>
@@ -231,7 +250,7 @@ const DescriptionSection = ({ anime }) => {
 
       <AnimeDetails>{anime.synopsis}</AnimeDetails>
 
-      {!expanded && (
+      {showScrollButton && !expanded && (
         <SeeMoreButton onClick={toggleExpanded}>Enable Scrolling</SeeMoreButton>
       )}
     </DescriptionContainer>
