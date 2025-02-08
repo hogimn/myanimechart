@@ -83,7 +83,7 @@ const SeeMoreButton = styled.button`
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(5, 11, 58, 0.7);
+  background: rgba(19, 26, 39, 0.7);
   color: #ffffff;
   font-size: 0.9rem;
   border: none;
@@ -205,7 +205,6 @@ const DescriptionSection = ({ anime }) => {
           <TitleContainer>
             <Title>{anime.title}</Title>
             <SubTitle>{anime.englishTitle}</SubTitle>
-            <SubTitle>{anime.japaneseTitle}</SubTitle>
           </TitleContainer>
         </Link>
       </HeaderContainer>
