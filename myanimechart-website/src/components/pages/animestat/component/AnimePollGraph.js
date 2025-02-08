@@ -6,11 +6,11 @@ import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
 
 const StyledTotalVotes = styled.div`
-  margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: bold;
   color: #3b82f6;
   text-align: center;
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : 0)};
 `;
 
 const VoteList = styled.ul`
@@ -260,6 +260,7 @@ const AnimePollGraph = ({ polls }) => {
         setModalData({
           episode: data.episode,
           totalVotes: data.totalVotes,
+          averageScore: averageScores[episodeIndex],
           votesBreakdown: pollOptions.map((option, index) => {
             const votes = data.optionVotes[index];
             const percentage = ((votes / data.totalVotes) * 100).toFixed(1);
@@ -290,6 +291,9 @@ const AnimePollGraph = ({ polls }) => {
           centered
         >
           <StyledTotalVotes>
+            Average Score: {modalData.averageScore.toFixed(2)}
+          </StyledTotalVotes>
+          <StyledTotalVotes marginBottom={"1rem"}>
             Total Votes: {modalData.totalVotes}
           </StyledTotalVotes>
           <VoteList>
