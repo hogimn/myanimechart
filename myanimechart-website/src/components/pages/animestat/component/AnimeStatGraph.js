@@ -13,7 +13,7 @@ import {
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
-import { parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import ZoomButton from "../../../common/button/ZoomButton";
 
 const plugin = {
@@ -183,8 +183,9 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         },
         ticks: {
           color: "#ffffff",
+          stepSize: 7,
           callback: function (value, index) {
-            return "";
+            return format(new Date(value), "MM/dd");
           },
         },
       },

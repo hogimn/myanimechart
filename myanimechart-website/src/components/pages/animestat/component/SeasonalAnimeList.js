@@ -46,6 +46,10 @@ const AnimeStatSubWrapper = styled.article`
   border: rgba(131, 125, 125, 0.51) 1px solid;
   border-radius: 10px;
   margin: 10px;
+
+  section + section {
+    margin-top: 10px;
+  }
 `;
 
 const AnimeWrapper = styled.section`
