@@ -1,11 +1,11 @@
 package com.hogimn.myanimechart.database.anime.service;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
-import com.hogimn.myanimechart.database.anime.entity.AnimeStatEntity;
 import com.hogimn.myanimechart.database.anime.dto.AnimeDto;
 import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
+import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
+import com.hogimn.myanimechart.database.anime.entity.AnimeStatEntity;
 import com.hogimn.myanimechart.database.anime.repository.AnimeStatRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

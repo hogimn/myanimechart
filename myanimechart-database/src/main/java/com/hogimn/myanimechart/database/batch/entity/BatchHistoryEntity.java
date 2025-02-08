@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.database.batch.entity;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.database.batch.entity.key.BatchHistoryId;
 import com.hogimn.myanimechart.database.batch.dto.BatchDto;
+import com.hogimn.myanimechart.database.batch.entity.key.BatchHistoryId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
