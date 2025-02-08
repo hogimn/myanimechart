@@ -1,32 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  BarElement,
-} from "chart.js";
-import zoomPlugin from "chartjs-plugin-zoom";
+import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend,
-  zoomPlugin
-);
 
 const StyledTotalVotes = styled.div`
   margin-bottom: 1rem;
