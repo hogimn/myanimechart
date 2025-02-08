@@ -227,8 +227,18 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       y: {
         ticks: {
           color: "#ffffff",
-          callback: function (value) {
-            return value % 1 === 0 ? value : value.toFixed(2);
+          callback: function (value, index, values) {
+            const datasetIndex = this.chart.data.datasets.findIndex(
+              (dataset) => dataset.label === "Score"
+            );
+
+            if (
+              datasetIndex !== -1 &&
+              this.chart.isDatasetVisible(datasetIndex)
+            ) {
+              return value.toFixed(2);
+            }
+            return value;
           },
         },
         grid: {
