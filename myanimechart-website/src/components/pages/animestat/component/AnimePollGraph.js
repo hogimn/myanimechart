@@ -16,18 +16,6 @@ import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
 
-const plugin = {
-  id: "increase-legend-spacing",
-  beforeInit(chart) {
-    const originalFit = chart.legend.fit;
-
-    chart.legend.fit = function fit() {
-      originalFit.bind(chart.legend)();
-      this.height += 50;
-    };
-  },
-};
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -37,8 +25,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  zoomPlugin,
-  plugin
+  zoomPlugin
 );
 
 const StyledTotalVotes = styled.div`

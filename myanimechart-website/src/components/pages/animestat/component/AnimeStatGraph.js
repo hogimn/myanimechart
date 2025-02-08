@@ -16,7 +16,7 @@ import "chartjs-adapter-date-fns";
 import { format, parseISO } from "date-fns";
 import ZoomButton from "../../../common/button/ZoomButton";
 
-const plugin = {
+const increaseLegendSpacing = {
   id: "increase-legend-spacing",
   beforeInit(chart) {
     const originalFit = chart.legend.fit;
@@ -25,6 +25,40 @@ const plugin = {
       originalFit.bind(chart.legend)();
       this.height += 50;
     };
+  },
+};
+
+const verticalHoverLine = {
+  id: "verticalHoverLine",
+  afterDatasetsDraw(chart, args, plugins) {
+    const {
+      ctx,
+      tooltip,
+      chartArea: { top, bottom },
+    } = chart;
+
+    if (tooltip._active.length > 0) {
+      const tooltipX = tooltip._active[0].element.x;
+      const tooltipY = tooltip._active[0].element.y;
+      const datasetIndex = tooltip._active[0].datasetIndex;
+      const dataset = chart.data.datasets[datasetIndex];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(173, 173, 173, 0.95)";
+      ctx.setLineDash([2, 2]);
+      ctx.moveTo(tooltipX, top);
+      ctx.lineTo(tooltipX, bottom);
+      ctx.stroke();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(tooltipX, tooltipY, 4, 0, Math.PI * 2);
+      ctx.fillStyle = dataset.borderColor;
+      ctx.fill();
+      ctx.closePath();
+    }
   },
 };
 
@@ -38,7 +72,8 @@ ChartJS.register(
   Legend,
   zoomPlugin,
   TimeScale,
-  plugin
+  increaseLegendSpacing,
+  verticalHoverLine
 );
 
 const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
@@ -66,6 +101,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       mode: "x",
     },
   };
+
   useEffect(() => {
     if (selectedLegend === "startDate") {
       const val = localStorage.getItem("selectedLegend");
@@ -140,11 +176,18 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index'",
+      intersect: false,
+    },
     plugins: {
       tooltip: {
+        mode: "index",
+        intersect: false,
         yAlign: "bottom",
         callbacks: {
-          label: (context) => `${context.dataset.label}: ${context.raw}`,
+          label: (context) =>
+            `${context.dataset.label}: ${context.raw.toFixed(2)}`,
         },
       },
       legend: {
@@ -192,6 +235,9 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       y: {
         ticks: {
           color: "#ffffff",
+          callback: function (value) {
+            return value.toFixed(2);
+          },
         },
         grid: {
           color: "rgba(255, 255, 255, 0.2)",
@@ -201,6 +247,11 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     },
     animation: {
       duration: 0,
+    },
+    elements: {
+      line: {
+        borderDash: [5, 5],
+      },
     },
   };
 
