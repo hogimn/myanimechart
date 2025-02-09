@@ -62,7 +62,7 @@ public class AnimeStatService {
     public List<AnimeDto> getAnimeStatDtos(Integer year, String season) {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByYearAndSeason(year, season);
         List<AnimeDto> animeDtos = animeEntities.stream()
-                .filter(e -> !Objects.equals(e.getHide(), "N"))
+                .filter(e -> !Objects.equals(e.getHide(), "Y"))
                 .map(AnimeDto::from)
                 .toList();
         for (int i = 0; i < animeDtos.size(); i++) {
