@@ -22,6 +22,7 @@ public class AnimeDto {
     private String title;
     private String link;
     private String image;
+    private String largeImage;
     private Double score;
     private Integer members;
     private List<String> genre;
@@ -41,6 +42,8 @@ public class AnimeDto {
     private String englishTitle;
     private String japaneseTitle;
     private String synopsis;
+    private String rating;
+    private String nsfw;
 
     private List<AnimeStatDto> animeStats;
     private List<PollDto> polls;
@@ -51,6 +54,7 @@ public class AnimeDto {
         anime.setTitle(animeEntity.getTitle());
         anime.setSeason(animeEntity.getSeason());
         anime.setImage(animeEntity.getImage());
+        anime.setLargeImage(animeEntity.getLargeImage());
         anime.setLink(animeEntity.getLink());
         anime.setScore(animeEntity.getScore());
         anime.setMembers(animeEntity.getMembers());
@@ -71,6 +75,8 @@ public class AnimeDto {
         anime.setEnglishTitle(animeEntity.getEnglishTitle());
         anime.setJapaneseTitle(animeEntity.getJapaneseTitle());
         anime.setSynopsis(animeEntity.getSynopsis());
+        anime.setRating(animeEntity.getRating());
+        anime.setNsfw(animeEntity.getNsfw());
         return anime;
     }
 
@@ -80,6 +86,7 @@ public class AnimeDto {
         animeDto.setTitle(anime.getTitle());
         animeDto.setSeason(anime.getStartSeason().getSeason().field());
         animeDto.setImage(anime.getMainPicture().getMediumURL());
+        animeDto.setLargeImage(anime.getMainPicture().getLargeURL());
         animeDto.setLink("https://myanimelist.net/anime/" + anime.getID());
         animeDto.setScore(anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0);
         animeDto.setMembers(anime.getUserListingCount());
@@ -91,17 +98,17 @@ public class AnimeDto {
         animeDto.setPopularity(anime.getPopularity());
         animeDto.setScoringCount(anime.getUserScoringCount());
         animeDto.setEpisodes(anime.getEpisodes());
-        animeDto.setAirStatus(!Objects.equals(anime.getStatus().field(), "") ?
-                anime.getStatus().field() : anime.getRawStatus());
+        animeDto.setAirStatus(anime.getStatus().field());
         animeDto.setTitle(anime.getTitle());
-        animeDto.setType(!Objects.equals(anime.getType().field(), "") ?
-                anime.getType().field() : anime.getRawType());
+        animeDto.setType(anime.getType().field());
 
         animeDto.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
         animeDto.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
         animeDto.setEnglishTitle(anime.getAlternativeTitles().getEnglish());
         animeDto.setJapaneseTitle(anime.getAlternativeTitles().getJapanese());
         animeDto.setSynopsis(anime.getSynopsis());
+        animeDto.setRating(anime.getRating().field());
+        animeDto.setNsfw(anime.getNSFW().field());
 
         return animeDto;
     }

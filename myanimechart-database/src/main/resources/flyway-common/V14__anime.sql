@@ -1,0 +1,4 @@
+ALTER TABLE anime
+    ADD COLUMN large_image VARCHAR(255),
+    ADD COLUMN rating VARCHAR(50),
+    ADD COLUMN nsfw VARCHAR(50);

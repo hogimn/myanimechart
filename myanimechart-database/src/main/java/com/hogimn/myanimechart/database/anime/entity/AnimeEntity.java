@@ -19,6 +19,7 @@ public class AnimeEntity {
     private String title;
     private String link;
     private String image;
+    private String largeImage;
     private Double score;
     private Integer members;
     private String genre;
@@ -40,6 +41,8 @@ public class AnimeEntity {
     private String synopsis;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String rating;
+    private String nsfw;
 
     public static AnimeEntity from(AnimeDto animeDto) {
         AnimeEntity anime = new AnimeEntity();
@@ -47,6 +50,7 @@ public class AnimeEntity {
         anime.setTitle(animeDto.getTitle());
         anime.setSeason(animeDto.getSeason());
         anime.setImage(animeDto.getImage());
+        anime.setLargeImage(animeDto.getLargeImage());
         anime.setLink(animeDto.getLink());
         anime.setScore(animeDto.getScore());
         anime.setMembers(animeDto.getMembers());
@@ -67,6 +71,8 @@ public class AnimeEntity {
         anime.setEnglishTitle(animeDto.getEnglishTitle());
         anime.setJapaneseTitle(animeDto.getJapaneseTitle());
         anime.setSynopsis(animeDto.getSynopsis());
+        anime.setRating(animeDto.getRating());
+        anime.setNsfw(animeDto.getNsfw());
         return anime;
     }
 
@@ -75,6 +81,7 @@ public class AnimeEntity {
         this.setTitle(animeDto.getTitle());
         this.setSeason(animeDto.getSeason());
         this.setImage(animeDto.getImage());
+        this.setLargeImage(animeDto.getLargeImage());
         this.setLink(animeDto.getLink());
         this.setScore(animeDto.getScore());
         this.setMembers(animeDto.getMembers());
@@ -95,5 +102,7 @@ public class AnimeEntity {
         this.setEnglishTitle(animeDto.getEnglishTitle());
         this.setJapaneseTitle(animeDto.getJapaneseTitle());
         this.setSynopsis(animeDto.getSynopsis());
+        this.setRating(animeDto.getRating());
+        this.setNsfw(animeDto.getNsfw());
     }
 }
