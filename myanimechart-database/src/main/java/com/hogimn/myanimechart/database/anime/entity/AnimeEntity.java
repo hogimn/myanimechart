@@ -44,6 +44,7 @@ public class AnimeEntity {
     private String rating;
     private String nsfw;
     private String hide;
+    private String forceCollect;
 
     public static AnimeEntity from(AnimeDto animeDto) {
         AnimeEntity anime = new AnimeEntity();
@@ -75,6 +76,7 @@ public class AnimeEntity {
         anime.setRating(animeDto.getRating());
         anime.setNsfw(animeDto.getNsfw());
         anime.setHide(animeDto.getHide());
+        anime.setForceCollect(animeDto.getForceCollect());
         return anime;
     }
 
@@ -107,5 +109,6 @@ public class AnimeEntity {
         this.setRating(animeDto.getRating());
         this.setNsfw(animeDto.getNsfw());
         this.setHide(animeDto.getHide());
+        this.setForceCollect(animeDto.getForceCollect());
     }
 }

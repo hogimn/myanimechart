@@ -102,6 +102,26 @@ public class AnimeCollectService {
         }
 
         collectAnimeStatisticsOldSeasonCurrentlyAiring();
+
+        collectAnimeForceCollectTrue();
+    }
+
+    private void collectAnimeForceCollectTrue() {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
+        for (AnimeEntity animeEntity : animeEntities) {
+            try {
+                Anime anime = getAnime(animeEntity.getId());
+                Thread.sleep(1000);
+                AnimeDto animeDto = AnimeDto.from(anime);
+
+                AnimeEntity oldAnimeEntity = animeService.getAnimeEntityById(animeEntity.getId());
+                animeDto.setScore(oldAnimeEntity.getScore());
+
+                serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+            } catch (Exception e) {
+                log.error("Failed to collect anime statistics for anime '{}': {}", animeEntity.getId(), e.getMessage(), e);
+            }
+        }
     }
 
     private void collectAnimeStatisticsOldSeasonCurrentlyAiring() {

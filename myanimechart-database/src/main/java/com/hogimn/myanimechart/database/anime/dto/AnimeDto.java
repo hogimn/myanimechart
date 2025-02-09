@@ -45,6 +45,7 @@ public class AnimeDto {
     private String rating;
     private String nsfw;
     private String hide;
+    private String forceCollect;
 
     private List<AnimeStatDto> animeStats;
     private List<PollDto> polls;
@@ -79,6 +80,7 @@ public class AnimeDto {
         anime.setRating(animeEntity.getRating());
         anime.setNsfw(animeEntity.getNsfw());
         anime.setHide(animeEntity.getHide());
+        anime.setForceCollect(animeEntity.getForceCollect());
         return anime;
     }
 

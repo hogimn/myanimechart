@@ -113,4 +113,8 @@ public class AnimeService {
     public AnimeEntity getAnimeEntityByIdWithLock(Long animeId) {
         return animeRepository.findByIdWithLock(animeId);
     }
+
+    public List<AnimeEntity> getAnimeEntitiesForceCollectTrue() {
+        return animeRepository.findByForceCollect("Y");
+    }
 }

@@ -41,4 +41,6 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM AnimeEntity a WHERE a.id = :id")
     AnimeEntity findByIdWithLock(@Param("id") Long id);
+
+    List<AnimeEntity> findByForceCollect(String forceCollect);
 }
