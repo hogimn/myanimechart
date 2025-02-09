@@ -265,7 +265,7 @@ const SeasonalAnimeList = ({
                   <AnimeStatGraph
                     animeStats={anime.animeStats.slice(
                       10,
-                      anime.animeStats.length - 1
+                      anime.animeStats.length
                     )}
                     selectedLegend={"score"}
                   />
