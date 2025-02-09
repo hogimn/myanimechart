@@ -36,7 +36,6 @@ public class AnimeDto {
     private Integer episodes;
     private String airStatus;
     private String type;
-    private LocalDateTime finishedAt;
     private Date startDate;
     private Date endDate;
     private String englishTitle;
@@ -71,7 +70,6 @@ public class AnimeDto {
         anime.setAirStatus(animeEntity.getAirStatus());
         anime.setTitle(animeEntity.getTitle());
         anime.setType(animeEntity.getType());
-        anime.setFinishedAt(animeEntity.getFinishedAt());
         anime.setStartDate(animeEntity.getStartDate());
         anime.setEndDate(animeEntity.getEndDate());
         anime.setEnglishTitle(animeEntity.getEnglishTitle());

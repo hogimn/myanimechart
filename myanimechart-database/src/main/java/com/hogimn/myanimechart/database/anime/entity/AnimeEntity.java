@@ -33,7 +33,6 @@ public class AnimeEntity {
     private Integer episodes;
     private String airStatus;
     private String type;
-    private LocalDateTime finishedAt;
     private Date startDate;
     private Date endDate;
     private String englishTitle;
@@ -65,7 +64,6 @@ public class AnimeEntity {
         anime.setScoringCount(animeDto.getScoringCount());
         anime.setEpisodes(animeDto.getEpisodes());
         anime.setAirStatus(animeDto.getAirStatus());
-        anime.setFinishedAt(animeDto.getFinishedAt());
         anime.setTitle(animeDto.getTitle());
         anime.setType(animeDto.getType());
         anime.setStartDate(animeDto.getStartDate());
@@ -98,7 +96,6 @@ public class AnimeEntity {
         this.setScoringCount(animeDto.getScoringCount());
         this.setEpisodes(animeDto.getEpisodes());
         this.setAirStatus(animeDto.getAirStatus());
-        this.setFinishedAt(animeDto.getFinishedAt());
         this.setTitle(animeDto.getTitle());
         this.setType(animeDto.getType());
         this.setStartDate(animeDto.getStartDate());

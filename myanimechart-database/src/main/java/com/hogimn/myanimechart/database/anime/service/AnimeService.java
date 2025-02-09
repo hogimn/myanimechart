@@ -33,12 +33,6 @@ public class AnimeService {
             AnimeEntity animeEntity = optional.get();
             animeEntity.setFrom(animeDto);
             animeEntity.setUpdatedAt(DateUtil.now());
-
-            if (Objects.equals(animeDto.getAirStatus(), "finished_airing")
-                    && animeEntity.getFinishedAt() != null) {
-                animeDto.setFinishedAt(DateUtil.now());
-            }
-
             AnimeEntity saved = animeRepository.save(animeEntity);
             log.info("Updated anime: {}", saved);
             return;
@@ -46,11 +40,6 @@ public class AnimeService {
 
         AnimeEntity animeEntity = AnimeEntity.from(animeDto);
         animeEntity.setCreatedAt(DateUtil.now());
-
-        if (Objects.equals(animeDto.getAirStatus(), "finished_airing")) {
-            animeDto.setFinishedAt(DateUtil.now());
-        }
-
         AnimeEntity saved = animeRepository.save(animeEntity);
         log.info("Inserted new anime: {}", saved);
     }
