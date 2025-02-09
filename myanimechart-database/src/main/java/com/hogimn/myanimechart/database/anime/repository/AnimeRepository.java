@@ -28,12 +28,13 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                                                                 String currentlyAiring, String finishedAiring);
 
     @Query("SELECT a FROM AnimeEntity a " +
-            "WHERE a.airStatus = :currentlyAiring OR " +
+            "WHERE (a.airStatus = :currentlyAiring OR " +
             "(a.airStatus = :finishedAiring AND " +
             "(EXTRACT(MONTH FROM a.finishedAt) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
             "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
             "WHEN EXTRACT(MONTH FROM a.finishedAt) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM a.finishedAt) + 1 END))")
+            "ELSE EXTRACT(MONTH FROM a.finishedAt) + 1 END))) " +
+            "OR a.forceCollect = 'Y'")
     List<AnimeEntity> findAnimeEntitiesForPollCollection(String currentlyAiring, String finishedAiring);
 
     List<AnimeEntity> findAllByTitleContaining(String title);
