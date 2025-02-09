@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   toDateLabel,
   toEpisodeLabel,
+  toSourceLabel,
   toTypeLabel,
 } from "../../../../util/strUtil";
 
@@ -35,13 +36,13 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(44, 44, 44, 0.22);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.55);
 
   span:not(:last-child) {
     border-right: 1px solid #353535;
-    padding-right: 10px;
-    margin-right: 10px;
+    padding-right: 5px;
+    margin-right: 5px;
     height: 15px;
     display: flex;
     align-items: center;
@@ -206,6 +207,7 @@ const DescriptionSection = ({ anime }) => {
         <span>{toDateLabel(anime.startDate)}</span>
         <span>{toEpisodeLabel(anime.episodes)} eps </span>
         <span>{toTypeLabel(anime.type)}</span>
+        <span>{toSourceLabel(anime.source)}</span>
       </Box>
 
       <ListBox category="genre">

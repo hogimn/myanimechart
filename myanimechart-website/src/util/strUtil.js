@@ -19,6 +19,12 @@ export const toTypeLabel = (str) => {
   }
 };
 
+export const toSourceLabel = (str) => {
+  if (!str) return "";
+  const newStr = str.replace(/_/g, " ");
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
+};
+
 export const toAirStatusLabel = (str) => {
   switch (str) {
     case "all":
