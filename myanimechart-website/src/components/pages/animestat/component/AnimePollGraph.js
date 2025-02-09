@@ -169,6 +169,9 @@ const AnimePollGraph = ({ polls }) => {
         mode: "index",
         intersect: false,
         yAlign: "bottom",
+        itemSort: (a, b) => {
+          return b.datasetIndex - a.datasetIndex;
+        },
         callbacks: {
           labelColor: (tooltipItem, chart) => {
             const datasetIndex = tooltipItem.datasetIndex;
