@@ -90,9 +90,9 @@ public class AnimeService {
         return animeEntities.stream().map(AnimeDto::from).collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> getAiringOrFinishedAnimeExcludingSeasonsNextMonth(int year, String season,
-                                                                               int nextYear, String nextSeason) {
-        return animeRepository.findAiringOrFinishedAnimeExcludingSeasonsNextMonth(
+    public List<AnimeEntity> getAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
+                                                                      int nextYear, String nextSeason) {
+        return animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(
                 year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
     }
 
@@ -105,8 +105,8 @@ public class AnimeService {
         return animeEntities.stream().map(AnimeDto::from).collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> getAiringOrFinishedAnimeNextMonth() {
-        return animeRepository.findAiringOrFinishedAnimeNextMonth("currently_airing", "finished_airing");
+    public List<AnimeEntity> getAnimeEntitiesForPollCollection() {
+        return animeRepository.findAnimeEntitiesForPollCollection("currently_airing", "finished_airing");
     }
 
     @Transactional

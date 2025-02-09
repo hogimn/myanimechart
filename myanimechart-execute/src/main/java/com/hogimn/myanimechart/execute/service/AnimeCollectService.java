@@ -105,7 +105,7 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeStatisticsOldSeasonCurrentlyAiring() {
-        List<AnimeEntity> animeEntities = animeService.getAiringOrFinishedAnimeExcludingSeasonsNextMonth(
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesOldSeasonCurrentlyAiring(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
         for (AnimeEntity animeEntity : animeEntities) {

@@ -20,21 +20,21 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
             "AND (a.airStatus = :currentlyAiring OR" +
             " (a.airStatus = :finishedAiring AND " +
             "(EXTRACT(MONTH FROM a.finishedAt) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
-            "OR EXTRACT(MONTH FROM a.finishedAt) = CASE " +
-            "WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM CURRENT_TIMESTAMP) + 1 END)))")
-    List<AnimeEntity> findAiringOrFinishedAnimeExcludingSeasonsNextMonth(Integer year, String season,
-                                                                         Integer nextYear, String nextSeason,
-                                                                         String currentlyAiring, String finishedAiring);
+            "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
+            "WHEN EXTRACT(MONTH FROM a.finishedAt) = 12 THEN 1 " +
+            "ELSE EXTRACT(MONTH FROM a.finishedAt) + 1 END)))")
+    List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(Integer year, String season,
+                                                                Integer nextYear, String nextSeason,
+                                                                String currentlyAiring, String finishedAiring);
 
     @Query("SELECT a FROM AnimeEntity a " +
             "WHERE a.airStatus = :currentlyAiring OR " +
             "(a.airStatus = :finishedAiring AND " +
             "(EXTRACT(MONTH FROM a.finishedAt) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
-            "OR EXTRACT(MONTH FROM a.finishedAt) = CASE " +
-            "WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM CURRENT_TIMESTAMP) + 1 END))")
-    List<AnimeEntity> findAiringOrFinishedAnimeNextMonth(String currentlyAiring, String finishedAiring);
+            "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
+            "WHEN EXTRACT(MONTH FROM a.finishedAt) = 12 THEN 1 " +
+            "ELSE EXTRACT(MONTH FROM a.finishedAt) + 1 END))")
+    List<AnimeEntity> findAnimeEntitiesForPollCollection(String currentlyAiring, String finishedAiring);
 
     List<AnimeEntity> findAllByTitleContaining(String title);
 
