@@ -114,12 +114,12 @@ const AnimePollGraph = ({ polls }) => {
 
   const baseDatasetConfig = {
     tension: 0.3,
-    pointRadius: 3.0,
-    pointHoverRadius: 8,
-    pointHitRadius: 6,
-    borderRadius: 7,
-    borderWidth: 2,
-    borderDash: [4, 2],
+    pointHoverRadius: 6,
+    pointHitRadius: 8,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderDash: [5, 2],
+    pointRadius: 3,
   };
 
   const chartData = {
@@ -129,9 +129,8 @@ const AnimePollGraph = ({ polls }) => {
         label: "Avg. Score",
         type: "line",
         data: averageScores,
-        borderColor: "rgb(174, 209, 241)",
-        backgroundColor: "rgba(118, 165, 211, 0.2)",
-        pointBackgroundColor: "rgb(92, 111, 131)",
+        borderColor: "rgba(183, 221, 247, 0.9)",
+        pointBackgroundColor: "rgba(255, 255, 255, 0)",
         yAxisID: "y1",
         ...baseDatasetConfig,
       },
@@ -152,13 +151,6 @@ const AnimePollGraph = ({ polls }) => {
           "rgba(88, 120, 198, 0.25)",
           "rgba(74, 144, 226, 0.25)",
         ][index],
-        pointBackgroundColor: [
-          "rgba(163, 48, 80, 1)",
-          "rgba(139, 63, 124, 1)",
-          "rgba(114, 83, 166, 1)",
-          "rgba(88, 120, 198, 1)",
-          "rgba(74, 144, 226, 1)",
-        ][index],
         stack: "Stack 0",
         ...baseDatasetConfig,
       })),
@@ -168,10 +160,24 @@ const AnimePollGraph = ({ polls }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
     plugins: {
       tooltip: {
+        mode: "index",
+        intersect: false,
         yAlign: "bottom",
         callbacks: {
+          labelColor: (tooltipItem, chart) => {
+            const datasetIndex = tooltipItem.datasetIndex;
+            const borderColor = chartData.datasets[datasetIndex].borderColor;
+            return {
+              borderColor: borderColor,
+              backgroundColor: borderColor,
+            };
+          },
           label: (context) => {
             const datasetLabel = context.dataset.label || "";
             const value = context.raw;

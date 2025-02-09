@@ -42,7 +42,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   }, [selectedLegend]);
 
   const baseDatasetConfig = {
-    tension: 0.5,
+    tension: 0.3,
     pointRadius: 0,
     pointHoverRadius: 6,
     pointHitRadius: 8,
