@@ -4,6 +4,7 @@ import { Chart as ChartJS } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { format, parseISO } from "date-fns";
 import ZoomButton from "../../../common/button/ZoomButton";
+import { createGradient } from "../../../../util/chartUtil";
 
 const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
   const chartRef = useRef(null);
@@ -49,14 +50,6 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
     borderWidth: 1.5,
     borderDash: [],
     fill: true,
-  };
-
-  const createGradient = (ctx, chartArea, colorStart, colorEnd) => {
-    const { top, bottom } = chartArea;
-    const gradient = ctx.createLinearGradient(0, top, 0, bottom);
-    gradient.addColorStop(0, colorStart);
-    gradient.addColorStop(1, colorEnd);
-    return gradient;
   };
 
   const chartData = {
