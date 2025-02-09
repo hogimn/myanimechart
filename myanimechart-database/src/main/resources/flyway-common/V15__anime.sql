@@ -1,0 +1,2 @@
+ALTER TABLE anime
+    ADD COLUMN hide CHAR(1);

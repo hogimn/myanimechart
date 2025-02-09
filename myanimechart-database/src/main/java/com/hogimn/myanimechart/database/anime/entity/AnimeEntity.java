@@ -43,6 +43,7 @@ public class AnimeEntity {
     private LocalDateTime updatedAt;
     private String rating;
     private String nsfw;
+    private String hide;
 
     public static AnimeEntity from(AnimeDto animeDto) {
         AnimeEntity anime = new AnimeEntity();
@@ -73,6 +74,7 @@ public class AnimeEntity {
         anime.setSynopsis(animeDto.getSynopsis());
         anime.setRating(animeDto.getRating());
         anime.setNsfw(animeDto.getNsfw());
+        anime.setHide(animeDto.getHide());
         return anime;
     }
 
@@ -104,5 +106,6 @@ public class AnimeEntity {
         this.setSynopsis(animeDto.getSynopsis());
         this.setRating(animeDto.getRating());
         this.setNsfw(animeDto.getNsfw());
+        this.setHide(animeDto.getHide());
     }
 }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -60,7 +61,10 @@ public class AnimeStatService {
 
     public List<AnimeDto> getAnimeStatDtos(Integer year, String season) {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByYearAndSeason(year, season);
-        List<AnimeDto> animeDtos = animeEntities.stream().map(AnimeDto::from).toList();
+        List<AnimeDto> animeDtos = animeEntities.stream()
+                .filter(e -> !Objects.equals(e.getHide(), "N"))
+                .map(AnimeDto::from)
+                .toList();
         for (int i = 0; i < animeDtos.size(); i++) {
             AnimeEntity animeEntity = animeEntities.get(i);
             AnimeDto animeDto = animeDtos.get(i);

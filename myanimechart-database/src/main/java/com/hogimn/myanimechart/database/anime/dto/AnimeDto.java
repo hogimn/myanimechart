@@ -44,6 +44,7 @@ public class AnimeDto {
     private String synopsis;
     private String rating;
     private String nsfw;
+    private String hide;
 
     private List<AnimeStatDto> animeStats;
     private List<PollDto> polls;
@@ -77,6 +78,7 @@ public class AnimeDto {
         anime.setSynopsis(animeEntity.getSynopsis());
         anime.setRating(animeEntity.getRating());
         anime.setNsfw(animeEntity.getNsfw());
+        anime.setHide(animeEntity.getHide());
         return anime;
     }
 
@@ -101,7 +103,6 @@ public class AnimeDto {
         animeDto.setAirStatus(anime.getStatus().field());
         animeDto.setTitle(anime.getTitle());
         animeDto.setType(anime.getType().field());
-
         animeDto.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
         animeDto.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
         animeDto.setEnglishTitle(anime.getAlternativeTitles().getEnglish());
@@ -109,7 +110,6 @@ public class AnimeDto {
         animeDto.setSynopsis(anime.getSynopsis());
         animeDto.setRating(anime.getRating().field());
         animeDto.setNsfw(anime.getNSFW().field());
-
         return animeDto;
     }
 }
