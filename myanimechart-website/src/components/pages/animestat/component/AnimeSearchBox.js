@@ -8,7 +8,7 @@ const SearchBoxWrapper = styled.div`
   justify-content: flex-start;
   margin-top: 15px;
   margin-bottom: 15px;
-  margin-left: 5px;
+  margin-left: 10px;
 
   .ant-input-affix-wrapper {
     width: 400px;

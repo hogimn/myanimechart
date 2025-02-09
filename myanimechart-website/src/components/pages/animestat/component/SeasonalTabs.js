@@ -20,11 +20,15 @@ const SelectWrapper = styled.div`
   .ant-select {
     min-width: fit-content;
     margin-top: 5px;
-    margin-left: 5px;
+    margin-left: 10px;
   }
 `;
 
 const CustomTabs = styled(CommonTabs)`
+  .ant-tabs-nav-wrap {
+    margin: 0 10px;
+  }
+
   .ant-tabs-tab + .ant-tabs-tab {
     margin: 0 0 0 0;
   }

@@ -5,6 +5,17 @@ import styled from "styled-components";
 const StyledTabs = styled(Tabs)`
   .ant-tabs-tab {
     font-size: 0.9rem;
+    background-color: rgba(36, 46, 66, 0.7);
+  }
+
+  .ant-tabs-tab-active {
+    font-size: 0.9rem;
+    background-color: rgba(66, 84, 122, 0.7);
+  }
+
+  .ant-tabs-nav-wrap {
+    border-radius: 9px;
+    background-color: rgba(30, 34, 39, 0.45);
   }
 `;
 
