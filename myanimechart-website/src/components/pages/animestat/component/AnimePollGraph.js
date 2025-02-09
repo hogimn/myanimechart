@@ -72,7 +72,7 @@ const AnimePollGraph = ({ polls }) => {
   };
 
   const chartData = {
-    labels: episodes.map((ep) => `ep${ep}`),
+    labels: episodes.map((ep) => `Ep.${ep}`),
     datasets: [
       {
         label: "Avg. Score",
@@ -158,12 +158,13 @@ const AnimePollGraph = ({ polls }) => {
         position: "top",
         labels: {
           color: "#ffffff",
-          boxHeight: 9,
+          boxHeight: 7,
           usePointStyle: true,
           generateLabels: (chart) => {
             const labels =
               ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
             return labels.reverse().map((label) => {
+              label.fillStyle = label.strokeStyle;
               if (label.hidden) {
                 label.fontColor = "rgba(255, 255, 255, 0.4)";
                 label.lineWidth = 0;

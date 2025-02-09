@@ -179,7 +179,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
         position: "top",
         labels: {
           color: "#ffffff",
-          boxHeight: 9,
+          boxHeight: 7,
           usePointStyle: true,
           generateLabels: (chart) => {
             const labels =
