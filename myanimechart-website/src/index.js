@@ -13,6 +13,7 @@ const darkTheme = {
     colorLink: "#4164fd",
     colorBorder: "#444",
     fontFamily: "Avenir, sans-serif",
+    fontSize: 12,
   },
 };
 

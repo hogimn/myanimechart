@@ -3,13 +3,9 @@ import styled from "styled-components";
 import useLazyLoad from "../../../hook/useLazyLoad";
 
 const ImageContainer = styled.div`
-  width: 220px;
+  width: 180px;
   height: 100%;
   position: relative;
-
-  @media (max-width: 768px) {
-    width: 150px;
-  }
 `;
 
 const StyledAnimeImage = styled.img`

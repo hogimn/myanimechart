@@ -75,4 +75,6 @@ export const registerCharts = () => {
     increaseLegendSpacing,
     verticalHoverLine
   );
+
+  Chart.defaults.font.size = 11;
 };

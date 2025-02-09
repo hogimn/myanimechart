@@ -1,12 +1,19 @@
 import React from "react";
 import { Tabs } from "antd";
+import styled from "styled-components";
+
+const StyledTabs = styled(Tabs)`
+  .ant-tabs-tab {
+    font-size: 0.9rem;
+  }
+`;
 
 const CommonTabs = ({
   tabs = [],
   defaultActiveKey = "1",
   onChange,
   tabBarExtraContent,
-  size = "default",
+  size = "medium",
   style = {},
   ...restProps
 }) => {
@@ -17,7 +24,7 @@ const CommonTabs = ({
   }));
 
   return (
-    <Tabs
+    <StyledTabs
       defaultActiveKey={defaultActiveKey}
       onChange={onChange}
       tabBarExtraContent={tabBarExtraContent}

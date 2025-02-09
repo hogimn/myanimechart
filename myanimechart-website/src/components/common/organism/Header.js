@@ -11,6 +11,7 @@ const StyledLink = styled(Link)`
 const StyledHeader = styled.header`
   display: flex;
   align-items: center;
+  font-size: 1.15em;
 
   h1 {
     margin-left: 10px;
@@ -28,7 +29,7 @@ const Header = () => {
         <Logo
           src={getImagePath("myanimechart-logo.png")}
           alt={"MyAnimeChart Logo"}
-          width={"75px"}
+          width={"70px"}
         />
       </StyledLink>
       <StyledLink to="/">

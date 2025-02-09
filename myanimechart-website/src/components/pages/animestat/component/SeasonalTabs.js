@@ -30,7 +30,6 @@ const CustomTabs = styled(CommonTabs)`
   }
 
   .ant-tabs-tab {
-    font-size: 17px;
     padding: 12px 24px;
   }
 `;

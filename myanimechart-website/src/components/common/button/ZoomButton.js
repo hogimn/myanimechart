@@ -3,7 +3,7 @@ import CommonButton from "../basic/CommonButton";
 import { MdCancel, MdCheckCircle } from "react-icons/md";
 
 const StyledZoomButton = styled(CommonButton)`
-  font-size: 11px;
+  font-size: 0.65rem;
   background-color: ${(props) =>
     props.zoomEnabled ? "rgba(230, 57, 70, 0.6)" : "rgba(42, 157, 143, 0.6)"};
   position: absolute;

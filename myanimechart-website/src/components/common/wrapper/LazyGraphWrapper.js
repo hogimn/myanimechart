@@ -16,7 +16,6 @@ const StyledSpin = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 14px;
   color: #aaa;
 `;
 

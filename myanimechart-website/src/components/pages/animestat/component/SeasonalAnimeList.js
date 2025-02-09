@@ -67,7 +67,7 @@ const OverlayBox = styled.div`
   color: white;
   padding: 5px 10px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 0.7rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -84,10 +84,6 @@ const ImageWrapper = styled.div`
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
-
-  @media (max-width: 768px) {
-    height: 200px;
-  }
 `;
 
 const SeasonalAnimeList = ({

@@ -25,12 +25,8 @@ const ListBox = styled.div`
     border-radius: 8px;
     padding: 1px 4px;
     margin: 2px;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: rgba(255, 255, 255, 0.55);
-
-    @media (max-width: 768px) {
-      font-size: 0.6rem;
-    }
   }
 `;
 
@@ -39,12 +35,8 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(44, 44, 44, 0.22);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.55);
-
-  @media (max-width: 768px) {
-    font-size: 0.7rem;
-  }
 
   span:not(:last-child) {
     border-right: 1px solid #353535;
@@ -69,13 +61,9 @@ const Dot = styled.div`
 const DescriptionContainer = styled.div`
   flex: 2;
   background-color: rgba(0, 0, 0, 0.24);
-  height: 350px;
+  height: 300px;
   overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
   position: relative;
-
-  @media (max-width: 768px) {
-    height: 200px;
-  }
 `;
 
 const SeeMoreButton = styled.button`
@@ -85,15 +73,11 @@ const SeeMoreButton = styled.button`
   right: 0;
   background: rgba(19, 26, 39, 0.7);
   color: #ffffff;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   border: none;
   padding: 5px;
   cursor: pointer;
   text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 0.7rem;
-  }
 
   &:hover {
     background: rgba(4, 8, 43, 0.8);
@@ -115,27 +99,19 @@ const HeaderContainer = styled.div`
 
 const Title = styled.div`
   display: block;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #a7ccf1;
   line-height: 1;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
 `;
 
 const SubTitle = styled.div`
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: rgb(190, 183, 183);
   line-height: 1;
   text-overflow: ellipsis;
   text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 0.7rem;
-  }
 `;
 
 const TitleContainer = styled.span`
@@ -176,11 +152,7 @@ const Link = styled.a`
 
 const AnimeDetails = styled.div`
   padding: 10px;
-  font-size: 0.9rem;
-
-  @media (max-width: 768px) {
-    font-size: 0.8rem;
-  }
+  font-size: 0.8rem;
 
   & strong {
     font-weight: bold;
