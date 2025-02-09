@@ -1,61 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
-import CommonModal from "../../../common/basic/CommonModal";
-import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
-
-const StyledTotalVotes = styled.div`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #3b82f6;
-  text-align: center;
-  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : 0)};
-`;
-
-const VoteList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-`;
-
-const VoteItem = styled.li`
-  margin-bottom: 1rem;
-`;
-
-const ProgressBarBackground = styled.div`
-  width: 100%;
-  background-color: #e2e8f0;
-  height: 1rem;
-  margin-top: 0.25rem;
-  border-radius: 0.375rem;
-`;
-
-const ProgressBarFill = styled.div`
-  height: 1rem;
-  background-color: #3b82f6;
-  border-radius: 0.375rem;
-  width: ${(props) => props.width}%;
-`;
-
-const StyledButton = styled.button`
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #2563eb;
-  }
-`;
 
 const AnimePollGraph = ({ polls }) => {
   const chartRef = useRef(null);
-
-  const [modalData, setModalData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [zoomEnabled, setZoomEnabled] = useState(false);
 
   const handleZoomToggle = () => {
@@ -265,19 +214,10 @@ const AnimePollGraph = ({ polls }) => {
         const element = elements[0];
         const episodeIndex = element.index;
         const data = dataPerEpisode[episodeIndex];
-
-        setModalData({
-          episode: data.episode,
-          totalVotes: data.totalVotes,
-          averageScore: averageScores[episodeIndex],
-          votesBreakdown: pollOptions.map((option, index) => {
-            const votes = data.optionVotes[index];
-            const percentage = ((votes / data.totalVotes) * 100).toFixed(1);
-            return { option, votes, percentage };
-          }),
-          topicId: data.topicId,
-        });
-        setIsModalOpen(true);
+        window.open(
+          `https://myanimelist.net/forum/?topicid=${data.topicId}`,
+          "_blank"
+        );
       }
     },
   };
@@ -290,45 +230,6 @@ const AnimePollGraph = ({ polls }) => {
         onClick={handleZoomToggle}
       />
       <Bar ref={chartRef} options={options} data={chartData} />
-
-      {isModalOpen && modalData && (
-        <CommonModal
-          title={`Episode ${modalData.episode}`}
-          open={isModalOpen}
-          onCancel={() => setIsModalOpen(false)}
-          footer={null}
-          centered
-        >
-          <StyledTotalVotes>
-            Average Score: {modalData.averageScore.toFixed(2)}
-          </StyledTotalVotes>
-          <StyledTotalVotes marginBottom={"1rem"}>
-            Total Votes: {modalData.totalVotes}
-          </StyledTotalVotes>
-          <VoteList>
-            {[...modalData.votesBreakdown]
-              .reverse()
-              .map(({ option, votes, percentage }) => (
-                <VoteItem key={option}>
-                  ★{option}: {votes} votes ({percentage}%)
-                  <ProgressBarBackground>
-                    <ProgressBarFill width={percentage} />
-                  </ProgressBarBackground>
-                </VoteItem>
-              ))}
-          </VoteList>
-          <StyledButton
-            onClick={() =>
-              window.open(
-                `https://myanimelist.net/forum/?topicid=${modalData.topicId}`,
-                "_blank"
-              )
-            }
-          >
-            Go to Discussion
-          </StyledButton>
-        </CommonModal>
-      )}
     </>
   );
 };
