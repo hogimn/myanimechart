@@ -225,7 +225,13 @@ const SeasonalAnimeList = ({
           >
             <AnimeStatSubWrapper>
               <AnimeWrapper>
-                <ImageWrapper onClick={() => handleImageClick(anime.image)}>
+                <ImageWrapper
+                  onClick={() =>
+                    handleImageClick(
+                      anime.largeImage ? anime.largeImage : anime.image
+                    )
+                  }
+                >
                   <AnimeImage alt={anime.title} src={anime.image} />
                   <OverlayBox>
                     <span>
