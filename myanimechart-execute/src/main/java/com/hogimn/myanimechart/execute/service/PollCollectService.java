@@ -66,7 +66,7 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
-        List<AnimeEntity> animeEntities = animeService.getAiringAnimeEntities();
+        List<AnimeEntity> animeEntities = animeService.getAiringOrFinishedAnimeNextMonth();
 
         animeEntities.forEach(animeEntity -> {
             try {
