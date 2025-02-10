@@ -42,7 +42,6 @@ public class AnimeEntity {
     private LocalDateTime updatedAt;
     private String rating;
     private String nsfw;
-    private String hide;
     private String forceCollect;
 
     public static AnimeEntity from(AnimeDto animeDto) {
