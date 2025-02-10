@@ -73,8 +73,6 @@ public class AnimeEntity {
         anime.setSynopsis(animeDto.getSynopsis());
         anime.setRating(animeDto.getRating());
         anime.setNsfw(animeDto.getNsfw());
-        anime.setHide(animeDto.getHide());
-        anime.setForceCollect(animeDto.getForceCollect());
         return anime;
     }
 
@@ -105,7 +103,5 @@ public class AnimeEntity {
         this.setSynopsis(animeDto.getSynopsis());
         this.setRating(animeDto.getRating());
         this.setNsfw(animeDto.getNsfw());
-        this.setHide(animeDto.getHide());
-        this.setForceCollect(animeDto.getForceCollect());
     }
 }
