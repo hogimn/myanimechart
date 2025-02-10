@@ -6,10 +6,10 @@ import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
 
 const StyledTotalVotes = styled.div`
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  color: #3b82f6;
-  text-align: center;
+  color: rgb(149, 195, 255);
+  text-align: left;
   margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : 0)};
 `;
 
@@ -25,7 +25,7 @@ const VoteItem = styled.li`
 
 const ProgressBarBackground = styled.div`
   width: 100%;
-  background-color: #e2e8f0;
+  background-color: rgba(81, 84, 102, 0.24);
   height: 1rem;
   margin-top: 0.25rem;
   border-radius: 0.375rem;
@@ -33,7 +33,7 @@ const ProgressBarBackground = styled.div`
 
 const ProgressBarFill = styled.div`
   height: 1rem;
-  background-color: #3b82f6;
+  background-color: rgba(99, 154, 255, 1);
   border-radius: 0.375rem;
   width: ${(props) => props.width}%;
 `;
@@ -41,13 +41,13 @@ const ProgressBarFill = styled.div`
 const StyledButton = styled.button`
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #3b82f6;
+  background-color: rgba(99, 154, 255, 0.7);
   color: white;
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
   &:hover {
-    background-color: #2563eb;
+    background-color: rgba(99, 154, 255, 1);
   }
 `;
 
