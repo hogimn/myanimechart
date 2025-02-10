@@ -3,9 +3,8 @@ import { Tabs } from "antd";
 import styled from "styled-components";
 
 const StyledTabs = styled(Tabs)`
-  .ant-tabs-tab {
-    font-size: 0.9rem;
-    background-color: rgba(36, 46, 66, 0.7);
+  .ant-tabs-nav::before {
+    border-bottom: none !important;
   }
 
   .ant-tabs-tab-active {
