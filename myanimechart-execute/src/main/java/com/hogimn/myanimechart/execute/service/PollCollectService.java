@@ -67,6 +67,8 @@ public class PollCollectService {
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForPollCollection();
+        List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.getAnimeEntitiesForceCollectTrue();
+        animeEntities.addAll(animeEntitiesForceCollectTrue);
 
         animeEntities.forEach(animeEntity -> {
             try {
