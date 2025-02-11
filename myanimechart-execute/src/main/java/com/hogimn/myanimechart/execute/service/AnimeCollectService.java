@@ -103,17 +103,19 @@ public class AnimeCollectService {
 
         collectAnimeStatisticsOldSeasonCurrentlyAiring();
 
-        collectAnimeForceCollectTrue();
+        collectAnimeStatisticsForceCollectTrue();
     }
 
-    private void collectAnimeForceCollectTrue() {
+    private void collectAnimeStatisticsForceCollectTrue() {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
         for (AnimeEntity animeEntity : animeEntities) {
             try {
                 Anime anime = getAnime(animeEntity.getId());
                 Thread.sleep(1000);
                 AnimeDto animeDto = AnimeDto.from(anime);
+                AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+                serviceRegistryService.send(RegisteredService.EXECUTE, "/animeStat/saveAnimeStat", animeStatDto);
             } catch (Exception e) {
                 log.error("Failed to collect anime statistics for anime '{}': {}", animeEntity.getId(), e.getMessage(), e);
             }
