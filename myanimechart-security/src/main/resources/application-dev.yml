@@ -1,0 +1,16 @@
+myanimelist:
+  client-id: ${myanimelist_clientid}
+  client-secret: ${myanimelist_clientsecret}
+  redirect-uri: ${myanimelist_redirecturi}
+
+spring:
+  application:
+    name: security
+  config:
+    import: file:../myanimechart-common/src/main/resources/application-dev.yml,file:../myanimechart-database/src/main/resources/application-dev.yml
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

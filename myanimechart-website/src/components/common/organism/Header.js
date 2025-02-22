@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Logo from "./logo/Logo";
 import { getImagePath } from "../../../util/pathUtil";
 import { Link } from "react-router-dom";
+import CommonButton from "../basic/CommonButton";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -20,9 +21,23 @@ const StyledHeader = styled.header`
   ${StyledLink} + ${StyledLink} {
     margin-left: 5px;
   }
+
+  .ant-btn {
+    margin-left: auto;
+  }
 `;
 
 const Header = () => {
+  const startOAuthFlow = async () => {
+    const gateway_url = process.env.REACT_APP_GATEWAY_URL;
+    const authorizationUrl = `${gateway_url}/security/oauth2/authorize/myanimelist`;
+    window.location.href = authorizationUrl;
+  };
+
+  const handleLogin = (e) => {
+    startOAuthFlow();
+  };
+
   return (
     <StyledHeader>
       <StyledLink to="/">
@@ -35,6 +50,7 @@ const Header = () => {
       <StyledLink to="/">
         <h2>MyAnimeChart</h2>
       </StyledLink>
+      <CommonButton onClick={handleLogin}>Login</CommonButton>
     </StyledHeader>
   );
 };
