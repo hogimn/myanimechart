@@ -68,7 +68,7 @@ public class OAuth2Controller {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(HttpSession session, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Boolean> logout(HttpSession session, HttpServletResponse response) {
         session.invalidate();
 
         Cookie cookie = new Cookie("access_token", null);
