@@ -18,6 +18,10 @@ spring:
           uri: lb://security
           predicates:
             - Path=/security/**
+        - id: execute
+          uri: lb://execute
+          predicates:
+            - Path=/execute/**
 
 springdoc:
   api-docs:
@@ -30,3 +34,5 @@ springdoc:
         url: /query/v3/api-docs
       - name: security
         url: /security/v3/api-docs
+      - name: execute
+        url: /execute/v3/api-docs
