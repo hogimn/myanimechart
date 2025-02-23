@@ -2,7 +2,7 @@ myanimelist:
   clientId: ${myanimechart_myanimelist_client_id}
 
 discord:
-  webhookUrl: ${myanimechart_discord_webhookurl}
+  webhookUrl: ${myanimechart_discord_webhook_url}
 
 eureka:
   instance:
