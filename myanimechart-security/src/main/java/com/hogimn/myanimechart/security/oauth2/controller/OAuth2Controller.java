@@ -67,7 +67,24 @@ public class OAuth2Controller {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(HttpServletResponse response) {
+    public ResponseEntity<Boolean> logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        boolean found = false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_token".equals(cookie.getName())) {
+                    log.info("Access token in cookie: {}", cookie.getValue());
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            log.error("Access token in cookie not found, cookies: {}", cookies);
+            return ResponseEntity.ok(false);
+        }
+
         Cookie cookie = new Cookie("access_token", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
