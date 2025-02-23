@@ -26,10 +26,3 @@ management:
 server:
   ssl:
     enabled: false
-    key-store: ${myanimechart_keystore_path}
-    key-store-password: ${myanimechart_keystore_password}
-    key-store-type: JKS
-    key-alias: ${myanimechart_keystore_alias}
-    trust-store: ${myanimechart_truststore_path}
-    trust-store-password: ${myanimechart_truststore_password}
-    trust-store-type: JKS
