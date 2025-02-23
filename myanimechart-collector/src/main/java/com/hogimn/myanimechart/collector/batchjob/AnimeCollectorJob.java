@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.collector.batchjob;
 
-import com.hogimn.myanimechart.common.serviceregistry.domain.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.service.ServiceRegistryService;
+import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.database.batch.dto.BatchDto;
 import com.hogimn.myanimechart.database.batch.service.BatchService;
 import jakarta.annotation.PostConstruct;
@@ -38,6 +38,6 @@ public class AnimeCollectorJob {
     }
 
     public void collectAnimeAndAnimeStat(String batchJobName) {
-        serviceRegistryService.send(RegisteredService.EXECUTE, "/collect/collectAnimeStatistics", batchJobName);
+        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeCollect/collectAnimeStatistics", batchJobName);
     }
 }
