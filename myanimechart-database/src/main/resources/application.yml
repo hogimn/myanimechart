@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ${mariadb_url}
-    username: ${mariadb_username}
-    password: ${mariadb_password}
+    url: ${myanimechart_mariadb_url}
+    username: ${myanimechart_mariadb_username}
+    password: ${myanimechart_mariadb_password}
   jpa:
     hibernate:
       show-sql: true

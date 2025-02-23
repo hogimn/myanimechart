@@ -29,8 +29,8 @@
   },
   "homepage": "https://myanimechart.com",
   "scripts": {
-    "start": "cross-env REACT_APP_GATEWAY_URL=%gateway_url% react-scripts start",
-    "build": "cross-env REACT_APP_GATEWAY_URL=%gateway_url% react-scripts build",
+    "start": "cross-env REACT_APP_GATEWAY_URL=%myanimechart_gateway_url% react-scripts start",
+    "build": "cross-env REACT_APP_GATEWAY_URL=%myanimechart_gateway_url% react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",

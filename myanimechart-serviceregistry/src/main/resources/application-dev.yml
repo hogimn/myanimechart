@@ -9,4 +9,4 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: ${serviceregistry_url}
+      defaultZone: ${myanimechart_serviceregistry_url}

@@ -1,8 +1,8 @@
 myanimelist:
-  clientId: ${myanimelist_clientid}
+  clientId: ${myanimechart_myanimelist_client_id}
 
 discord:
-  webhookUrl: ${discord_webhookurl}
+  webhookUrl: ${myanimechart_discord_webhookurl}
 
 eureka:
   instance:
@@ -15,7 +15,7 @@ eureka:
   client:
     enabled: true
     serviceUrl:
-      defaultZone: ${serviceregistry_url}
+      defaultZone: ${myanimechart_serviceregistry_url}
 
 management:
   endpoints:
@@ -25,10 +25,10 @@ management:
 
 server:
   ssl:
-    key-store: ${keystore_path}
-    key-store-password: ${keystore_password}
+    key-store: ${myanimechart_keystore_path}
+    key-store-password: ${myanimechart_keystore_password}
     key-store-type: JKS
-    key-alias: ${keystore_alias}
-    trust-store: ${truststore_path}
-    trust-store-password: ${truststore_password}
+    key-alias: ${myanimechart_keystore_alias}
+    trust-store: ${myanimechart_truststore_path}
+    trust-store-password: ${myanimechart_truststore_password}
     trust-store-type: JKS
