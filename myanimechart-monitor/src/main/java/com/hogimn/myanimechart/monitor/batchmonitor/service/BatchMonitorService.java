@@ -27,7 +27,7 @@ public class BatchMonitorService {
         this.alarmServices = alarmServices;
     }
 
-    @SaveBatchHistory(value = "#batchJobName", saveDirectly = true)
+    @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "checkBatchNotExecuted")
     public void checkBatchNotExecuted(String batchJobName) {
         List<BatchDto> batchDtos = batchService.getAllBatchDtos();

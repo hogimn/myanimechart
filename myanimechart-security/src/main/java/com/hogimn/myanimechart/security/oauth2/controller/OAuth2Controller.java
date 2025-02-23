@@ -4,7 +4,6 @@ import com.hogimn.myanimechart.security.oauth2.dto.TokenResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -68,9 +67,7 @@ public class OAuth2Controller {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(HttpSession session, HttpServletResponse response) {
-        session.invalidate();
-
+    public ResponseEntity<Boolean> logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("access_token", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
@@ -84,18 +81,34 @@ public class OAuth2Controller {
     @GetMapping("/callback/myanimelist")
     public void callback(
             @RequestParam("code") String code,
-            HttpSession session,
+            HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
         log.info("Received code: {}", code);
 
-        String codeVerifier = (String) session.getAttribute("code_verifier");
+        String codeVerifier = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("code_verifier".equals(cookie.getName())
+                        && cookie.getValue() != null
+                        && !cookie.getValue().isEmpty()) {
+                    codeVerifier = cookie.getValue();
+                }
+            }
+        }
+
+        Cookie cookie = new Cookie("code_verifier", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
         log.info("Received code_verifier: {}", codeVerifier);
 
         TokenResponse token = exchangeCodeForToken(code, codeVerifier);
         log.info("Received token: {}", token);
-
-        session.setAttribute("refresh_token", token.getRefreshToken());
 
         Cookie accessTokenCookie = new Cookie("access_token", token.getAccessToken());
         accessTokenCookie.setHttpOnly(true);
@@ -132,11 +145,17 @@ public class OAuth2Controller {
     }
 
     @GetMapping("/authorize/myanimelist")
-    public void authorize(HttpServletResponse response, HttpSession session) throws IOException {
+    public void authorize(HttpServletResponse response) throws IOException {
         String codeChallenge = generateCodeChallenge();
 
         log.info("Generated code_verifier: {}", codeChallenge);
-        session.setAttribute("code_verifier", codeChallenge);
+
+        Cookie cookie = new Cookie("code_verifier", codeChallenge);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(30);
+        response.addCookie(cookie);
 
         String responseType = "code";
         String scope = "write:users";
