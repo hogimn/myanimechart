@@ -28,6 +28,12 @@ const StyledHeader = styled.header`
   .ant-btn {
     margin-left: auto;
     margin-right: 10px;
+    background-color: rgba(36, 46, 66, 0.7);
+    border: 1px solid rgba(25, 26, 46, 0.7);
+  }
+
+  .ant-btn:hover {
+    background-color: rgba(96, 119, 160, 0.7) !important;
   }
 
   .ant-alert {
