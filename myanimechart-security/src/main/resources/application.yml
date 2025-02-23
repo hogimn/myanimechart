@@ -1,3 +1,11 @@
+myanimechart:
+  home-url: ${myanimechart_home_url}
+
+myanimelist:
+  client-id: ${myanimelist_clientid}
+  client-secret: ${myanimelist_clientsecret}
+  redirect-uri: ${myanimelist_redirecturi}
+
 spring:
   application:
     name: security

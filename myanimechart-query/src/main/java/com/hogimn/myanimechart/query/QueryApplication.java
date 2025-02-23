@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.hogimn.myanimechart.execute",
+        "com.hogimn.myanimechart.query",
         "com.hogimn.myanimechart.common",
         "com.hogimn.myanimechart.database"
 })

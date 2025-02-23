@@ -5,7 +5,7 @@ const AnimeStatApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/animeStat/${year}/${season}`
+        `${gatewayUrl}/query/animeStat/getAnimeStat/${year}/${season}`
       );
       return response.data;
     } catch (error) {
