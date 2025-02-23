@@ -73,7 +73,6 @@ public class OAuth2Controller {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("access_token".equals(cookie.getName())) {
-                    log.info("Access token in cookie: {}", cookie.getValue());
                     found = true;
                     break;
                 }
@@ -81,7 +80,7 @@ public class OAuth2Controller {
         }
 
         if (!found) {
-            log.error("Access token in cookie not found, cookies: {}", cookies);
+            log.error("Access token in cookie not found");
             return ResponseEntity.ok(false);
         }
 
@@ -101,8 +100,6 @@ public class OAuth2Controller {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        log.info("Received code: {}", code);
-
         String codeVerifier = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -122,10 +119,7 @@ public class OAuth2Controller {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        log.info("Received code_verifier: {}", codeVerifier);
-
         TokenResponse token = exchangeCodeForToken(code, codeVerifier);
-        log.info("Received token: {}", token);
 
         Cookie accessTokenCookie = new Cookie("access_token", token.getAccessToken());
         accessTokenCookie.setHttpOnly(true);
@@ -164,8 +158,6 @@ public class OAuth2Controller {
     @GetMapping("/authorize/myanimelist")
     public void authorize(HttpServletResponse response) throws IOException {
         String codeChallenge = generateCodeChallenge();
-
-        log.info("Generated code_verifier: {}", codeChallenge);
 
         Cookie cookie = new Cookie("code_verifier", codeChallenge);
         cookie.setHttpOnly(true);
