@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/oauth2")
@@ -32,18 +33,15 @@ public class OAuth2Controller {
     private final String redirectUri;
     private final String homeUrl;
     private final RestTemplate restTemplate;
+    private static final String ACCESS_TOKEN_COOKIE = "access_token";
+    private static final String CODE_VERIFIER_COOKIE = "code_verifier";
 
     public OAuth2Controller(
-            @Value("${myanimelist.client-id}")
-            String clientId,
-            @Value("${myanimelist.client-secret}")
-            String clientSecret,
-            @Value("${myanimelist.redirect-uri}")
-            String redirectUri,
-            @Value("${myanimechart.home-url}")
-            String homeUrl,
-            RestTemplate restTemplate
-    ) {
+            @Value("${myanimelist.client-id}") String clientId,
+            @Value("${myanimelist.client-secret}") String clientSecret,
+            @Value("${myanimelist.redirect-uri}") String redirectUri,
+            @Value("${myanimechart.home-url}") String homeUrl,
+            RestTemplate restTemplate) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
@@ -53,148 +51,96 @@ public class OAuth2Controller {
 
     @GetMapping("/isAuthenticated")
     public ResponseEntity<Boolean> isAuthenticated(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("access_token".equals(cookie.getName())
-                        && cookie.getValue() != null
-                        && !cookie.getValue().isEmpty()) {
-                    return ResponseEntity.ok(true);
-                }
-            }
-        }
-        return ResponseEntity.ok(false);
+        return ResponseEntity.ok(getCookieValue(request, ACCESS_TOKEN_COOKIE).isPresent());
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        boolean found = false;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("access_token".equals(cookie.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if (!found) {
-            log.error("Access token in cookie not found");
-            return ResponseEntity.ok(false);
-        }
-
-        Cookie cookie = new Cookie("access_token", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-
+    public ResponseEntity<Boolean> logout(HttpServletResponse response) {
+        deleteCookie(response, ACCESS_TOKEN_COOKIE);
         return ResponseEntity.ok(true);
     }
 
     @GetMapping("/callback/myanimelist")
-    public void callback(
-            @RequestParam("code") String code,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        String codeVerifier = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("code_verifier".equals(cookie.getName())
-                        && cookie.getValue() != null
-                        && !cookie.getValue().isEmpty()) {
-                    codeVerifier = cookie.getValue();
-                }
-            }
-        }
-
-        Cookie cookie = new Cookie("code_verifier", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
+    public void callback(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String codeVerifier = getCookieValue(request, CODE_VERIFIER_COOKIE).orElse("");
+        deleteCookie(response, CODE_VERIFIER_COOKIE);
 
         TokenResponse token = exchangeCodeForToken(code, codeVerifier);
-
-        Cookie accessTokenCookie = new Cookie("access_token", token.getAccessToken());
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(token.getExpiresIn());
-        response.addCookie(accessTokenCookie);
+        setCookie(response, ACCESS_TOKEN_COOKIE, token.getAccessToken(), token.getExpiresIn());
 
         response.sendRedirect(homeUrl);
-    }
-
-    private TokenResponse exchangeCodeForToken(String code, String codeVerifier) {
-        HttpHeaders headers = new HttpHeaders();
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", clientId);
-        params.add("client_secret", clientSecret);
-        params.add("grant_type", "authorization_code");
-        params.add("code", code);
-        params.add("redirect_uri", redirectUri);
-        params.add("code_verifier", codeVerifier);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-
-        String tokenUrl = "https://myanimelist.net/v1/oauth2/token";
-        ResponseEntity<TokenResponse> response = restTemplate.postForEntity(tokenUrl, request, TokenResponse.class);
-
-        return response.getBody();
-    }
-
-    private String encodeClientCredentials() {
-        String credentials = clientId + ":" + clientSecret;
-        return Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 
     @GetMapping("/authorize/myanimelist")
     public void authorize(HttpServletResponse response) throws IOException {
         String codeChallenge = generateCodeChallenge();
+        setCookie(response, CODE_VERIFIER_COOKIE, codeChallenge, 30);
 
-        Cookie cookie = new Cookie("code_verifier", codeChallenge);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(30);
-        response.addCookie(cookie);
-
-        String responseType = "code";
-        String scope = "write:users";
-
-        String authorizationUrl = "https://myanimelist.net/v1/oauth2/authorize?" +
-                "response_type=" + responseType +
-                "&client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
-                "&scope=" + scope +
-                "&code_challenge=" + codeChallenge +
-                "&code_challenge_method=plain";
+        String authorizationUrl = String.format(
+                "https://myanimelist.net/v1/oauth2/authorize?" +
+                        "response_type=code" +
+                        "&client_id=%s" +
+                        "&redirect_uri=%s" +
+                        "&scope=write:users" +
+                        "&code_challenge=%s" +
+                        "&code_challenge_method=plain",
+                clientId, redirectUri, codeChallenge);
 
         response.sendRedirect(authorizationUrl);
     }
 
-    public String generateCodeChallenge() {
-        StringBuilder result = new StringBuilder();
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private TokenResponse exchangeCodeForToken(String code, String codeVerifier) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
+            add("client_id", clientId);
+            add("client_secret", clientSecret);
+            add("grant_type", "authorization_code");
+            add("code", code);
+            add("redirect_uri", redirectUri);
+            add("code_verifier", codeVerifier);
+        }};
+
+        ResponseEntity<TokenResponse> response = restTemplate.postForEntity(
+                "https://myanimelist.net/v1/oauth2/token",
+                new HttpEntity<>(params, new HttpHeaders()),
+                TokenResponse.class);
+
+        return response.getBody();
+    }
+
+    private Optional<String> getCookieValue(HttpServletRequest request, String name) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (name.equals(cookie.getName()) && cookie.getValue() != null && !cookie.getValue().isEmpty()) {
+                    return Optional.of(cookie.getValue());
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private void setCookie(HttpServletResponse response, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(maxAge);
+        response.addCookie(cookie);
+    }
+
+    private void deleteCookie(HttpServletResponse response, String name) {
+        setCookie(response, name, null, 0);
+    }
+
+    private String generateCodeChallenge() {
         SecureRandom random;
         try {
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             random = new SecureRandom();
         }
-
-        for (int i = 0; i < 100; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            result.append(characters.charAt(randomIndex));
-        }
-
-        return result.toString();
+        return random.ints(100, 0, 62)
+                .mapToObj("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"::charAt)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
     }
 }
