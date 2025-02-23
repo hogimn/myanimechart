@@ -64,8 +64,8 @@ const Header = () => {
     startOAuth2Flow();
   };
 
-  const handleLogout = (event) => {
-    const isSuccess = SecurityApi.logout();
+  const handleLogout = async (event) => {
+    const isSuccess = await SecurityApi.logout();
     if (isSuccess) {
       window.location.href = "/";
     } else {
