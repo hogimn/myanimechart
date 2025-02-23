@@ -76,7 +76,6 @@ public class OAuth2Controller {
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
-        cookie.setDomain("localhost");
         response.addCookie(cookie);
 
         return ResponseEntity.ok(true);
