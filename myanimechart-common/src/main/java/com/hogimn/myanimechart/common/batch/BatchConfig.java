@@ -10,7 +10,7 @@ public class BatchConfig {
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(ThreadPoolTaskSchedulerBuilder builder) {
         return builder
-                .threadNamePrefix("collector-")
+                .threadNamePrefix("scheduler-")
                 .build();
     }
 }
