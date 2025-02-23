@@ -218,8 +218,10 @@ const SeasonalAnimeList = ({
       <CommonRow>
         {currentAnimeStats.map((anime) => (
           <AnimeStatWrapper
-            lg={24}
-            xl={12}
+            sm={24}
+            md={12}
+            lg={12}
+            xl={8}
             xxl={8}
             key={`anime-card-${anime.id}`}
           >

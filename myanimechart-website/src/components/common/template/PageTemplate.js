@@ -1,16 +1,15 @@
 import Header from "../organism/Header";
 import Footer from "../organism/Footer";
 import styled from "styled-components";
-import Side from "../organism/Side";
 
 const PageWrapper = styled.div`
-  display: flex;
-`;
-
-const MidWrapper = styled.div`
-  min-height: 100vh;
   color: white;
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1400px;
+  @media (max-width: 1359px) {
+    width: 100%;
+  }
 `;
 
 const MainWrapper = styled.main``;
@@ -18,13 +17,9 @@ const MainWrapper = styled.main``;
 const PageTemplate = ({ children }) => {
   return (
     <PageWrapper>
-      <Side />
-      <MidWrapper>
-        <Header />
-        <MainWrapper>{children}</MainWrapper>
-        <Footer />
-      </MidWrapper>
-      <Side />
+      <Header />
+      <MainWrapper>{children}</MainWrapper>
+      <Footer />
     </PageWrapper>
   );
 };

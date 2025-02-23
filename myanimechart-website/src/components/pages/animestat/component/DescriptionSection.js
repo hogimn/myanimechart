@@ -60,7 +60,7 @@ const Dot = styled.div`
 `;
 
 const DescriptionContainer = styled.div`
-  flex: 2;
+  flex: 1;
   background-color: rgba(0, 0, 0, 0.24);
   height: 300px;
   overflow-y: ${(props) => (props.expanded ? "auto" : "hidden")};
