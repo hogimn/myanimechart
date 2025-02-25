@@ -1,6 +1,7 @@
 import Header from "../organism/Header";
 import Footer from "../organism/Footer";
 import styled from "styled-components";
+import { UserProvider } from "../context/UserContext";
 
 const PageWrapper = styled.div`
   color: white;
@@ -16,11 +17,13 @@ const MainWrapper = styled.main``;
 
 const PageTemplate = ({ children }) => {
   return (
-    <PageWrapper>
-      <Header />
-      <MainWrapper>{children}</MainWrapper>
-      <Footer />
-    </PageWrapper>
+    <UserProvider>
+      <PageWrapper>
+        <Header />
+        <MainWrapper>{children}</MainWrapper>
+        <Footer />
+      </PageWrapper>
+    </UserProvider>
   );
 };
 

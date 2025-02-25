@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.Optional;
 
 @RestController

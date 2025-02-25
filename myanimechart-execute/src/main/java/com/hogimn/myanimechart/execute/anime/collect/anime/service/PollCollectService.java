@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.execute.anime.collect.anime.service;
 
+import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.database.anime.dto.PollDto;
@@ -8,7 +9,6 @@ import com.hogimn.myanimechart.database.anime.entity.PollOptionEntity;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.anime.service.PollOptionService;
 import com.hogimn.myanimechart.database.batch.aop.SaveBatchHistory;
-import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
@@ -28,18 +28,18 @@ import java.util.regex.Pattern;
 @Slf4j
 public class PollCollectService {
     private final AnimeService animeService;
-    private final MyAnimeList myAnimeList;
+    private final MyAnimeListProvider myAnimeListProvider;
     private final PollOptionService pollOptionService;
     private final ServiceRegistryService serviceRegistryService;
 
     public PollCollectService(
             AnimeService animeService,
-            MyAnimeList myAnimeList,
+            MyAnimeListProvider myAnimeListProvider,
             PollOptionService pollOptionService,
             ServiceRegistryService serviceRegistryService
     ) {
         this.animeService = animeService;
-        this.myAnimeList = myAnimeList;
+        this.myAnimeListProvider = myAnimeListProvider;
         this.pollOptionService = pollOptionService;
         this.serviceRegistryService = serviceRegistryService;
     }
@@ -80,7 +80,9 @@ public class PollCollectService {
                     keyword = "Touhai: Ura Rate Mahjong Touhai Roku" + " Poll Episode Discussion";
                 }
 
-                PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeList.getForumTopics()
+                PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeListProvider
+                        .getMyAnimeList()
+                        .getForumTopics()
                         .withQuery(keyword)
                         .withLimit(50)
                         .searchAll();
@@ -150,7 +152,7 @@ public class PollCollectService {
         voteZeroOptions.add(4);
         voteZeroOptions.add(5);
 
-        ForumTopicDetail forumTopicDetail = myAnimeList.getForumTopicDetail(topicId);
+        ForumTopicDetail forumTopicDetail = myAnimeListProvider.getForumTopicDetail(topicId);
         Thread.sleep(1000);
         Poll poll = forumTopicDetail.getPoll();
         PollOption[] options = poll.getOptions();

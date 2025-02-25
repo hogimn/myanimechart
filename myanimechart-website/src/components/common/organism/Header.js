@@ -6,6 +6,9 @@ import CommonButton from "../basic/CommonButton";
 import { useEffect, useState } from "react";
 import SecurityApi from "../../api/animestat/SecurityAPI";
 import CommonAlert from "../basic/CommonAlert";
+import CommonModal from "../basic/CommonModal";
+import UserApi from "../../api/animestat/UserAPI";
+import { useUser } from "../context/UserContext";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -41,18 +44,50 @@ const StyledHeader = styled.header`
   }
 `;
 
+const Avatar = styled.img`
+  margin-left: auto;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+`;
+
+const ModalContent = styled.div`
+  text-align: center;
+`;
+
+const ModalAvatar = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+`;
+
+const ModalHeader = styled.h2`
+  margin-top: 10px;
+`;
+
 const Header = () => {
+  const { user, setUser } = useUser();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
+      setLoading(true);
       const result = await SecurityApi.isAuthenticated();
       setIsAuthenticated(result);
+      if (result) {
+        const user = await UserApi.getUser();
+        setUser(user);
+      }
+      setLoading(false);
     };
 
     checkAuthentication();
-  }, []);
+  }, [setUser]);
 
   const startOAuth2Flow = async () => {
     const gateway_url = process.env.REACT_APP_GATEWAY_URL;
@@ -77,6 +112,14 @@ const Header = () => {
     setError("");
   };
 
+  const handleAvatarClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <StyledHeader>
       <StyledLink to="/">
@@ -89,11 +132,30 @@ const Header = () => {
       <StyledLink to="/">
         <h2>MyAnimeChart</h2>
       </StyledLink>
-      {isAuthenticated ? (
-        <CommonButton onClick={handleLogout}>Logout</CommonButton>
-      ) : (
-        <CommonButton onClick={handleLogin}>Login</CommonButton>
-      )}
+      {!loading &&
+        (isAuthenticated && user ? (
+          <>
+            <Avatar
+              src={user.pictureUrl}
+              alt={user.name}
+              onClick={handleAvatarClick}
+            />
+            <CommonModal
+              visible={isModalVisible}
+              onCancel={handleModalClose}
+              footer={null}
+              centered
+            >
+              <ModalContent>
+                <ModalAvatar src={user.pictureUrl} alt={user.name} />
+                <ModalHeader>Welcome, {user.name}</ModalHeader>
+                <CommonButton onClick={handleLogout}>Logout</CommonButton>
+              </ModalContent>
+            </CommonModal>
+          </>
+        ) : (
+          <CommonButton onClick={handleLogin}>Login</CommonButton>
+        ))}
       {error && (
         <CommonAlert message={error} type="error" onClose={handleAlertClose} />
       )}

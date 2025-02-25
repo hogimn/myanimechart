@@ -1,3 +1,6 @@
+cors:
+  allowed-origins: ${myanimechart_cors_allowed_origins}
+
 myanimelist:
   clientId: ${myanimechart_myanimelist_client_id}
 

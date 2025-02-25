@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.execute.anime.collect.anime.service;
 
+import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
@@ -8,7 +9,6 @@ import com.hogimn.myanimechart.database.anime.dto.AnimeStatDto;
 import com.hogimn.myanimechart.database.anime.entity.AnimeEntity;
 import com.hogimn.myanimechart.database.anime.service.AnimeService;
 import com.hogimn.myanimechart.database.batch.aop.SaveBatchHistory;
-import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
@@ -23,23 +23,26 @@ import java.util.Objects;
 @Slf4j
 public class AnimeCollectService {
     private final AnimeService animeService;
-    private final MyAnimeList myAnimeList;
+    private final MyAnimeListProvider myAnimeListProvider;
     private final ServiceRegistryService serviceRegistryService;
 
     public AnimeCollectService(
             AnimeService animeService,
-            MyAnimeList myAnimeList,
+            MyAnimeListProvider myAnimeListProvider,
             ServiceRegistryService serviceRegistryService
     ) {
         this.animeService = animeService;
-        this.myAnimeList = myAnimeList;
+        this.myAnimeListProvider = myAnimeListProvider;
         this.serviceRegistryService = serviceRegistryService;
     }
 
     public void collectAnime(int year, String season) {
         try {
             PaginatedIterator<Anime> animePaginatedIterator =
-                    myAnimeList.getAnimeSeason(year, getSeason(season)).searchAll();
+                    myAnimeListProvider
+                            .getMyAnimeList()
+                            .getAnimeSeason(year, getSeason(season))
+                            .searchAll();
 
             while (animePaginatedIterator.hasNext()) {
                 try {
@@ -75,7 +78,7 @@ public class AnimeCollectService {
 
     public Anime getAnime(Long id) {
         try {
-            return myAnimeList.getAnime(id);
+            return myAnimeListProvider.getMyAnimeList().getAnime(id);
         } catch (Exception e) {
             log.error("Failed to retrieve anime '{}': {}", id, e.getMessage(), e);
             return null;
