@@ -1,6 +1,11 @@
 import axios from "axios";
 
 const SecurityApi = {
+  startOAuth2Flow: async () => {
+    const gateway_url = process.env.REACT_APP_GATEWAY_URL;
+    const authorizationUrl = `${gateway_url}/security/oauth2/authorize/myanimelist`;
+    window.location.href = authorizationUrl;
+  },
   isAuthenticated: async () => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;

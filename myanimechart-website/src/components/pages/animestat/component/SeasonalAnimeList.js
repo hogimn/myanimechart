@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
@@ -16,6 +17,8 @@ import AnimePollGraph from "./AnimePollGraph";
 import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
 import CommonModal from "../../../common/basic/CommonModal";
 import { isMobile } from "react-device-detect";
+import { useUser } from "../../../common/context/UserContext";
+import SecurityApi from "../../../api/animestat/SecurityAPI";
 
 const StyledSpin = styled(CommonSpin)`
   display: flex;
@@ -27,6 +30,7 @@ const StyledSpin = styled(CommonSpin)`
 const AnimeStatWrapper = styled(CommonCol)`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .ant-col {
     max-width: 100%;
@@ -86,6 +90,26 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
+const EditButton = styled.button`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 1);
+  }
+`;
+
 const SeasonalAnimeList = ({
   year,
   season,
@@ -97,12 +121,14 @@ const SeasonalAnimeList = ({
   animeList,
   selected,
 }) => {
+  const { user } = useUser();
   const [animeStats, setAnimeStats] = useState([]);
   const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
   const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showAnimeEdit, setShowAnimeEdit] = useState(false);
 
   const handleImageClick = (src) => {
     setSelectedImage(src);
@@ -110,6 +136,18 @@ const SeasonalAnimeList = ({
 
   const closeModal = () => {
     setSelectedImage(null);
+  };
+
+  const openEditModal = () => {
+    if (user == null) {
+      SecurityApi.startOAuth2Flow();
+      return;
+    }
+    setShowAnimeEdit(true);
+  };
+
+  const closeEditModal = () => {
+    setShowAnimeEdit(false);
   };
 
   useEffect(() => {
@@ -258,6 +296,9 @@ const SeasonalAnimeList = ({
                     </span>
                   </OverlayBox>
                 </ImageWrapper>
+                <EditButton onClick={openEditModal}>
+                  <EditOutlined />
+                </EditButton>
                 <DescriptionSection anime={anime} />
               </AnimeWrapper>
 
@@ -295,6 +336,19 @@ const SeasonalAnimeList = ({
         style={{ marginTop: "16px", textAlign: "center" }}
         showSizeChanger={false}
       />
+
+      <CommonModal
+        open={showAnimeEdit}
+        onCancel={closeEditModal}
+        footer={null}
+        centered
+        width={isMobile ? "90%" : "30%"}
+      >
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <h3>Anime Edit Modal</h3>
+          <p>This is a blank modal where you can add editing functionality.</p>
+        </div>
+      </CommonModal>
 
       <CommonModal
         open={!!selectedImage}

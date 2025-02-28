@@ -92,6 +92,8 @@ const Header = () => {
       if (result) {
         const user = await UserApi.getUser();
         setUser(user);
+      } else {
+        setUser(null);
       }
       setLoading(false);
     };
@@ -100,9 +102,7 @@ const Header = () => {
   }, [setUser]);
 
   const startOAuth2Flow = async () => {
-    const gateway_url = process.env.REACT_APP_GATEWAY_URL;
-    const authorizationUrl = `${gateway_url}/security/oauth2/authorize/myanimelist`;
-    window.location.href = authorizationUrl;
+    SecurityApi.startOAuth2Flow();
   };
 
   const handleLogin = (event) => {
