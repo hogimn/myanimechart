@@ -33,6 +33,8 @@ const StyledHeader = styled.header`
     margin-right: 10px;
     background-color: rgba(36, 46, 66, 0.7);
     border: 1px solid rgba(25, 26, 46, 0.7);
+    padding-left: 7px;
+    padding-right: 7px;
   }
 
   .ant-btn:hover {
@@ -154,7 +156,18 @@ const Header = () => {
             </CommonModal>
           </>
         ) : (
-          <CommonButton onClick={handleLogin}>Login</CommonButton>
+          <CommonButton
+            onClick={handleLogin}
+            icon={
+              <img
+                src={getImagePath("myanimelist-logo.png")}
+                width={"20px"}
+                alt={"MAL"}
+              />
+            }
+          >
+            Login
+          </CommonButton>
         ))}
       {error && (
         <CommonAlert message={error} type="error" onClose={handleAlertClose} />
