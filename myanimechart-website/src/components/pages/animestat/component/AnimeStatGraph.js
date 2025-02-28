@@ -164,7 +164,7 @@ const AnimeStatGraph = ({ animeStats, selectedLegend }) => {
       tooltip: {
         mode: "index",
         intersect: false,
-        yAlign: "bottom",
+        position: "stat",
         callbacks: {
           label: (context) => {
             if (context.dataset.label.includes("Score")) {

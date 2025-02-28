@@ -76,5 +76,19 @@ export const registerCharts = () => {
     verticalHoverLine
   );
 
+  Tooltip.positioners.stat = (elements, position) => {
+    return {
+      x: position.x,
+      y: 110,
+    };
+  };
+
+  Tooltip.positioners.poll = (elements, position) => {
+    return {
+      x: position.x,
+      y: 120,
+    };
+  };
+
   Chart.defaults.font.size = 11;
 };
