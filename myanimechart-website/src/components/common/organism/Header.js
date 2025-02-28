@@ -13,6 +13,14 @@ import { useUser } from "../context/UserContext";
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  p {
+    font-size: 10px;
+  }
 `;
 
 const StyledHeader = styled.header`
@@ -133,6 +141,7 @@ const Header = () => {
       </StyledLink>
       <StyledLink to="/">
         <h2>MyAnimeChart</h2>
+        <p>Data is sourced from MyAnimeList</p>
       </StyledLink>
       {!loading &&
         (isAuthenticated && user ? (
