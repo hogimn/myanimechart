@@ -78,7 +78,7 @@ const ModalHeader = styled.h2`
 `;
 
 const Header = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser } = useUser(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -87,11 +87,13 @@ const Header = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       setLoading(true);
-      const result = await SecurityApi.isAuthenticated();
-      setIsAuthenticated(result);
-      if (result) {
-        const user = await UserApi.getUser();
-        setUser(user);
+      const authenticated = await SecurityApi.isAuthenticated();
+      setIsAuthenticated(authenticated);
+      if (authenticated) {
+        if (user == null) {
+          const userDto = await UserApi.getUser();
+          setUser(userDto);
+        }
       } else {
         setUser(null);
       }
