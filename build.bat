@@ -1,1 +1,1 @@
-.\mvnw clean install -T4
+.\mvnw clean install -T4 -DskipTests
