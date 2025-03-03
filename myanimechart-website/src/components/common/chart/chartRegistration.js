@@ -1,16 +1,5 @@
-import {
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-  BarElement,
-  Chart,
-  Filler,
-} from "chart.js";
+import { Chart } from "chart.js/auto";
+import { Tooltip } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 
 const increaseLegendSpacing = {
@@ -60,22 +49,6 @@ const verticalHoverLine = {
 };
 
 export const registerCharts = () => {
-  Chart.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    zoomPlugin,
-    TimeScale,
-    BarElement,
-    Filler,
-    increaseLegendSpacing,
-    verticalHoverLine
-  );
-
   Tooltip.positioners.stat = (elements, position) => {
     return {
       x: position.x,
