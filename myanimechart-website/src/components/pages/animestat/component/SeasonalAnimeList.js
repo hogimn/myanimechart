@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
@@ -185,12 +185,15 @@ const SeasonalAnimeList = ({
   const [animeStats, setAnimeStats] = useState([]);
   const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
   const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [animeStatsLoading, setAnimeStatsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedAnime, setSelectedAnime] = useState(null);
   const [selectedUserAnimeStatus, setSelectedUserAnimeStatus] = useState(null);
+
   const [showAnimeEdit, setShowAnimeEdit] = useState(false);
+  const [userAnimeDict, setUserAnimeDict] = useState({});
   const [userAnimeLoading, setUserAnimeLoading] = useState(false);
   const [userAnimeUpdating, setUserAnimeUpdating] = useState(false);
 
@@ -209,8 +212,8 @@ const SeasonalAnimeList = ({
     }
 
     setUserAnimeLoading(true);
-    let userAnime = await UserApi.getUserAnimeStatusById(anime.id);
-    if (userAnime === "") {
+    let userAnime = userAnimeDict[anime.id];
+    if (userAnime == null) {
       userAnime = {
         animeId: anime.id,
         status: "Select",
@@ -229,20 +232,37 @@ const SeasonalAnimeList = ({
     setShowAnimeEdit(false);
   };
 
+  const refreshUserAnimeStatusDict = useCallback(async () => {
+    if (user == null) {
+      return;
+    }
+
+    const userAnimeDtos = await UserApi.getUserAnimeStatusListByYearAndSeason(
+      year,
+      season
+    );
+
+    const userAnimeDict = userAnimeDtos.reduce((acc, userAnimeDto) => {
+      acc[userAnimeDto.animeId] = userAnimeDto;
+      return acc;
+    }, {});
+    setUserAnimeDict(userAnimeDict);
+  }, [user, year, season]);
+
   useEffect(() => {
     if (!selected) {
       return;
     }
 
     const fetchData = async () => {
-      setLoading(true);
+      setAnimeStatsLoading(true);
       try {
-        const data = await AnimeStatApi.fetchAnimeStats(year, season);
-        setAnimeStats(data);
+        const animeStatsDto = await AnimeStatApi.fetchAnimeStats(year, season);
+        setAnimeStats(animeStatsDto);
       } catch (err) {
         setError("Failed to fetch anime data");
       } finally {
-        setLoading(false);
+        setAnimeStatsLoading(false);
       }
     };
 
@@ -252,6 +272,14 @@ const SeasonalAnimeList = ({
       setAnimeStats(animeList);
     }
   }, [year, season, animeList, selected]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refreshUserAnimeStatusDict();
+    };
+
+    fetchData();
+  }, [user, refreshUserAnimeStatusDict]);
 
   useEffect(() => {
     const sortAnimeStats = (data, criterion) => {
@@ -318,7 +346,7 @@ const SeasonalAnimeList = ({
     setPage(page);
   };
 
-  if (loading) {
+  if (animeStatsLoading) {
     return <StyledSpin tip="Loading..." />;
   }
 
@@ -500,6 +528,7 @@ const SeasonalAnimeList = ({
               onClick={async () => {
                 setUserAnimeUpdating(true);
                 await UserApi.updateUserAnimeStatus(selectedUserAnimeStatus);
+                await refreshUserAnimeStatusDict();
                 setUserAnimeUpdating(false);
                 setShowAnimeEdit(false);
               }}

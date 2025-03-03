@@ -101,7 +101,7 @@ const Header = () => {
     };
 
     checkAuthentication();
-  }, [setUser]);
+  }, [user, setUser]);
 
   const startOAuth2Flow = async () => {
     SecurityApi.startOAuth2Flow();

@@ -51,6 +51,7 @@ public class UserService {
                 .parallelStream()
                 .filter(animeListStatus ->
                         animeListStatus.getAnime().getStartSeason() != null
+                                && animeListStatus.getAnime().getStartSeason().getYear() != null
                                 && animeListStatus.getAnime().getStartSeason().getYear() == year
                                 && animeListStatus.getAnime().getStartSeason().getSeason() != null
                                 && animeListStatus.getAnime().getStartSeason().getSeason().field().equals(season))

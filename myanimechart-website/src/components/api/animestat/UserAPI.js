@@ -13,7 +13,7 @@ const UserApi = {
       return false;
     }
   },
-  getUserAnimeListByYearAndSeason: async (year, season) => {
+  getUserAnimeStatusListByYearAndSeason: async (year, season) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
