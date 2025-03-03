@@ -5,6 +5,15 @@ spring:
     import: file:../myanimechart-common/src/main/resources/application-dev.yml
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: ${myanimechart_cors_allowed_origins}
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
       discovery:
         locator:
           enabled: true

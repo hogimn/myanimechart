@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
@@ -16,9 +16,50 @@ import AnimeImage from "./AnimeImage";
 import AnimePollGraph from "./AnimePollGraph";
 import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
 import CommonModal from "../../../common/basic/CommonModal";
-import { isMobile } from "react-device-detect";
 import { useUser } from "../../../common/context/UserContext";
-import SecurityApi from "../../../api/animestat/SecurityAPI";
+import SecurityApi from "../../../api/animestat/SecurityApi";
+import CommonInput from "../../../common/basic/CommonInput";
+import CommonSelect from "../../../common/basic/CommonSelect";
+import ModalButton from "../../../common/button/ModalButton";
+import UserApi from "../../../api/animestat/UserApi";
+import CommonButton from "../../../common/basic/CommonButton";
+
+const statusOptions = [
+  { value: "watching", label: "Watching" },
+  { value: "completed", label: "Completed" },
+  { value: "on_hold", label: "On Hold" },
+  { value: "dropped", label: "Dropped" },
+  { value: "plan_to_watch", label: "Plan to Watch" },
+];
+
+const scoreOptions = Array.from({ length: 10 }, (_, i) => ({
+  value: i + 1,
+  label: i + 1,
+})).reverse();
+
+const EpisodeSeenWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const PlusButton = styled(CommonButton)`
+  margin-left: 8px;
+  padding: 0 10px;
+  font-size: 16px;
+`;
+
+const StyledTitle = styled.h3`
+  color: rgb(149, 195, 255);
+`;
+
+const StyledCol = styled(CommonCol)`
+  width: 150px;
+
+  input {
+    width: 50px;
+    max-width: 50px;
+  }
+`;
 
 const StyledSpin = styled(CommonSpin)`
   display: flex;
@@ -110,6 +151,25 @@ const EditButton = styled.button`
   }
 `;
 
+const ModalContent = styled.div`
+  padding: 20px;
+`;
+
+const SelectWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  .ant-select {
+    width: 115px;
+  }
+  margin-bottom: 10px;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
 const SeasonalAnimeList = ({
   year,
   season,
@@ -128,7 +188,11 @@ const SeasonalAnimeList = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedAnime, setSelectedAnime] = useState(null);
+  const [selectedUserAnimeStatus, setSelectedUserAnime] = useState(null);
   const [showAnimeEdit, setShowAnimeEdit] = useState(false);
+  const [userAnimeLoading, setUserAnimeLoading] = useState(false);
+  const [userAnimeUpdating, setUserAnimeUpdating] = useState(false);
 
   const handleImageClick = (src) => {
     setSelectedImage(src);
@@ -138,12 +202,27 @@ const SeasonalAnimeList = ({
     setSelectedImage(null);
   };
 
-  const openEditModal = () => {
+  const openEditModal = async (anime) => {
     if (user == null) {
       SecurityApi.startOAuth2Flow();
       return;
     }
+
+    setUserAnimeLoading(true);
+    let userAnime = await UserApi.getUserAnimeById(anime.id);
+    if (userAnime === "") {
+      userAnime = {
+        status: "Select",
+        watchedEpisodes: "0",
+        score: "Select",
+      };
+    }
+
+    console.log(userAnime);
+    setSelectedAnime(anime);
+    setSelectedUserAnime(userAnime);
     setShowAnimeEdit(true);
+    setUserAnimeLoading(false);
   };
 
   const closeEditModal = () => {
@@ -253,121 +332,202 @@ const SeasonalAnimeList = ({
 
   return (
     <>
-      <CommonRow>
-        {currentAnimeStats.map((anime) => (
-          <AnimeStatWrapper
-            sm={24}
-            md={12}
-            lg={12}
-            xl={8}
-            xxl={8}
-            key={`anime-card-${anime.id}`}
-          >
-            <AnimeStatSubWrapper>
-              <AnimeWrapper>
-                <ImageWrapper
-                  onClick={() =>
-                    handleImageClick(
-                      anime.largeImage ? anime.largeImage : anime.image
-                    )
-                  }
+      <StyledSpin spinning={userAnimeLoading}>
+        <CommonRow>
+          {currentAnimeStats.map((anime) => (
+            <AnimeStatWrapper
+              sm={24}
+              md={12}
+              lg={12}
+              xl={8}
+              xxl={8}
+              key={`anime-card-${anime.id}`}
+            >
+              <AnimeStatSubWrapper>
+                <AnimeWrapper>
+                  <ImageWrapper
+                    onClick={() =>
+                      handleImageClick(
+                        anime.largeImage ? anime.largeImage : anime.image
+                      )
+                    }
+                  >
+                    <AnimeImage alt={anime.title} src={anime.image} />
+                    <OverlayBox>
+                      <span>
+                        <FaStar title="Score" />
+                        {toScoreLabel(anime.score)}
+                      </span>
+                      <span>
+                        <FaVoteYea title="Votes" />
+                        {anime.scoringCount}
+                      </span>
+                      <span>
+                        <FaTrophy title="Rank" />
+                        {anime.rank}
+                      </span>
+                      <span>
+                        <FaUserFriends title="Members" />
+                        {anime.members.toLocaleString()}
+                      </span>
+                      <span>
+                        <MdTrendingUp title="Popularity" />
+                        {anime.popularity}
+                      </span>
+                    </OverlayBox>
+                  </ImageWrapper>
+                  <EditButton onClick={() => openEditModal(anime)}>
+                    <EditOutlined />
+                  </EditButton>
+                  <DescriptionSection anime={anime} />
+                </AnimeWrapper>
+
+                <CommonCol
+                  key={`anime-graph-${anime.id}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
                 >
-                  <AnimeImage alt={anime.title} src={anime.image} />
-                  <OverlayBox>
-                    <span>
-                      <FaStar title="Score" />
-                      {toScoreLabel(anime.score)}
-                    </span>
-                    <span>
-                      <FaVoteYea title="Votes" />
-                      {anime.scoringCount}
-                    </span>
-                    <span>
-                      <FaTrophy title="Rank" />
-                      {anime.rank}
-                    </span>
-                    <span>
-                      <FaUserFriends title="Members" />
-                      {anime.members.toLocaleString()}
-                    </span>
-                    <span>
-                      <MdTrendingUp title="Popularity" />
-                      {anime.popularity}
-                    </span>
-                  </OverlayBox>
-                </ImageWrapper>
-                <EditButton onClick={openEditModal}>
-                  <EditOutlined />
-                </EditButton>
-                <DescriptionSection anime={anime} />
-              </AnimeWrapper>
+                  <LazyGraphWrapper>
+                    <AnimeStatGraph
+                      animeStats={anime.animeStats.slice(
+                        10,
+                        anime.animeStats.length
+                      )}
+                      selectedLegend={"score"}
+                    />
+                  </LazyGraphWrapper>
+                  <LazyGraphWrapper>
+                    <AnimePollGraph polls={anime.polls} />
+                  </LazyGraphWrapper>
+                </CommonCol>
+              </AnimeStatSubWrapper>
+            </AnimeStatWrapper>
+          ))}
+        </CommonRow>
 
-              <CommonCol
-                key={`anime-graph-${anime.id}`}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <LazyGraphWrapper>
-                  <AnimeStatGraph
-                    animeStats={anime.animeStats.slice(
-                      10,
-                      anime.animeStats.length
-                    )}
-                    selectedLegend={"score"}
-                  />
-                </LazyGraphWrapper>
-                <LazyGraphWrapper>
-                  <AnimePollGraph polls={anime.polls} />
-                </LazyGraphWrapper>
-              </CommonCol>
-            </AnimeStatSubWrapper>
-          </AnimeStatWrapper>
-        ))}
-      </CommonRow>
-
-      <CommonPagination
-        current={page}
-        pageSize={pageSize}
-        total={sortedAndFilteredStats.length}
-        onChange={onPageChange}
-        style={{ marginTop: "16px", textAlign: "center" }}
-        showSizeChanger={false}
-      />
-
-      <CommonModal
-        open={showAnimeEdit}
-        onCancel={closeEditModal}
-        footer={null}
-        centered
-        width={isMobile ? "90%" : "30%"}
-      >
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          <h3>Anime Edit Modal</h3>
-          <p>This is a blank modal where you can add editing functionality.</p>
-        </div>
-      </CommonModal>
-
-      <CommonModal
-        open={!!selectedImage}
-        onCancel={closeModal}
-        footer={null}
-        centered
-        width={isMobile ? "90%" : "30%"}
-      >
-        <img
-          src={selectedImage}
-          alt="Anime"
-          style={{
-            width: "100%",
-            height: "auto",
-            maxHeight: "80vh",
-            objectFit: "contain",
-          }}
+        <CommonPagination
+          current={page}
+          pageSize={pageSize}
+          total={sortedAndFilteredStats.length}
+          onChange={onPageChange}
+          style={{ marginTop: "16px", textAlign: "center" }}
+          showSizeChanger={false}
         />
-      </CommonModal>
+
+        <CommonModal
+          open={showAnimeEdit}
+          onCancel={closeEditModal}
+          footer={null}
+          centered
+          title={"Edit Anime Status"}
+        >
+          <ModalContent>
+            <StyledTitle>{selectedAnime?.title}</StyledTitle>
+            <CommonRow>
+              <SelectWrapper>
+                <StyledCol>Status:</StyledCol>
+                <StyledCol>
+                  <CommonSelect
+                    value={selectedUserAnimeStatus?.status}
+                    options={statusOptions}
+                    onChange={(value) =>
+                      setSelectedUserAnime({
+                        ...selectedUserAnimeStatus,
+                        status: value,
+                      })
+                    }
+                  />
+                </StyledCol>
+              </SelectWrapper>
+            </CommonRow>
+            <CommonRow>
+              <InputWrapper>
+                <StyledCol>Episode seen:</StyledCol>
+                <StyledCol>
+                  <EpisodeSeenWrapper>
+                    <CommonInput
+                      value={selectedUserAnimeStatus?.watchedEpisodes}
+                      placeholder="Ep."
+                      onChange={(event) =>
+                        setSelectedUserAnime({
+                          ...selectedUserAnimeStatus,
+                          watchedEpisodes: event.target.value,
+                        })
+                      }
+                    />
+                    {"/ "}
+                    {selectedAnime?.episodes}
+                    <PlusButton
+                      icon={<PlusOutlined />}
+                      onClick={() => {
+                        const newWatchedEpisodes = isNaN(
+                          parseInt(selectedUserAnimeStatus?.watchedEpisodes)
+                        )
+                          ? 1
+                          : parseInt(selectedUserAnimeStatus?.watchedEpisodes) +
+                            1;
+                        setSelectedUserAnime({
+                          ...selectedUserAnimeStatus,
+                          watchedEpisodes: newWatchedEpisodes.toString(),
+                        });
+                      }}
+                    />
+                  </EpisodeSeenWrapper>
+                </StyledCol>
+              </InputWrapper>
+            </CommonRow>
+            <CommonRow>
+              <SelectWrapper>
+                <StyledCol>Score:</StyledCol>
+                <StyledCol>
+                  <CommonSelect
+                    value={selectedUserAnimeStatus?.score}
+                    options={scoreOptions}
+                    onChange={(value) =>
+                      setSelectedUserAnime({
+                        ...selectedUserAnimeStatus,
+                        score: value,
+                      })
+                    }
+                  />
+                </StyledCol>
+              </SelectWrapper>
+            </CommonRow>
+            <ModalButton
+              onClick={async () => {
+                setUserAnimeUpdating(true);
+                await UserApi.updateUserAnimeStatus(selectedUserAnimeStatus);
+                setUserAnimeUpdating(false);
+                setShowAnimeEdit(false);
+              }}
+            >
+              Update
+              <StyledSpin spinning={userAnimeUpdating}></StyledSpin>
+            </ModalButton>
+          </ModalContent>
+        </CommonModal>
+
+        <CommonModal
+          open={!!selectedImage}
+          onCancel={closeModal}
+          footer={null}
+          centered
+        >
+          <img
+            src={selectedImage}
+            alt="Anime"
+            style={{
+              width: "100%",
+              height: "auto",
+              maxHeight: "80vh",
+              objectFit: "contain",
+            }}
+          />
+        </CommonModal>
+      </StyledSpin>
     </>
   );
 };

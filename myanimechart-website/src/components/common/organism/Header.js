@@ -4,11 +4,11 @@ import { getImagePath } from "../../../util/pathUtil";
 import { Link } from "react-router-dom";
 import CommonButton from "../basic/CommonButton";
 import { useEffect, useState } from "react";
-import SecurityApi from "../../api/animestat/SecurityAPI";
+import SecurityApi from "../../api/animestat/SecurityApi";
 import CommonAlert from "../basic/CommonAlert";
 import CommonModal from "../basic/CommonModal";
-import UserApi from "../../api/animestat/UserAPI";
 import { useUser } from "../context/UserContext";
+import UserApi from "../../api/animestat/UserApi";
 
 const StyledLink = styled(Link)`
   text-decoration: none;

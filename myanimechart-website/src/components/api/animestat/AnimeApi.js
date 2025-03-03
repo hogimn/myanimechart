@@ -2,8 +2,8 @@ import axios from "axios";
 
 const AnimeApi = {
   searchAnimeByKeyword: async (keyword) => {
+    const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
-      const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
         `${gatewayUrl}/query/animeStat/getAnimeStatByKeyword`,
         {

@@ -4,6 +4,7 @@ import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import StyledZoomButton from "../../../common/button/ZoomButton";
+import ModalButton from "../../../common/button/ModalButton";
 
 const StyledTotalVotes = styled.div`
   font-size: 0.9rem;
@@ -36,19 +37,6 @@ const ProgressBarFill = styled.div`
   background-color: rgba(99, 154, 255, 1);
   border-radius: 0.375rem;
   width: ${(props) => props.width}%;
-`;
-
-const StyledButton = styled.button`
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: rgba(99, 154, 255, 0.7);
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(99, 154, 255, 1);
-  }
 `;
 
 const AnimePollGraph = ({ polls }) => {
@@ -318,7 +306,7 @@ const AnimePollGraph = ({ polls }) => {
                 </VoteItem>
               ))}
           </VoteList>
-          <StyledButton
+          <ModalButton
             onClick={() =>
               window.open(
                 `https://myanimelist.net/forum/?topicid=${modalData.topicId}`,
@@ -327,7 +315,7 @@ const AnimePollGraph = ({ polls }) => {
             }
           >
             Go to Discussion
-          </StyledButton>
+          </ModalButton>
         </CommonModal>
       )}
     </>
