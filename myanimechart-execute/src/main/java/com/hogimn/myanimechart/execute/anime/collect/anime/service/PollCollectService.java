@@ -84,7 +84,7 @@ public class PollCollectService {
                         .getMyAnimeList()
                         .getForumTopics()
                         .withQuery(keyword)
-                        .withLimit(50)
+                        .withLimit(100)
                         .searchAll();
 
                 int firstWordDiffCnt = 0;
