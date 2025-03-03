@@ -189,7 +189,7 @@ const SeasonalAnimeList = ({
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedAnime, setSelectedAnime] = useState(null);
-  const [selectedUserAnimeStatus, setSelectedUserAnime] = useState(null);
+  const [selectedUserAnimeStatus, setSelectedUserAnimeStatus] = useState(null);
   const [showAnimeEdit, setShowAnimeEdit] = useState(false);
   const [userAnimeLoading, setUserAnimeLoading] = useState(false);
   const [userAnimeUpdating, setUserAnimeUpdating] = useState(false);
@@ -212,15 +212,15 @@ const SeasonalAnimeList = ({
     let userAnime = await UserApi.getUserAnimeById(anime.id);
     if (userAnime === "") {
       userAnime = {
+        animeId: anime.id,
         status: "Select",
         watchedEpisodes: "0",
         score: "Select",
       };
     }
 
-    console.log(userAnime);
     setSelectedAnime(anime);
-    setSelectedUserAnime(userAnime);
+    setSelectedUserAnimeStatus(userAnime);
     setShowAnimeEdit(true);
     setUserAnimeLoading(false);
   };
@@ -434,7 +434,7 @@ const SeasonalAnimeList = ({
                     value={selectedUserAnimeStatus?.status}
                     options={statusOptions}
                     onChange={(value) =>
-                      setSelectedUserAnime({
+                      setSelectedUserAnimeStatus({
                         ...selectedUserAnimeStatus,
                         status: value,
                       })
@@ -452,7 +452,7 @@ const SeasonalAnimeList = ({
                       value={selectedUserAnimeStatus?.watchedEpisodes}
                       placeholder="Ep."
                       onChange={(event) =>
-                        setSelectedUserAnime({
+                        setSelectedUserAnimeStatus({
                           ...selectedUserAnimeStatus,
                           watchedEpisodes: event.target.value,
                         })
@@ -469,7 +469,7 @@ const SeasonalAnimeList = ({
                           ? 1
                           : parseInt(selectedUserAnimeStatus?.watchedEpisodes) +
                             1;
-                        setSelectedUserAnime({
+                        setSelectedUserAnimeStatus({
                           ...selectedUserAnimeStatus,
                           watchedEpisodes: newWatchedEpisodes.toString(),
                         });
@@ -487,7 +487,7 @@ const SeasonalAnimeList = ({
                     value={selectedUserAnimeStatus?.score}
                     options={scoreOptions}
                     onChange={(value) =>
-                      setSelectedUserAnime({
+                      setSelectedUserAnimeStatus({
                         ...selectedUserAnimeStatus,
                         score: value,
                       })
