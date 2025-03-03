@@ -42,6 +42,7 @@ public class AnimeCollectService {
                     myAnimeListProvider
                             .getMyAnimeList()
                             .getAnimeSeason(year, getSeason(season))
+                            .withLimit(500)
                             .searchAll();
 
             while (animePaginatedIterator.hasNext()) {
