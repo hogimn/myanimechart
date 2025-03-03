@@ -43,7 +43,7 @@ const SeasonalTabs = () => {
   const [filterBy, setFilterBy] = useState({ type: "all", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
   const [page, setPage] = useState(1);
-  const pageSize = 9;
+  const pageSize = 6;
   const [searchResults, setSearchResults] = useState([]);
   const [input, setInput] = useState("");
 
