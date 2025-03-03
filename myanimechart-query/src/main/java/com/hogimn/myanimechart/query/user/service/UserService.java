@@ -4,9 +4,7 @@ import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.database.user.dto.AnimeListStatusDto;
 import com.hogimn.myanimechart.database.user.dto.UserDto;
 import dev.katsute.mal4j.MyAnimeList;
-import dev.katsute.mal4j.PaginatedIterator;
 import dev.katsute.mal4j.anime.AnimeListStatus;
-import dev.katsute.mal4j.anime.property.StartSeason;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -49,51 +47,46 @@ public class UserService {
             }
         }
 
-        List<AnimeListStatusDto> results = new ArrayList<>();
-        for (AnimeListStatus animeListStatus : animeListStatuses) {
-            StartSeason startSeason = animeListStatus.getAnime().getStartSeason();
-            if (startSeason.getYear() == null
-                    || startSeason.getYear() != year
-                    || startSeason.getSeason() == null
-                    || !startSeason.getSeason().field().equals(season)) {
-                continue;
-            }
-            results.add(AnimeListStatusDto.from(animeListStatus));
-        }
-
-        return results;
+        return animeListStatuses
+                .parallelStream()
+                .filter(animeListStatus ->
+                        animeListStatus.getAnime().getStartSeason() != null
+                                && animeListStatus.getAnime().getStartSeason().getYear() == year
+                                && animeListStatus.getAnime().getStartSeason().getSeason() != null
+                                && animeListStatus.getAnime().getStartSeason().getSeason().field().equals(season))
+                .map(AnimeListStatusDto::from)
+                .toList();
     }
 
     public AnimeListStatusDto getAnimeListStatusDtoById(int id) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
-        List<AnimeListStatus> animeListStatuses = myAnimeList
-                .getUserAnimeListing(userDto.getName())
-                .withLimit(1000)
-                .search();
 
-        Optional<AnimeListStatusDto> animeListStatusDto = animeListStatuses.parallelStream()
+        int offset = 0;
+        int limit = 1000;
+
+        List<AnimeListStatus> animeListStatuses = new ArrayList<>();
+        while (true) {
+            animeListStatuses.addAll(myAnimeList
+                    .getUserAnimeListing(userDto.getName())
+                    .withLimit(limit)
+                    .withOffset(offset)
+                    .search());
+
+            if (animeListStatuses.size() >= limit) {
+                offset += limit;
+            } else {
+                break;
+            }
+        }
+
+        Optional<AnimeListStatusDto> animeListStatusDto = animeListStatuses
+                .parallelStream()
                 .filter(animeListStatus -> animeListStatus.getAnime().getID() == id)
                 .findFirst()
                 .map(AnimeListStatusDto::from);
 
-        if (animeListStatusDto.isPresent()) {
-            return animeListStatusDto.get();
-        }
-
-        PaginatedIterator<AnimeListStatus> iterator = myAnimeList
-                .getUserAnimeListing(userDto.getName())
-                .withOffset(animeListStatuses.size())
-                .searchAll();
-
-        while (iterator.hasNext()) {
-            AnimeListStatus animeListStatus = iterator.next();
-            if (animeListStatus.getAnime().getID() == id) {
-                return AnimeListStatusDto.from(animeListStatus);
-            }
-        }
-
-        return null;
+        return animeListStatusDto.orElse(null);
     }
 
     public void updateUserAnimeStatus(AnimeListStatusDto animeListStatusDto) {
