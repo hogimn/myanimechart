@@ -104,4 +104,9 @@ public class UserService {
 
         animeListUpdate.update();
     }
+
+    public void deleteUserAnimeStatus(AnimeListStatusDto animeListStatusDto) {
+        MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
+        myAnimeList.deleteAnimeListing(animeListStatusDto.getAnimeId());
+    }
 }

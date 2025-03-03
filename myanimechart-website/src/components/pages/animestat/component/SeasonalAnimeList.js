@@ -37,6 +37,12 @@ const scoreOptions = Array.from({ length: 10 }, (_, i) => ({
   label: i + 1,
 })).reverse();
 
+const StyledModalButtons = styled.div`
+  .ant-btn + .ant-btn {
+    margin-left: 10px;
+  }
+`;
+
 const EpisodeSeenWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -194,9 +200,12 @@ const SeasonalAnimeList = ({
   const [selectedAnime, setSelectedAnime] = useState(null);
   const [selectedUserAnimeStatus, setSelectedUserAnimeStatus] = useState(null);
 
-  const [showAnimeEdit, setShowAnimeEdit] = useState(false);
+  const [showUserAnimeStatusEdit, setShowUserAnimeStatusEdit] = useState(false);
+  const [showUserAnimeStatusDelete, setShowUserAnimeStatusDelete] =
+    useState(false);
   const [userAnimeDict, setUserAnimeDict] = useState({});
   const [userAnimeLoading, setUserAnimeLoading] = useState(false);
+  const [userAnimeDeleting, setUserAnimeDeleting] = useState(false);
   const [userAnimeUpdating, setUserAnimeUpdating] = useState(false);
 
   const handleImageClick = (src) => {
@@ -222,16 +231,19 @@ const SeasonalAnimeList = ({
         watchedEpisodes: 0,
         score: "Select",
       };
+      setShowUserAnimeStatusDelete(false);
+    } else {
+      setShowUserAnimeStatusDelete(true);
     }
 
     setSelectedAnime(anime);
     setSelectedUserAnimeStatus(userAnime);
-    setShowAnimeEdit(true);
+    setShowUserAnimeStatusEdit(true);
     setUserAnimeLoading(false);
   };
 
   const closeEditModal = () => {
-    setShowAnimeEdit(false);
+    setShowUserAnimeStatusEdit(false);
   };
 
   const refreshUserAnimeStatusDict = useCallback(async () => {
@@ -498,7 +510,7 @@ const SeasonalAnimeList = ({
         />
 
         <CommonModal
-          open={showAnimeEdit}
+          open={showUserAnimeStatusEdit}
           onCancel={closeEditModal}
           footer={null}
           centered
@@ -576,18 +588,40 @@ const SeasonalAnimeList = ({
                 </StyledCol>
               </SelectWrapper>
             </CommonRow>
-            <ModalButton
-              onClick={async () => {
-                setUserAnimeUpdating(true);
-                await UserApi.updateUserAnimeStatus(selectedUserAnimeStatus);
-                await refreshUserAnimeStatusDict();
-                setUserAnimeUpdating(false);
-                setShowAnimeEdit(false);
-              }}
-            >
-              Update
-              <StyledSpin spinning={userAnimeUpdating}></StyledSpin>
-            </ModalButton>
+            <CommonRow>
+              <StyledModalButtons>
+                <ModalButton
+                  onClick={async () => {
+                    setUserAnimeUpdating(true);
+                    await UserApi.updateUserAnimeStatus(
+                      selectedUserAnimeStatus
+                    );
+                    await refreshUserAnimeStatusDict();
+                    setUserAnimeUpdating(false);
+                    setShowUserAnimeStatusEdit(false);
+                  }}
+                >
+                  Update
+                  <StyledSpin spinning={userAnimeUpdating}></StyledSpin>
+                </ModalButton>
+                {showUserAnimeStatusDelete && (
+                  <ModalButton
+                    onClick={async () => {
+                      setUserAnimeDeleting(true);
+                      await UserApi.deleteUserAnimeStatus(
+                        selectedUserAnimeStatus
+                      );
+                      await refreshUserAnimeStatusDict();
+                      setUserAnimeDeleting(false);
+                      setShowUserAnimeStatusEdit(false);
+                    }}
+                  >
+                    Delete
+                    <StyledSpin spinning={userAnimeDeleting}></StyledSpin>
+                  </ModalButton>
+                )}
+              </StyledModalButtons>
+            </CommonRow>
           </ModalContent>
         </CommonModal>
 

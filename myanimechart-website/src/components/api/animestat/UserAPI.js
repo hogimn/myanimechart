@@ -24,8 +24,8 @@ const UserApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting user anime list:", error);
-      return false;
+      console.error("Error getting user anime status list:", error);
+      return {};
     }
   },
   getUserAnimeStatusById: async (id) => {
@@ -42,7 +42,7 @@ const UserApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting user anime:", error);
+      console.error("Error getting user anime status:", error);
       return null;
     }
   },
@@ -66,7 +66,24 @@ const UserApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting user anime:", error);
+      console.error("Error updating user anime status:", error);
+      return null;
+    } finally {
+    }
+  },
+  deleteUserAnimeStatus: async (animeListStatusDto) => {
+    try {
+      const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
+      const response = await axios.post(
+        `${gatewayUrl}/query/user/deleteUserAnimeStatus`,
+        animeListStatusDto,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting user anime status:", error);
       return null;
     } finally {
     }

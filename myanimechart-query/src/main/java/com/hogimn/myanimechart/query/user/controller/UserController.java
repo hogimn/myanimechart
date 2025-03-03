@@ -37,4 +37,9 @@ public class UserController {
     public void updateUserAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
         userService.updateUserAnimeStatus(animeListStatusDto);
     }
+
+    @PostMapping("/deleteUserAnimeStatus")
+    public void deleteUserAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
+        userService.deleteUserAnimeStatus(animeListStatusDto);
+    }
 }
