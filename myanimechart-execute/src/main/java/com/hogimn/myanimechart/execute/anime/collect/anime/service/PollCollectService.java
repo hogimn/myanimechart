@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -80,22 +81,28 @@ public class PollCollectService {
                     keyword = "Touhai: Ura Rate Mahjong Touhai Roku" + " Poll Episode Discussion";
                 }
 
-                PaginatedIterator<ForumTopic> forumTopicPaginatedIterator = myAnimeListProvider
-                        .getMyAnimeList()
-                        .getForumTopics()
-                        .withQuery(keyword)
-                        .withLimit(100)
-                        .searchAll();
+                List<ForumTopic> forumTopics = new ArrayList<>();
+                int offset = 0;
+                int limit = 100;
+
+                while (true) {
+                    forumTopics.addAll(myAnimeListProvider
+                            .getMyAnimeList()
+                            .getForumTopics()
+                            .withQuery(keyword)
+                            .withLimit(limit)
+                            .withOffset(offset)
+                            .search());
+
+                    if (forumTopics.size() >= limit) {
+                        offset += limit;
+                    } else {
+                        break;
+                    }
+                }
 
                 int firstWordDiffCnt = 0;
-                while (forumTopicPaginatedIterator.hasNext()) {
-                    ForumTopic forumTopic;
-                    try {
-                        forumTopic = forumTopicPaginatedIterator.next();
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                        continue;
-                    }
+                for (ForumTopic forumTopic : forumTopics) {
                     Long topicId = forumTopic.getID();
                     String topicTitle = forumTopic.getTitle();
 
@@ -142,8 +149,7 @@ public class PollCollectService {
     }
 
     private void savePoll(
-            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity)
-            throws InterruptedException {
+            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity) throws InterruptedException {
         Set<Integer> voteZeroOptions = new HashSet<>();
         voteZeroOptions.add(1);
         voteZeroOptions.add(2);
@@ -152,6 +158,8 @@ public class PollCollectService {
         voteZeroOptions.add(5);
 
         ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
+        Thread.sleep(5000);
+
         Poll poll = forumTopicDetail.getPoll();
         PollOption[] options = poll.getOptions();
 

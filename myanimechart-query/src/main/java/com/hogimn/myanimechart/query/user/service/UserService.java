@@ -30,14 +30,27 @@ public class UserService {
     public List<AnimeListStatusDto> getUserAnimeListStatusDtosByYearAndSeason(int year, String season) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
-        PaginatedIterator<AnimeListStatus> iterator = myAnimeList
-                .getUserAnimeListing(userDto.getName())
-                .withLimit(1000)
-                .searchAll();
+
+        int offset = 0;
+        int limit = 1000;
+
+        List<AnimeListStatus> animeListStatuses = new ArrayList<>();
+        while (true) {
+            animeListStatuses.addAll(myAnimeList
+                    .getUserAnimeListing(userDto.getName())
+                    .withLimit(limit)
+                    .withOffset(offset)
+                    .search());
+
+            if (animeListStatuses.size() >= limit) {
+                offset += limit;
+            } else {
+                break;
+            }
+        }
 
         List<AnimeListStatusDto> results = new ArrayList<>();
-        while (iterator.hasNext()) {
-            AnimeListStatus animeListStatus = iterator.next();
+        for (AnimeListStatus animeListStatus : animeListStatuses) {
             StartSeason startSeason = animeListStatus.getAnime().getStartSeason();
             if (startSeason.getYear() == null
                     || startSeason.getYear() != year

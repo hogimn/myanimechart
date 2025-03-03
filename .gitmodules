@@ -1,0 +1,3 @@
+[submodule "Mal4J"]
+	path = Mal4J
+	url = git@github.com:hogimn/Mal4J.git

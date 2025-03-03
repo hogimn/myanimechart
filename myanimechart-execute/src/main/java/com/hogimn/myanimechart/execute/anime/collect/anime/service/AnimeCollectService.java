@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,17 +39,28 @@ public class AnimeCollectService {
 
     public void collectAnime(int year, String season) {
         try {
-            PaginatedIterator<Anime> animePaginatedIterator =
-                    myAnimeListProvider
-                            .getMyAnimeList()
-                            .getAnimeSeason(year, getSeason(season))
-                            .withLimit(500)
-                            .searchAll();
+            int offset = 0;
+            int limit = 500;
+            List<Anime> animeList = new ArrayList<>();
 
-            while (animePaginatedIterator.hasNext()) {
+            while (true) {
+                animeList.addAll(
+                        myAnimeListProvider
+                                .getMyAnimeList()
+                                .getAnimeSeason(year, getSeason(season))
+                                .withLimit(limit)
+                                .withOffset(offset)
+                                .search());
+
+                if (animeList.size() >= limit) {
+                    offset += limit;
+                } else {
+                    break;
+                }
+            }
+
+            for (Anime anime : animeList) {
                 try {
-                    Anime anime = animePaginatedIterator.next();
-
                     if (anime.getStartSeason().getYear() != year ||
                             !Objects.equals(anime.getStartSeason().getSeason().field(), season)) {
                         log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
