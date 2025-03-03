@@ -28,7 +28,7 @@ const UserApi = {
       return false;
     }
   },
-  getUserAnimeById: async (id) => {
+  getUserAnimeStatusById: async (id) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(

@@ -209,7 +209,7 @@ const SeasonalAnimeList = ({
     }
 
     setUserAnimeLoading(true);
-    let userAnime = await UserApi.getUserAnimeById(anime.id);
+    let userAnime = await UserApi.getUserAnimeStatusById(anime.id);
     if (userAnime === "") {
       userAnime = {
         animeId: anime.id,
