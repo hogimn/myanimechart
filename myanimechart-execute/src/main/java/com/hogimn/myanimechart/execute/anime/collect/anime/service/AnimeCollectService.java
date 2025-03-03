@@ -48,7 +48,6 @@ public class AnimeCollectService {
             while (animePaginatedIterator.hasNext()) {
                 try {
                     Anime anime = animePaginatedIterator.next();
-                    Thread.sleep(1000);
 
                     if (anime.getStartSeason().getYear() != year ||
                             !Objects.equals(anime.getStartSeason().getSeason().field(), season)) {

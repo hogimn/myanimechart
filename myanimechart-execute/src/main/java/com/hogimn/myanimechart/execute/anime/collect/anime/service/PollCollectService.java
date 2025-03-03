@@ -92,7 +92,6 @@ public class PollCollectService {
                     ForumTopic forumTopic;
                     try {
                         forumTopic = forumTopicPaginatedIterator.next();
-                        Thread.sleep(1000);
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         continue;
@@ -153,7 +152,6 @@ public class PollCollectService {
         voteZeroOptions.add(5);
 
         ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
-        Thread.sleep(1000);
         Poll poll = forumTopicDetail.getPoll();
         PollOption[] options = poll.getOptions();
 
