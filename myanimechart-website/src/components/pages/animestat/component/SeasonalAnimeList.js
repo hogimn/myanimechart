@@ -5,6 +5,7 @@ import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
 import CommonAlert from "../../../common/basic/CommonAlert";
 import CommonSpin from "../../../common/basic/CommonSpin";
+import AnimeStatGraph from "./AnimeStatGraph";
 import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import styled from "styled-components";
@@ -389,6 +390,15 @@ const SeasonalAnimeList = ({
                     alignItems: "flex-start",
                   }}
                 >
+                  <LazyGraphWrapper>
+                    <AnimeStatGraph
+                      animeStats={anime.animeStats.slice(
+                        10,
+                        anime.animeStats.length
+                      )}
+                      selectedLegend={"score"}
+                    />
+                  </LazyGraphWrapper>
                   <LazyGraphWrapper>
                     <AnimePollGraph polls={anime.polls} />
                   </LazyGraphWrapper>
