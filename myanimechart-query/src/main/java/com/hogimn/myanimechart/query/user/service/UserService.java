@@ -5,6 +5,7 @@ import com.hogimn.myanimechart.database.user.dto.AnimeListStatusDto;
 import com.hogimn.myanimechart.database.user.dto.UserDto;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.anime.AnimeListStatus;
+import dev.katsute.mal4j.query.AnimeListUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -92,10 +93,15 @@ public class UserService {
 
     public void updateUserAnimeStatus(AnimeListStatusDto animeListStatusDto) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        myAnimeList.updateAnimeListing(animeListStatusDto.getAnimeId())
-                .status(animeListStatusDto.getStatus())
-                .score(animeListStatusDto.getScore())
-                .episodesWatched(animeListStatusDto.getWatchedEpisodes())
-                .update();
+        AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(animeListStatusDto.getAnimeId());
+        if (animeListStatusDto.getStatus() != null) {
+             animeListUpdate.status(animeListStatusDto.getStatus());
+        }
+        if (animeListStatusDto.getScore() != null) {
+                animeListUpdate.score(animeListStatusDto.getScore());
+        }
+        animeListUpdate.episodesWatched(animeListStatusDto.getWatchedEpisodes());
+
+        animeListUpdate.update();
     }
 }

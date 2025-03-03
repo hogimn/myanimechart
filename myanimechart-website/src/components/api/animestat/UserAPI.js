@@ -47,6 +47,14 @@ const UserApi = {
     }
   },
   updateUserAnimeStatus: async (animeListStatusDto) => {
+    if (animeListStatusDto.status === "Select") {
+      animeListStatusDto.status = null;
+    }
+
+    if (animeListStatusDto.score === "Select") {
+      animeListStatusDto.score = null;
+    }
+
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(

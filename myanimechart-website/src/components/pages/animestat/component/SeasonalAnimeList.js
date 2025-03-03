@@ -135,7 +135,8 @@ const EditButton = styled.button`
   position: absolute;
   top: 15px;
   left: 15px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: ${(props) =>
+    props?.backgroundColor || "rgba(0, 0, 0, 0.7)"};
   border: none;
   border-radius: 50%;
   color: white;
@@ -147,7 +148,8 @@ const EditButton = styled.button`
   font-size: 17px;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: ${(props) =>
+      props?.backgroundColorHover || "rgba(0, 0, 0, 1.0)"};
   }
 `;
 
@@ -217,7 +219,7 @@ const SeasonalAnimeList = ({
       userAnime = {
         animeId: anime.id,
         status: "Select",
-        watchedEpisodes: "0",
+        watchedEpisodes: 0,
         score: "Select",
       };
     }
@@ -358,6 +360,50 @@ const SeasonalAnimeList = ({
     return <p>No anime found</p>;
   }
 
+  const makeEditButtonBackgroundColor = (animeId) => {
+    const userAnimeStatus = userAnimeDict[animeId];
+    if (userAnimeStatus == null) {
+      return null;
+    }
+
+    switch (userAnimeStatus.status) {
+      case "watching":
+        return "rgb(65, 129, 105, 0.8)";
+      case "completed":
+        return "rgb(70, 91, 136, 0.8)";
+      case "on_hold":
+        return "rgb(150, 148, 72, 0.8)";
+      case "dropped":
+        return "rgb(136, 60, 60, 0.8)";
+      case "plan_to_watch":
+        return "rgb(78, 78, 78, 0.8)";
+      default:
+        return null;
+    }
+  };
+
+  const makeEditButtonBackgroundColorHover = (animeId) => {
+    const userAnimeStatus = userAnimeDict[animeId];
+    if (userAnimeStatus == null) {
+      return null;
+    }
+
+    switch (userAnimeStatus.status) {
+      case "watching":
+        return "rgb(65, 129, 105)";
+      case "completed":
+        return "rgb(70, 91, 136)";
+      case "on_hold":
+        return "rgb(150, 148, 72)";
+      case "dropped":
+        return "rgb(136, 60, 60)";
+      case "plan_to_watch":
+        return "rgb(78, 78, 78)";
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <StyledSpin spinning={userAnimeLoading}>
@@ -404,7 +450,13 @@ const SeasonalAnimeList = ({
                       </span>
                     </OverlayBox>
                   </ImageWrapper>
-                  <EditButton onClick={() => openEditModal(anime)}>
+                  <EditButton
+                    backgroundColor={makeEditButtonBackgroundColor(anime.id)}
+                    backgroundColorHover={makeEditButtonBackgroundColorHover(
+                      anime.id
+                    )}
+                    onClick={() => openEditModal(anime)}
+                  >
                     <EditOutlined />
                   </EditButton>
                   <DescriptionSection anime={anime} />
