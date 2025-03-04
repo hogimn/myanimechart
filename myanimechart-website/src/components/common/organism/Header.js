@@ -89,19 +89,26 @@ const Header = () => {
       setLoading(true);
       const authenticated = await SecurityApi.isAuthenticated();
       setIsAuthenticated(authenticated);
+
       if (authenticated) {
-        if (user == null) {
+        let storedUser = sessionStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        } else {
           const userDto = await UserApi.getUser();
           setUser(userDto);
+          sessionStorage.setItem("user", JSON.stringify(userDto));
         }
       } else {
         setUser(null);
+        sessionStorage.removeItem("user");
       }
+
       setLoading(false);
     };
 
     checkAuthentication();
-  }, [user, setUser]);
+  }, [setUser]);
 
   const startOAuth2Flow = async () => {
     SecurityApi.startOAuth2Flow();
