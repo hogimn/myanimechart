@@ -158,7 +158,7 @@ public class PollCollectService {
         voteZeroOptions.add(5);
 
         ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
-        Thread.sleep(20 * 1000);
+        Thread.sleep(60 * 1000);
 
         Poll poll = forumTopicDetail.getPoll();
         PollOption[] options = poll.getOptions();

@@ -126,7 +126,7 @@ public class AnimeCollectService {
         for (AnimeEntity animeEntity : animeEntities) {
             try {
                 Anime anime = getAnime(animeEntity.getId());
-                Thread.sleep(20 * 1000);
+                Thread.sleep(60 * 1000);
                 AnimeDto animeDto = AnimeDto.from(anime);
                 AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
@@ -144,7 +144,7 @@ public class AnimeCollectService {
         for (AnimeEntity animeEntity : animeEntities) {
             try {
                 Anime anime = getAnime(animeEntity.getId());
-                Thread.sleep(20 * 1000);
+                Thread.sleep(60 * 1000);
                 AnimeDto animeDto = AnimeDto.from(anime);
                 AnimeStatDto animeStatDto = AnimeStatDto.from(animeDto);
                 serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
