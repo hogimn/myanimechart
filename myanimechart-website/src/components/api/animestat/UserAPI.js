@@ -51,7 +51,7 @@ const UserApi = {
       animeListStatusDto.status = null;
     }
 
-    if (animeListStatusDto.score === "Select") {
+    if (animeListStatusDto.score === 0) {
       animeListStatusDto.score = null;
     }
 

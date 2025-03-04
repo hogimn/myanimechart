@@ -229,7 +229,7 @@ const SeasonalAnimeList = ({
         animeId: anime.id,
         status: "Select",
         watchedEpisodes: 0,
-        score: "Select",
+        score: 0,
       };
       setShowUserAnimeStatusDelete(false);
     } else {
@@ -256,6 +256,10 @@ const SeasonalAnimeList = ({
       season
     );
 
+    if (userAnimeDtos == null || Object.entries(userAnimeDtos).length === 0) {
+      setUserAnimeDict({});
+      return;
+    }
     const userAnimeDict = userAnimeDtos.reduce((acc, userAnimeDto) => {
       acc[userAnimeDto.animeId] = userAnimeDto;
       return acc;
@@ -576,7 +580,11 @@ const SeasonalAnimeList = ({
                 <StyledCol>Score:</StyledCol>
                 <StyledCol>
                   <CommonSelect
-                    value={selectedUserAnimeStatus?.score}
+                    value={
+                      selectedUserAnimeStatus?.score === 0
+                        ? "Select"
+                        : selectedUserAnimeStatus?.score
+                    }
                     options={scoreOptions}
                     onChange={(value) =>
                       setSelectedUserAnimeStatus({
