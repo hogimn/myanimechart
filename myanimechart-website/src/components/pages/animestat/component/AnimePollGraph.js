@@ -275,7 +275,7 @@ const AnimePollGraph = ({ polls }) => {
     <>
       <StyledZoomButton
         zoomEnabled={zoomEnabled}
-        top={"270px"}
+        top={"35px"}
         onClick={handleZoomToggle}
       />
       <Bar ref={chartRef} options={options} data={chartData} />
