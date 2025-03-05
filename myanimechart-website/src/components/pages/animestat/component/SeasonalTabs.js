@@ -43,9 +43,10 @@ const SeasonalTabs = () => {
   const [filterBy, setFilterBy] = useState({ type: "all", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
   const [page, setPage] = useState(1);
-  const pageSize = 6;
   const [searchResults, setSearchResults] = useState([]);
   const [input, setInput] = useState("");
+
+  let pageSize = 12;
 
   const handleSearch = async (keyword) => {
     setInput(keyword);
@@ -54,7 +55,7 @@ const SeasonalTabs = () => {
       return;
     }
 
-    const data = await AnimeApi.searchAnimeByKeyword(keyword);
+    const data = await AnimeApi.getAnimeWithPollByKeyword(keyword);
     setSearchResults(data);
     setPage(1);
     return data;

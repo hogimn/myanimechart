@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import AnimeStatApi from "../../../api/animestat/AnimeStatApi";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
 import CommonAlert from "../../../common/basic/CommonAlert";
 import CommonSpin from "../../../common/basic/CommonSpin";
-import AnimeStatGraph from "./AnimeStatGraph";
 import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
 import styled from "styled-components";
@@ -23,6 +21,7 @@ import CommonSelect from "../../../common/basic/CommonSelect";
 import ModalButton from "../../../common/button/ModalButton";
 import UserApi from "../../../api/animestat/UserApi";
 import CommonButton from "../../../common/basic/CommonButton";
+import AnimeApi from "../../../api/animestat/AnimeApi";
 
 const statusOptions = [
   { value: "watching", label: "Watching" },
@@ -275,7 +274,7 @@ const SeasonalAnimeList = ({
     const fetchData = async () => {
       setAnimeStatsLoading(true);
       try {
-        const animeStatsDto = await AnimeStatApi.fetchAnimeStats(year, season);
+        const animeStatsDto = await AnimeApi.getAnimeWithPoll(year, season);
         setAnimeStats(animeStatsDto);
       } catch (err) {
         setError("Failed to fetch anime data");
@@ -486,15 +485,6 @@ const SeasonalAnimeList = ({
                     alignItems: "flex-start",
                   }}
                 >
-                  <LazyGraphWrapper>
-                    <AnimeStatGraph
-                      animeStats={anime.animeStats.slice(
-                        10,
-                        anime.animeStats.length
-                      )}
-                      selectedLegend={"score"}
-                    />
-                  </LazyGraphWrapper>
                   <LazyGraphWrapper>
                     <AnimePollGraph polls={anime.polls} />
                   </LazyGraphWrapper>
