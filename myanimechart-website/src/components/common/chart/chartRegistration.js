@@ -10,6 +10,7 @@ import {
   BarElement,
   Chart,
   Filler,
+  LineController,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 
@@ -73,7 +74,8 @@ export const registerCharts = () => {
     BarElement,
     Filler,
     increaseLegendSpacing,
-    verticalHoverLine
+    verticalHoverLine,
+    LineController
   );
 
   Tooltip.positioners.stat = (elements, position) => {
