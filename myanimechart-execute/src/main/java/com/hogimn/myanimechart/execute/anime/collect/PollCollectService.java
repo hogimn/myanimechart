@@ -3,12 +3,14 @@ package com.hogimn.myanimechart.execute.anime.collect;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.database.anime.AnimeDto;
 import com.hogimn.myanimechart.database.anime.AnimeEntity;
 import com.hogimn.myanimechart.database.anime.AnimeService;
 import com.hogimn.myanimechart.database.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.database.poll.PollDto;
 import com.hogimn.myanimechart.database.poll.PollOptionEntity;
 import com.hogimn.myanimechart.database.poll.PollOptionService;
+import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
@@ -66,85 +68,106 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPollStatistics")
     public void collectPollStatistics(String batchJobName) {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForPollCollection();
+        collectPollAllSeasonCurrentlyAiring();
+        collectPollForceCollectTrue();
+    }
+
+    private void collectPollForceCollectTrue() {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
+        animeEntities.forEach(this::processForumTopics);
+    }
+
+    private void collectPollAllSeasonCurrentlyAiring() {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesAllSeasonCurrentlyAiring();
         List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.getAnimeEntitiesForceCollectTrue();
         animeEntities.addAll(animeEntitiesForceCollectTrue);
+        animeEntities.forEach(this::processForumTopics);
+    }
 
-        animeEntities.forEach(animeEntity -> {
-            try {
-                log.info("Collecting poll statistics for anime: {}", animeEntity.getTitle());
+    private List<ForumTopic> fetchForumTopics(String keyword) {
+        List<ForumTopic> forumTopics = new ArrayList<>();
+        int offset = 0;
+        int limit = 100;
 
-                // TODO: Create keyword mapping table in database for irregular search keyword
-                String keyword = animeEntity.getTitle() + " Poll Episode Discussion";
-                if (animeEntity.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
-                    keyword = "Touhai: Ura Rate Mahjong Touhai Roku" + " Poll Episode Discussion";
-                }
+        while (true) {
+            List<ForumTopic> topics = myAnimeListProvider
+                    .getMyAnimeList()
+                    .getForumTopics()
+                    .withQuery(keyword)
+                    .withLimit(limit)
+                    .withOffset(offset)
+                    .search();
 
-                List<ForumTopic> forumTopics = new ArrayList<>();
-                int offset = 0;
-                int limit = 100;
+            forumTopics.addAll(topics);
 
-                while (true) {
-                    forumTopics.addAll(myAnimeListProvider
-                            .getMyAnimeList()
-                            .getForumTopics()
-                            .withQuery(keyword)
-                            .withLimit(limit)
-                            .withOffset(offset)
-                            .search());
+            if (topics.size() >= limit) {
+                offset += limit;
+            } else {
+                break;
+            }
+        }
+        return forumTopics;
+    }
 
-                    if (forumTopics.size() >= limit) {
-                        offset += limit;
+    private String getSearchKeyword(AnimeEntity animeEntity) {
+        // TODO: Create keyword mapping table in database for irregular search keyword
+        if (animeEntity.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
+            return "Touhai: Ura Rate Mahjong Touhai Roku Poll Episode Discussion";
+        }
+        return animeEntity.getTitle() + " Poll Episode Discussion";
+    }
+
+    private void processForumTopics(AnimeEntity animeEntity) {
+        try {
+            log.info("Collecting poll statistics for anime: {}", animeEntity.getTitle());
+
+            String keyword = getSearchKeyword(animeEntity);
+            List<ForumTopic> forumTopics = fetchForumTopics(keyword);
+
+            int firstWordDiffCnt = 0;
+            for (ForumTopic forumTopic : forumTopics) {
+                Long topicId = forumTopic.getID();
+                String topicTitle = forumTopic.getTitle();
+
+                if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0])) {
+                    log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
+                            forumTopic.getTitle(), animeEntity.getTitle());
+                    firstWordDiffCnt++;
+                    if (firstWordDiffCnt > 10) {
+                        break;
                     } else {
-                        break;
-                    }
-                }
-
-                int firstWordDiffCnt = 0;
-                for (ForumTopic forumTopic : forumTopics) {
-                    Long topicId = forumTopic.getID();
-                    String topicTitle = forumTopic.getTitle();
-
-                    if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0])) {
-                        log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeEntity.getTitle());
-                        firstWordDiffCnt++;
-                        if (firstWordDiffCnt > 10) {
-                            break;
-                        } else {
-                            continue;
-                        }
-                    }
-
-                    if (!topicTitle.endsWith("Discussion")) {
-                        log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
-                        break;
-                    }
-
-                    if (checkMangaTopic(topicTitle)) {
-                        log.info("Topic name is manga discussion. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeEntity.getTitle());
-                        break;
-                    }
-
-                    if (!checkTitleSame(topicTitle, animeEntity.getTitle())) {
-                        log.info("Topic name is far different from anime name. topic: {},  anime: {}",
-                                forumTopic.getTitle(), animeEntity.getTitle());
                         continue;
                     }
-
-                    int episode = getEpisodeFromTopicTitle(topicTitle);
-                    if (episode == -1) {
-                        log.error("Failed to get episode from topic title: {}", topicTitle);
-                        break;
-                    }
-
-                    savePoll(topicId, topicTitle, episode, animeEntity);
                 }
-            } catch (Exception e) {
-                log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+
+                if (!topicTitle.endsWith("Discussion")) {
+                    log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
+                    break;
+                }
+
+                if (checkMangaTopic(topicTitle)) {
+                    log.info("Topic name is manga discussion. topic: {},  anime: {}",
+                            forumTopic.getTitle(), animeEntity.getTitle());
+                    break;
+                }
+
+                if (!checkTitleSame(topicTitle, animeEntity.getTitle())) {
+                    log.info("Topic name is far different from anime name. topic: {},  anime: {}",
+                            forumTopic.getTitle(), animeEntity.getTitle());
+                    continue;
+                }
+
+                int episode = getEpisodeFromTopicTitle(topicTitle);
+                if (episode == -1) {
+                    log.error("Failed to get episode from topic title: {}", topicTitle);
+                    break;
+                }
+
+                savePoll(topicId, topicTitle, episode, animeEntity);
             }
-        });
+        } catch (Exception e) {
+            log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+        }
     }
 
     private void savePoll(

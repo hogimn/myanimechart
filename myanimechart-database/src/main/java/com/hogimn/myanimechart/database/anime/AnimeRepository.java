@@ -27,7 +27,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
             "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
             "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
             "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END))")
-    List<AnimeEntity> findAnimeEntitiesForPollCollection(String currentlyAiring, String finishedAiring);
+    List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring(String currentlyAiring, String finishedAiring);
 
     List<AnimeEntity> findAllByTitleContaining(String title);
 

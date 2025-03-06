@@ -107,13 +107,10 @@ public class AnimeCollectService {
     @SchedulerLock(name = "collectAnimeStatistics")
     public void collectAnimeStatistics(String batchJobName) {
         collectAnimeCurrentSeason();
-
         if (DateUtil.changingSeasonMonth()) {
             collectAnimeNextSeason();
         }
-
         collectAnimeOldSeasonCurrentlyAiring();
-
         collectAnimeForceCollectTrue();
     }
 

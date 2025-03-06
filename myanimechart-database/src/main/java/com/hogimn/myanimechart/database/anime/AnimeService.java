@@ -64,8 +64,8 @@ public class AnimeService {
                 year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesForPollCollection() {
-        return animeRepository.findAnimeEntitiesForPollCollection("currently_airing", "finished_airing");
+    public List<AnimeEntity> getAnimeEntitiesAllSeasonCurrentlyAiring() {
+        return animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
     }
 
     public List<AnimeEntity> getAnimeEntitiesForceCollectTrue() {
