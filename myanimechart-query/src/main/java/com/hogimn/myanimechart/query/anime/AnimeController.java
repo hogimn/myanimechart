@@ -17,13 +17,13 @@ public class AnimeController {
         this.animeService = animeService;
     }
 
-    @GetMapping("/getAnimeByKeyword")
-    public List<AnimeDto> getAnimeByKeyword(@RequestParam("keyword") String keyword) {
-        return animeService.getAnimeDtosByKeyword(keyword);
+    @GetMapping("/getAnimeWithPollByKeyword")
+    public List<AnimeDto> getAnimeWithPollByKeyword(@RequestParam("keyword") String keyword) {
+        return animeService.getAnimeDtosWithPollByKeyword(keyword);
     }
 
     @GetMapping("/getAnimeWithPoll/{year}/{season}")
     public List<AnimeDto> getAnimeWithPollByYearAndSeason(@PathVariable int year, @PathVariable String season) {
-        return animeService.getAnimeDtosWithPollDtosByYearAndSeason(year, season);
+        return animeService.getAnimeDtosWithPollByYearAndSeason(year, season);
     }
 }

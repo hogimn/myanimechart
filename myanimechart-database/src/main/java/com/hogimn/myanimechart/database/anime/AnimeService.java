@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,15 +64,6 @@ public class AnimeService {
                 year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesByKeyword(String keyword) {
-        return animeRepository.findAllByTitleContaining(keyword);
-    }
-
-    public List<AnimeDto> getAnimeDtosByKeyword(String keyword) {
-        List<AnimeEntity> animeEntities = getAnimeEntitiesByKeyword(keyword);
-        return animeEntities.stream().map(AnimeDto::from).collect(Collectors.toList());
-    }
-
     public List<AnimeEntity> getAnimeEntitiesForPollCollection() {
         return animeRepository.findAnimeEntitiesForPollCollection("currently_airing", "finished_airing");
     }
@@ -82,8 +72,21 @@ public class AnimeService {
         return animeRepository.findByForceCollect("Y");
     }
 
-    public List<AnimeDto> getAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
+    public List<AnimeEntity> getAnimeEntitiesByKeyword(String keyword) {
+        return animeRepository.findAllByTitleContaining(keyword);
+    }
+
+    public List<AnimeDto> getAnimeDtosWithPollByKeyword(String keyword) {
+        List<AnimeEntity> animeEntities = getAnimeEntitiesByKeyword(keyword);
+        return convertToAnimeDtoWithPolls(animeEntities);
+    }
+
+    public List<AnimeDto> getAnimeDtosWithPollByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = getAnimeEntitiesByYearAndSeason(year, season);
+        return convertToAnimeDtoWithPolls(animeEntities);
+    }
+
+    private List<AnimeDto> convertToAnimeDtoWithPolls(List<AnimeEntity> animeEntities) {
         List<AnimeDto> animeDtos = animeEntities.stream()
                 .map(AnimeDto::from)
                 .toList();
