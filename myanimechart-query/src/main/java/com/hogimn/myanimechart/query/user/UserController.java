@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.query.user;
 
-import com.hogimn.myanimechart.database.user.AnimeListStatusDto;
-import com.hogimn.myanimechart.database.user.UserDto;
+import com.hogimn.myanimechart.common.user.AnimeListStatusDto;
+import com.hogimn.myanimechart.common.user.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

@@ -10,7 +10,7 @@ spring:
   application:
     name: security
   config:
-    import: file:../myanimechart-common/src/main/resources/application-dev.yml,file:../myanimechart-database/src/main/resources/application-dev.yml
+    import: file:../myanimechart-common/src/main/resources/application-dev.yml
 
 springdoc:
   api-docs:

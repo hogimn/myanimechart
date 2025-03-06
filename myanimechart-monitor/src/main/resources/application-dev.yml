@@ -2,4 +2,4 @@ spring:
   application:
     name: monitor
   config:
-    import: file:../myanimechart-common/src/main/resources/application-dev.yml,file:../myanimechart-database/src/main/resources/application-dev.yml
+    import: file:../myanimechart-common/src/main/resources/application-dev.yml

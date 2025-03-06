@@ -2,4 +2,4 @@ spring:
   application:
     name: collector
   config:
-    import: file:../myanimechart-common/src/main/resources/application.yml,file:../myanimechart-database/src/main/resources/application.yml
+    import: file:../myanimechart-common/src/main/resources/application.yml

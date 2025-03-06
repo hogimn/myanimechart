@@ -8,12 +8,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {
         "com.hogimn.myanimechart.collector",
-        "com.hogimn.myanimechart.common",
-        "com.hogimn.myanimechart.database"
+        "com.hogimn.myanimechart.common"
 })
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database")
-@EntityScan(basePackages = "com.hogimn.myanimechart.database")
+@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.common")
+@EntityScan(basePackages = "com.hogimn.myanimechart.common")
 public class CollectorApplication {
     public static void main(String[] args) {
         SpringApplication.run(CollectorApplication.class, args);

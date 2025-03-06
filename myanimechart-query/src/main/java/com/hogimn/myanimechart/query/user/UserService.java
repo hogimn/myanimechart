@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.query.user;
 
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.database.user.AnimeListStatusDto;
-import com.hogimn.myanimechart.database.user.UserDto;
+import com.hogimn.myanimechart.common.user.AnimeListStatusDto;
+import com.hogimn.myanimechart.common.user.UserDto;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.anime.AnimeListStatus;
 import dev.katsute.mal4j.query.AnimeListUpdate;

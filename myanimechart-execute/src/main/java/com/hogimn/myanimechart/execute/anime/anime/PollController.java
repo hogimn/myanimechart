@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.execute.anime.anime;
 
-import com.hogimn.myanimechart.database.poll.PollDto;
-import com.hogimn.myanimechart.database.poll.PollFacadeService;
+import com.hogimn.myanimechart.common.poll.PollDto;
+import com.hogimn.myanimechart.common.poll.PollFacadeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

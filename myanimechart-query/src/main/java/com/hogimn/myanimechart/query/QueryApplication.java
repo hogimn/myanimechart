@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {
         "com.hogimn.myanimechart.query",
         "com.hogimn.myanimechart.common",
-        "com.hogimn.myanimechart.database"
 })
-@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database")
-@EntityScan(basePackages = "com.hogimn.myanimechart.database")
+@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.common")
+@EntityScan(basePackages = "com.hogimn.myanimechart.common")
 public class QueryApplication {
     public static void main(String[] args) {
         SpringApplication.run(QueryApplication.class, args);

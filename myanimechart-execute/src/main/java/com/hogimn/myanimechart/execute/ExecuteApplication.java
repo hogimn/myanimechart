@@ -9,12 +9,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {
         "com.hogimn.myanimechart.execute",
-        "com.hogimn.myanimechart.common",
-        "com.hogimn.myanimechart.database"
+        "com.hogimn.myanimechart.common"
 })
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.database")
-@EntityScan(basePackages = "com.hogimn.myanimechart.database")
+@EnableJpaRepositories(basePackages = "com.hogimn.myanimechart.common")
+@EntityScan(basePackages = "com.hogimn.myanimechart.common")
 @EnableSchedulerLock(defaultLockAtMostFor = "PT3M")
 public class ExecuteApplication {
     public static void main(String[] args) {
