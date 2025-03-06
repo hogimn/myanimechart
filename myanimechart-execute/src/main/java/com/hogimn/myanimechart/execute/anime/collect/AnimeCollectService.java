@@ -42,15 +42,16 @@ public class AnimeCollectService {
             List<Anime> animeList = new ArrayList<>();
 
             while (true) {
-                animeList.addAll(
-                        myAnimeListProvider
-                                .getMyAnimeList()
-                                .getAnimeSeason(year, getSeason(season))
-                                .withLimit(limit)
-                                .withOffset(offset)
-                                .search());
+                List<Anime> tempAnimeList = myAnimeListProvider
+                        .getMyAnimeList()
+                        .getAnimeSeason(year, getSeason(season))
+                        .withLimit(limit)
+                        .withOffset(offset)
+                        .search();
 
-                if (animeList.size() >= limit) {
+                animeList.addAll(tempAnimeList);
+
+                if (tempAnimeList.size() >= limit) {
                     offset += limit;
                 } else {
                     break;

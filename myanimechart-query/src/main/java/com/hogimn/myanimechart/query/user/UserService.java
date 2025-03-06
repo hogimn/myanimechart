@@ -35,13 +35,15 @@ public class UserService {
 
         List<AnimeListStatus> animeListStatuses = new ArrayList<>();
         while (true) {
-            animeListStatuses.addAll(myAnimeList
+            List<AnimeListStatus> tempAnimeListStatuses = myAnimeList
                     .getUserAnimeListing(userDto.getName())
                     .withLimit(limit)
                     .withOffset(offset)
-                    .search());
+                    .search();
 
-            if (animeListStatuses.size() >= limit) {
+            animeListStatuses.addAll(tempAnimeListStatuses);
+
+            if (tempAnimeListStatuses.size() >= limit) {
                 offset += limit;
             } else {
                 break;
@@ -69,13 +71,15 @@ public class UserService {
 
         List<AnimeListStatus> animeListStatuses = new ArrayList<>();
         while (true) {
-            animeListStatuses.addAll(myAnimeList
+            List<AnimeListStatus> tempAnimeListStatuses = myAnimeList
                     .getUserAnimeListing(userDto.getName())
                     .withLimit(limit)
                     .withOffset(offset)
-                    .search());
+                    .search();
 
-            if (animeListStatuses.size() >= limit) {
+            animeListStatuses.addAll(tempAnimeListStatuses);
+
+            if (tempAnimeListStatuses.size() >= limit) {
                 offset += limit;
             } else {
                 break;
@@ -95,10 +99,10 @@ public class UserService {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(animeListStatusDto.getAnimeId());
         if (animeListStatusDto.getStatus() != null) {
-             animeListUpdate.status(animeListStatusDto.getStatus());
+            animeListUpdate.status(animeListStatusDto.getStatus());
         }
         if (animeListStatusDto.getScore() != null) {
-                animeListUpdate.score(animeListStatusDto.getScore());
+            animeListUpdate.score(animeListStatusDto.getScore());
         }
         animeListUpdate.episodesWatched(animeListStatusDto.getWatchedEpisodes());
 

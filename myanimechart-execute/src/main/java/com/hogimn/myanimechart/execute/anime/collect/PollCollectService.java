@@ -90,7 +90,7 @@ public class PollCollectService {
         int limit = 100;
 
         while (true) {
-            List<ForumTopic> topics = myAnimeListProvider
+            List<ForumTopic> tempForumTopics = myAnimeListProvider
                     .getMyAnimeList()
                     .getForumTopics()
                     .withQuery(keyword)
@@ -98,9 +98,9 @@ public class PollCollectService {
                     .withOffset(offset)
                     .search();
 
-            forumTopics.addAll(topics);
+            forumTopics.addAll(tempForumTopics);
 
-            if (topics.size() >= limit) {
+            if (tempForumTopics.size() >= limit) {
                 offset += limit;
             } else {
                 break;
