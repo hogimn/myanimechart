@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
         "com.hogimn.myanimechart.security",
-        "com.hogimn.myanimechart.common",
+        "com.hogimn.myanimechart.common.resttemplate",
 })
 public class SecurityApplication {
     public static void main(String[] args) {
