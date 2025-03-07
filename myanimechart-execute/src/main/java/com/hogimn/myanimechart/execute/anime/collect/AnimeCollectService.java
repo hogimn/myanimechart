@@ -60,7 +60,8 @@ public class AnimeCollectService {
 
             for (Anime anime : animeList) {
                 try {
-                    if (anime.getStartSeason().getYear() != year ||
+                    if (anime.getStartSeason() == null ||
+                            anime.getStartSeason().getYear() != year ||
                             !Objects.equals(anime.getStartSeason().getSeason().field(), season)) {
                         log.info("Skipping anime '{}': Year {} (expected: {}), Season {} (expected: {})",
                                 anime.getTitle(), anime.getStartSeason().getYear(), year,
