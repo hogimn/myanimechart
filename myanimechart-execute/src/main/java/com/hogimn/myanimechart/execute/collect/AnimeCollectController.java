@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.execute.anime.collect;
+package com.hogimn.myanimechart.execute.collect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

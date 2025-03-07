@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.execute.anime.batch;
+package com.hogimn.myanimechart.execute.batch;
 
 import com.hogimn.myanimechart.common.batch.BatchHistoryService;
 import org.springframework.web.bind.annotation.PostMapping;

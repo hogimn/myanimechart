@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.execute.anime.collect;
+package com.hogimn.myanimechart.execute.collect;
 
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;

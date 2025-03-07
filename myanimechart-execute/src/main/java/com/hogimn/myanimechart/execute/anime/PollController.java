@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.execute.anime.anime;
+package com.hogimn.myanimechart.execute.anime;
 
 import com.hogimn.myanimechart.common.poll.PollDto;
 import com.hogimn.myanimechart.common.poll.PollFacadeService;

@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.collector.batchjob;
+package com.hogimn.myanimechart.collector.anime;
 
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class PollCollectorJob {
+public class AnimeCollectJob {
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final ServiceRegistryService serviceRegistryService;
 
-    public PollCollectorJob(
+    public AnimeCollectJob(
             BatchService batchService,
             ThreadPoolTaskScheduler threadPoolTaskScheduler,
             ServiceRegistryService serviceRegistryService
@@ -28,16 +28,16 @@ public class PollCollectorJob {
     }
 
     @PostConstruct
-    public void schedulePollCollectionTask() {
+    public void scheduleAnimeCollectionTask() {
         BatchDto batchDto = batchService
                 .getBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectPollStat(batchDto.getName()),
+                () -> collectAnimeAndAnimeStat(batchDto.getName()),
                 new CronTrigger(batchDto.getCron()));
     }
 
-    public void collectPollStat(String batchJobName) {
-        serviceRegistryService.send(RegisteredService.EXECUTE, "/pollCollect/collectPollStatistics", batchJobName);
+    public void collectAnimeAndAnimeStat(String batchJobName) {
+        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeCollect/collectAnimeStatistics", batchJobName);
     }
 }

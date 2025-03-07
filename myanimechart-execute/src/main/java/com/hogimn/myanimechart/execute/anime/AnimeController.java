@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.execute.anime.anime;
+package com.hogimn.myanimechart.execute.anime;
 
 import com.hogimn.myanimechart.common.anime.AnimeDto;
 import com.hogimn.myanimechart.common.anime.AnimeService;
