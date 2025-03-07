@@ -1,11 +1,6 @@
-UPDATE batch
-SET
-  name = "AnimeCollectJob",
-  cron = "0 0 */1 * * ?"
-WHERE name = "AnimeCollectorJob";
+DELETE FROM batch WHERE name IN ('AnimeCollectorJob', 'PollCollectorJob');
 
-UPDATE batch
-SET
-  name = "PollCollectJob",
-  cron = "0 30 */1 * * ?"
-WHERE name = "PollCollectorJob";
+INSERT INTO batch (name, cron)
+VALUES
+  ('AnimeCollectJob', '0 0 */1 * * ?'),
+  ('PollCollectJob', '0 30 */1 * * ?');
