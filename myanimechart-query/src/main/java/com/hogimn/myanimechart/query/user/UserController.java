@@ -26,13 +26,16 @@ public class UserController {
 
     @ApiLoggable
     @GetMapping("/getUserAnimeStatusListByYearAndSeason/{year}/{season}")
-    public List<AnimeListStatusDto> getUserAnimeStatusListByYearAndSeason(@PathVariable int year, @PathVariable String season) {
+    public List<AnimeListStatusDto> getUserAnimeStatusListByYearAndSeason(
+            @PathVariable int year, @PathVariable String season
+    ) throws InterruptedException {
         return userService.getUserAnimeListStatusDtosByYearAndSeason(year, season);
     }
 
     @ApiLoggable
     @GetMapping("/getUserAnimeStatusById")
-    public AnimeListStatusDto getUserAnimeStatusById(@RequestParam("id") int id) {
+    public AnimeListStatusDto getUserAnimeStatusById(@RequestParam("id") int id)
+            throws InterruptedException {
         return userService.getAnimeListStatusDtoById(id);
     }
 
