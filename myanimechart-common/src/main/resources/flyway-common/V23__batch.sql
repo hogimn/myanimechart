@@ -1,3 +1,4 @@
+DELETE FROM batch_history WHERE name IN ('AnimeCollectorJob', 'PollCollectorJob');
 DELETE FROM batch WHERE name IN ('AnimeCollectorJob', 'PollCollectorJob');
 
 INSERT INTO batch (name, cron)
