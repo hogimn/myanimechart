@@ -49,6 +49,8 @@ public class AnimeCollectService {
                         .withOffset(offset)
                         .search();
 
+                Thread.sleep(60 * 1000);
+
                 animeList.addAll(tempAnimeList);
 
                 if (tempAnimeList.size() >= limit) {

@@ -72,17 +72,17 @@ public class PollCollectService {
 
     private void collectPollForceCollectTrue() {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
-        animeEntities.forEach(this::processForumTopics);
+        animeEntities.forEach(this::collectForumTopics);
     }
 
     private void collectPollAllSeasonCurrentlyAiring() {
         List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesAllSeasonCurrentlyAiring();
         List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.getAnimeEntitiesForceCollectTrue();
         animeEntities.addAll(animeEntitiesForceCollectTrue);
-        animeEntities.forEach(this::processForumTopics);
+        animeEntities.forEach(this::collectForumTopics);
     }
 
-    private List<ForumTopic> fetchForumTopics(String keyword) {
+    private List<ForumTopic> fetchForumTopics(String keyword) throws InterruptedException {
         List<ForumTopic> forumTopics = new ArrayList<>();
         int offset = 0;
         int limit = 100;
@@ -95,6 +95,8 @@ public class PollCollectService {
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
+
+            Thread.sleep(60 * 1000);
 
             forumTopics.addAll(tempForumTopics);
 
@@ -115,7 +117,7 @@ public class PollCollectService {
         return animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
-    private void processForumTopics(AnimeEntity animeEntity) {
+    private void collectForumTopics(AnimeEntity animeEntity) {
         try {
             log.info("Collecting poll statistics for anime: {}", animeEntity.getTitle());
 

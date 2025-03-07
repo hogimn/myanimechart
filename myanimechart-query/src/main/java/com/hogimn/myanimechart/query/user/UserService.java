@@ -26,7 +26,7 @@ public class UserService {
         return UserDto.from(myAnimeListProvider.getMyAnimeListWithToken().getAuthenticatedUser());
     }
 
-    public List<AnimeListStatusDto> getUserAnimeListStatusDtosByYearAndSeason(int year, String season) {
+    public List<AnimeListStatusDto> getUserAnimeListStatusDtosByYearAndSeason(int year, String season) throws InterruptedException {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -40,6 +40,8 @@ public class UserService {
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
+
+            Thread.sleep(60 * 1000);
 
             animeListStatuses.addAll(tempAnimeListStatuses);
 
@@ -62,7 +64,7 @@ public class UserService {
                 .toList();
     }
 
-    public AnimeListStatusDto getAnimeListStatusDtoById(int id) {
+    public AnimeListStatusDto getAnimeListStatusDtoById(int id) throws InterruptedException {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -76,6 +78,8 @@ public class UserService {
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
+
+            Thread.sleep(60 * 1000);
 
             animeListStatuses.addAll(tempAnimeListStatuses);
 
