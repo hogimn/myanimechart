@@ -41,8 +41,6 @@ public class UserService {
                     .withOffset(offset)
                     .search();
 
-            Thread.sleep(60 * 1000);
-
             animeListStatuses.addAll(tempAnimeListStatuses);
 
             if (tempAnimeListStatuses.size() >= limit) {
@@ -78,8 +76,6 @@ public class UserService {
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
-
-            Thread.sleep(60 * 1000);
 
             animeListStatuses.addAll(tempAnimeListStatuses);
 
