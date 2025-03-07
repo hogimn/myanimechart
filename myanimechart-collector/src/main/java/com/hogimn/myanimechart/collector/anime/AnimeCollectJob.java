@@ -1,7 +1,5 @@
 package com.hogimn.myanimechart.collector.anime;
 
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.batch.BatchDto;
 import com.hogimn.myanimechart.common.batch.BatchService;
 import jakarta.annotation.PostConstruct;
@@ -15,16 +13,16 @@ import org.springframework.stereotype.Component;
 public class AnimeCollectJob {
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
-    private final ServiceRegistryService serviceRegistryService;
+    private final AnimeCollectService animeCollectService;
 
     public AnimeCollectJob(
             BatchService batchService,
             ThreadPoolTaskScheduler threadPoolTaskScheduler,
-            ServiceRegistryService serviceRegistryService
+            AnimeCollectService animeCollectService
     ) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
-        this.serviceRegistryService = serviceRegistryService;
+        this.animeCollectService = animeCollectService;
     }
 
     @PostConstruct
@@ -33,11 +31,7 @@ public class AnimeCollectJob {
                 .getBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectAnimeAndAnimeStat(batchDto.getName()),
+                () -> animeCollectService.collectSeasonalAnime(batchDto.getName()),
                 new CronTrigger(batchDto.getCron()));
-    }
-
-    public void collectAnimeAndAnimeStat(String batchJobName) {
-        serviceRegistryService.send(RegisteredService.EXECUTE, "/animeCollect/collectAnimeStatistics", batchJobName);
     }
 }

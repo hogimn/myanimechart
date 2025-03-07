@@ -1,14 +1,15 @@
-package com.hogimn.myanimechart.execute.collect;
+package com.hogimn.myanimechart.collector.poll;
 
-import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
+import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.poll.PollDto;
 import com.hogimn.myanimechart.common.poll.PollOptionEntity;
 import com.hogimn.myanimechart.common.poll.PollOptionService;
+import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.common.util.SleepUtil;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
@@ -44,28 +45,19 @@ public class PollCollectService {
         this.serviceRegistryService = serviceRegistryService;
     }
 
-    private int getEpisodeFromTopicTitle(String topicTitle) {
-        String regex = "Episode (\\d+)";
-        Pattern pattern = Pattern.compile(regex);
+    public void collectPollByAnimeId(Long animeId) {
+        AnimeEntity animeEntity = animeService.getAnimeEntityById(animeId);
+        collectForumTopics(animeEntity);
+    }
 
-        try {
-            Matcher matcher = pattern.matcher(topicTitle);
-            if (matcher.find()) {
-                String episodeNumber = matcher.group(1);
-                return Integer.parseInt(episodeNumber);
-            } else {
-                System.out.println("No episode number found in: " + topicTitle);
-                return -1;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return -1;
-        }
+    public void collectPollByYearAndSeason(int year, String season) {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByYearAndSeason(year, season);
+        animeEntities.forEach(this::collectForumTopics);
     }
 
     @SaveBatchHistory("#batchJobName")
-    @SchedulerLock(name = "collectPollStatistics")
-    public void collectPollStatistics(String batchJobName) {
+    @SchedulerLock(name = "collectPoll")
+    public void collectSeasonalPoll(String batchJobName) {
         collectPollAllSeasonCurrentlyAiring();
         collectPollForceCollectTrue();
     }
@@ -82,7 +74,7 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
-    private List<ForumTopic> fetchForumTopics(String keyword) throws InterruptedException {
+    private List<ForumTopic> fetchForumTopics(String keyword) {
         List<ForumTopic> forumTopics = new ArrayList<>();
         int offset = 0;
         int limit = 100;
@@ -95,8 +87,6 @@ public class PollCollectService {
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
-
-            Thread.sleep(60 * 1000);
 
             forumTopics.addAll(tempForumTopics);
 
@@ -164,6 +154,7 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, topicTitle, episode, animeEntity);
+                SleepUtil.sleep(1000);
             }
         } catch (Exception e) {
             log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
@@ -180,8 +171,6 @@ public class PollCollectService {
         voteZeroOptions.add(5);
 
         ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
-        Thread.sleep(60 * 1000);
-
         Poll poll = forumTopicDetail.getPoll();
         PollOption[] options = poll.getOptions();
 
@@ -246,5 +235,24 @@ public class PollCollectService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(topicTitle);
         return matcher.find();
+    }
+
+    private int getEpisodeFromTopicTitle(String topicTitle) {
+        String regex = "Episode (\\d+)";
+        Pattern pattern = Pattern.compile(regex);
+
+        try {
+            Matcher matcher = pattern.matcher(topicTitle);
+            if (matcher.find()) {
+                String episodeNumber = matcher.group(1);
+                return Integer.parseInt(episodeNumber);
+            } else {
+                System.out.println("No episode number found in: " + topicTitle);
+                return -1;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return -1;
+        }
     }
 }

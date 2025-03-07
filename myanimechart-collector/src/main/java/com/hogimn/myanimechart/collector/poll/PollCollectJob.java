@@ -1,7 +1,5 @@
 package com.hogimn.myanimechart.collector.poll;
 
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.batch.BatchDto;
 import com.hogimn.myanimechart.common.batch.BatchService;
 import jakarta.annotation.PostConstruct;
@@ -15,16 +13,15 @@ import org.springframework.stereotype.Component;
 public class PollCollectJob {
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
-    private final ServiceRegistryService serviceRegistryService;
+    private final PollCollectService pollCollectService;
 
     public PollCollectJob(
             BatchService batchService,
             ThreadPoolTaskScheduler threadPoolTaskScheduler,
-            ServiceRegistryService serviceRegistryService
-    ) {
+            PollCollectService pollCollectService) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
-        this.serviceRegistryService = serviceRegistryService;
+        this.pollCollectService = pollCollectService;
     }
 
     @PostConstruct
@@ -33,11 +30,11 @@ public class PollCollectJob {
                 .getBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectPollStat(batchDto.getName()),
+                () -> collectPoll(batchDto.getName()),
                 new CronTrigger(batchDto.getCron()));
     }
 
-    public void collectPollStat(String batchJobName) {
-        serviceRegistryService.send(RegisteredService.EXECUTE, "/pollCollect/collectPollStatistics", batchJobName);
+    public void collectPoll(String batchJobName) {
+        pollCollectService.collectSeasonalPoll(batchJobName);
     }
 }

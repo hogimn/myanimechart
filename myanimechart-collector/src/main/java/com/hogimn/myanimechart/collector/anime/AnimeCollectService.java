@@ -1,13 +1,14 @@
-package com.hogimn.myanimechart.execute.collect;
+package com.hogimn.myanimechart.collector.anime;
 
-import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
-import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.anime.AnimeDto;
 import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
+import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
+import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.common.util.DateUtil;
+import com.hogimn.myanimechart.common.util.SleepUtil;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,57 @@ public class AnimeCollectService {
         this.serviceRegistryService = serviceRegistryService;
     }
 
+    public void collectAnimeByYearAndSeason(int year, String season) {
+        collectAnime(year, season);
+    }
+
+    @SaveBatchHistory("#batchJobName")
+    @SchedulerLock(name = "collectSeasonalAnime")
+    public void collectSeasonalAnime(String batchJobName) {
+        collectAnimeCurrentSeason();
+        if (DateUtil.changingSeasonMonth()) {
+            collectAnimeNextSeason();
+        }
+        collectAnimeOldSeasonCurrentlyAiring();
+        collectAnimeForceCollectTrue();
+    }
+
+    private void collectAnimeCurrentSeason() {
+        collectAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
+    }
+
+    private void collectAnimeNextSeason() {
+        collectAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+    }
+
+    private void collectAnimeOldSeasonCurrentlyAiring() {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesOldSeasonCurrentlyAiring(
+                DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
+                DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+        for (AnimeEntity animeEntity : animeEntities) {
+            collectAnimeByAnimeId(animeEntity.getId());
+            SleepUtil.sleep(1000);
+        }
+    }
+
+    private void collectAnimeForceCollectTrue() {
+        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
+        for (var animeEntity : animeEntities) {
+            collectAnimeByAnimeId(animeEntity.getId());
+            SleepUtil.sleep(1000);
+        }
+    }
+
+    public void collectAnimeByAnimeId(long animeId) {
+        try {
+            Anime anime = getAnime(animeId);
+            AnimeDto animeDto = AnimeDto.from(anime);
+            serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+        } catch (Exception e) {
+            log.error("Failed to collect anime '{}': {}", animeId, e.getMessage(), e);
+        }
+    }
+
     public void collectAnime(int year, String season) {
         try {
             int offset = 0;
@@ -48,8 +100,6 @@ public class AnimeCollectService {
                         .withLimit(limit)
                         .withOffset(offset)
                         .search();
-
-                Thread.sleep(60 * 1000);
 
                 animeList.addAll(tempAnimeList);
 
@@ -105,54 +155,5 @@ public class AnimeCollectService {
             case "winter" -> Season.Winter;
             default -> null;
         };
-    }
-
-    @SaveBatchHistory("#batchJobName")
-    @SchedulerLock(name = "collectAnimeStatistics")
-    public void collectAnimeStatistics(String batchJobName) {
-        collectAnimeCurrentSeason();
-        if (DateUtil.changingSeasonMonth()) {
-            collectAnimeNextSeason();
-        }
-        collectAnimeOldSeasonCurrentlyAiring();
-        collectAnimeForceCollectTrue();
-    }
-
-    private void collectAnimeForceCollectTrue() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
-        for (AnimeEntity animeEntity : animeEntities) {
-            try {
-                Anime anime = getAnime(animeEntity.getId());
-                Thread.sleep(60 * 1000);
-                AnimeDto animeDto = AnimeDto.from(anime);
-                serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
-            } catch (Exception e) {
-                log.error("Failed to collect anime statistics for anime '{}': {}", animeEntity.getId(), e.getMessage(), e);
-            }
-        }
-    }
-
-    private void collectAnimeOldSeasonCurrentlyAiring() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesOldSeasonCurrentlyAiring(
-                DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
-                DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-        for (AnimeEntity animeEntity : animeEntities) {
-            try {
-                Anime anime = getAnime(animeEntity.getId());
-                Thread.sleep(60 * 1000);
-                AnimeDto animeDto = AnimeDto.from(anime);
-                serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
-            } catch (Exception e) {
-                log.error("Failed to collect anime statistics for anime '{}': {}", animeEntity.getId(), e.getMessage(), e);
-            }
-        }
-    }
-
-    private void collectAnimeNextSeason() {
-        collectAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
-    }
-
-    private void collectAnimeCurrentSeason() {
-        collectAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
     }
 }
