@@ -31,6 +31,10 @@ spring:
           uri: lb://execute
           predicates:
             - Path=/execute/**
+        - id: collector
+          uri: lb://collector
+          predicates:
+            - Path=/collector/**
 
 springdoc:
   api-docs:
@@ -45,3 +49,5 @@ springdoc:
         url: /security/v3/api-docs
       - name: execute
         url: /execute/v3/api-docs
+      - name: collector
+        url: /collector/v3/api-docs
