@@ -4,8 +4,7 @@ import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -16,14 +15,43 @@ public class PollService {
         this.pollRepository = pollRepository;
     }
 
-    private List<PollEntity> getPollEntitiesByAnime(AnimeEntity animeEntity) {
-        return pollRepository.findByAnimeOrderByEpisodeAscPollOptionAsc(animeEntity);
+    private List<PollEntity> getByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(AnimeEntity animeEntity) {
+        return pollRepository.findByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(animeEntity);
     }
 
     public List<PollDto> getPollDtosByAnime(AnimeEntity animeEntity) {
-        List<PollEntity> pollEntities = getPollEntitiesByAnime(animeEntity);
-        return pollEntities.stream().map(PollDto::from).toList();
+        List<PollEntity> pollEntities = getByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(animeEntity);
+        List<PollEntity> uniquePollEntities = removeDuplicateForum(pollEntities);
+
+        return uniquePollEntities.stream().map(PollDto::from).toList();
     }
+
+    private List<PollEntity> removeDuplicateForum(List<PollEntity> pollEntities) {
+        Map<String, Map<Long, Integer>> episodeOptionVotesMap = new HashMap<>();
+
+        for (PollEntity poll : pollEntities) {
+            String key = poll.getEpisode() + "-" + poll.getPollOption().getId();
+            episodeOptionVotesMap.putIfAbsent(key, new HashMap<>());
+            episodeOptionVotesMap.get(key).merge(poll.getTopicId(), poll.getVotes(), Integer::sum);
+        }
+
+        Map<String, Long> maxTopicMap = new HashMap<>();
+        for (Map.Entry<String, Map<Long, Integer>> entry : episodeOptionVotesMap.entrySet()) {
+            maxTopicMap.put(entry.getKey(),
+                    entry.getValue().entrySet().stream()
+                            .max(Comparator.comparingInt(Map.Entry::getValue))
+                            .get().getKey()
+            );
+        }
+
+        return pollEntities.stream()
+                .filter(poll -> {
+                    String key = poll.getEpisode() + "-" + poll.getPollOption().getId();
+                    return maxTopicMap.get(key).equals(poll.getTopicId());
+                })
+                .toList();
+    }
+
 
     public Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(
             AnimeEntity anime, PollOptionEntity pollOption, long topicId

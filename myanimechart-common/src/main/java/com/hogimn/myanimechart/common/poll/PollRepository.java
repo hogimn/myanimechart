@@ -13,5 +13,5 @@ public interface PollRepository extends JpaRepository<PollEntity, Long> {
 
     List<PollEntity> findByAnime(AnimeEntity animeEntity);
 
-    List<PollEntity> findByAnimeOrderByEpisodeAscPollOptionAsc(AnimeEntity animeEntity);
+    List<PollEntity> findByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(AnimeEntity animeEntity);
 }
