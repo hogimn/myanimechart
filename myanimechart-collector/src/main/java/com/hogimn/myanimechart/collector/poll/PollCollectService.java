@@ -75,6 +75,7 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
+    @Synchronized
     private List<ForumTopic> fetchForumTopics(String keyword) {
         List<ForumTopic> forumTopics = new ArrayList<>();
         int offset = 0;
@@ -108,7 +109,6 @@ public class PollCollectService {
         return animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
-    @Synchronized
     private void collectForumTopics(AnimeEntity animeEntity) {
         try {
             log.info("Collecting poll for anime: {}", animeEntity.getTitle());
@@ -164,6 +164,7 @@ public class PollCollectService {
         }
     }
 
+    @Synchronized
     private void savePoll(
             Long topicId, String topicTitle, int episode, AnimeEntity animeEntity) throws InterruptedException {
         Set<Integer> voteZeroOptions = new HashSet<>();

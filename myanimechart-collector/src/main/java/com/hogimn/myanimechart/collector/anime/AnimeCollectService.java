@@ -11,6 +11,7 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.util.SleepUtil;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -77,6 +78,7 @@ public class AnimeCollectService {
         }
     }
 
+    @Synchronized
     public void collectAnimeByAnimeId(long animeId) {
         try {
             Anime anime = getAnime(animeId);
@@ -89,27 +91,7 @@ public class AnimeCollectService {
 
     public void collectAnime(int year, String season) {
         try {
-            int offset = 0;
-            int limit = 500;
-            List<Anime> animeList = new ArrayList<>();
-
-            while (true) {
-                List<Anime> tempAnimeList = myAnimeListProvider
-                        .getMyAnimeList()
-                        .getAnimeSeason(year, getSeason(season))
-                        .withLimit(limit)
-                        .withOffset(offset)
-                        .search();
-
-                animeList.addAll(tempAnimeList);
-
-                if (tempAnimeList.size() >= limit) {
-                    offset += limit;
-                } else {
-                    break;
-                }
-            }
-
+            List<Anime> animeList = fetchSeasonalAnime(year, season);
             for (Anime anime : animeList) {
                 try {
                     if (anime.getStartSeason() == null ||
@@ -136,6 +118,31 @@ public class AnimeCollectService {
         } catch (Exception e) {
             log.error("Failed to retrieve anime for season '{} {}': {}", season, year, e.getMessage(), e);
         }
+    }
+
+    @Synchronized
+    private List<Anime> fetchSeasonalAnime(int year, String season) {
+        int offset = 0;
+        int limit = 500;
+        List<Anime> animeList = new ArrayList<>();
+
+        while (true) {
+            List<Anime> tempAnimeList = myAnimeListProvider
+                    .getMyAnimeList()
+                    .getAnimeSeason(year, getSeason(season))
+                    .withLimit(limit)
+                    .withOffset(offset)
+                    .search();
+
+            animeList.addAll(tempAnimeList);
+
+            if (tempAnimeList.size() >= limit) {
+                offset += limit;
+            } else {
+                break;
+            }
+        }
+        return animeList;
     }
 
     public Anime getAnime(Long id) {
