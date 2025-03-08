@@ -14,6 +14,7 @@ import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
 import dev.katsute.mal4j.forum.property.PollOption;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -107,12 +108,14 @@ public class PollCollectService {
         return animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
+    @Synchronized
     private void collectForumTopics(AnimeEntity animeEntity) {
         try {
-            log.info("Collecting poll statistics for anime: {}", animeEntity.getTitle());
+            log.info("Collecting poll for anime: {}", animeEntity.getTitle());
 
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
+            SleepUtil.sleep(1000);
 
             int firstWordDiffCnt = 0;
             for (ForumTopic forumTopic : forumTopics) {
