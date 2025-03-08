@@ -24,9 +24,7 @@ public class PollEntity {
     @Id
     private Long topicId;
 
-    @Id
     private Integer episode;
-
     private String title;
     private Integer votes;
 
