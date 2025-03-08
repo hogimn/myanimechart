@@ -26,12 +26,22 @@ public class PollService {
     }
 
     public Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(
-            AnimeEntity anime, PollOptionEntity pollOption, Long topicId
+            AnimeEntity anime, PollOptionEntity pollOption, long topicId
     ) {
         return pollRepository.findByAnimeAndPollOptionAndTopicId(anime, pollOption, topicId);
     }
 
+    public Optional<PollEntity> findByAnimeAndPollOptionAndEpisode(
+            AnimeEntity anime, PollOptionEntity pollOption, int episode
+    ) {
+        return pollRepository.findByAnimeAndPollOptionAndTopicId(anime, pollOption, episode);
+    }
+
     public PollEntity save(PollEntity pollEntity) {
         return pollRepository.save(pollEntity);
+    }
+
+    public void delete(PollEntity found) {
+        pollRepository.delete(found);
     }
 }

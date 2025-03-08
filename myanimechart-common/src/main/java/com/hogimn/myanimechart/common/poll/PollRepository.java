@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PollRepository extends JpaRepository<PollEntity, Long> {
-    Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(AnimeEntity animeEntity, PollOptionEntity pollOption, Long topicId);
+    Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(AnimeEntity animeEntity, PollOptionEntity pollOption, long topicId);
+
+    Optional<PollEntity> findByAnimeAndPollOptionAndEpisode(AnimeEntity animeEntity, PollOptionEntity pollOption, int episode);
 
     List<PollEntity> findByAnime(AnimeEntity animeEntity);
 

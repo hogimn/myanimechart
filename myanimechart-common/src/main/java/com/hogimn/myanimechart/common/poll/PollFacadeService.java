@@ -31,7 +31,22 @@ public class PollFacadeService {
     public void upsertPoll(PollDto pollDto) {
         AnimeEntity animeEntity = animeService.getAnimeEntityById(pollDto.getAnimeId());
         PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntityById(pollDto.getPollOptionId());
+
         Optional<PollEntity> optional = pollService
+                .findByAnimeAndPollOptionAndEpisode(animeEntity, pollOptionEntity, pollDto.getEpisode());
+
+        if (optional.isPresent()) {
+            PollEntity found = optional.get();
+            if (found.getVotes() < pollDto.getVotes()) {
+                log.info("Overwrite non popular forum with popular forum: old: {} new: {}", found, pollDto);
+                pollService.delete(found);
+            } else {
+                log.info("Duplicate forum, not popular as much as saved one. old: {} new: {}", found, pollDto);
+                return;
+            }
+        }
+
+        optional = pollService
                 .findByAnimeAndPollOptionAndTopicId(animeEntity, pollOptionEntity, pollDto.getTopicId());
         LocalDateTime now = DateUtil.now();
         if (optional.isPresent()) {
