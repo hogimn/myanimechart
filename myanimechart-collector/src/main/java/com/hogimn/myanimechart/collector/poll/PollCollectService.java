@@ -115,7 +115,7 @@ public class PollCollectService {
 
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
-            SleepUtil.sleep(1000);
+            SleepUtil.sleep(60 * 1000);
 
             int firstWordDiffCnt = 0;
             for (ForumTopic forumTopic : forumTopics) {
@@ -157,7 +157,7 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, topicTitle, episode, animeEntity);
-                SleepUtil.sleep(1000);
+                SleepUtil.sleep(60 * 1000);
             }
         } catch (Exception e) {
             log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
@@ -166,7 +166,7 @@ public class PollCollectService {
 
     @Synchronized
     private void savePoll(
-            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity) throws InterruptedException {
+            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity) {
         Set<Integer> voteZeroOptions = new HashSet<>();
         voteZeroOptions.add(1);
         voteZeroOptions.add(2);
