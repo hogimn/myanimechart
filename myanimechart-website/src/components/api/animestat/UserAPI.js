@@ -1,38 +1,38 @@
 import axios from "axios";
 
 const UserApi = {
-  getUser: async () => {
+  findUser: async () => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
-      const response = await axios.get(`${gatewayUrl}/query/user/getUser`, {
+      const response = await axios.get(`${gatewayUrl}/query/user/findUser`, {
         withCredentials: true,
       });
       return response.data;
     } catch (error) {
-      console.error("Error getting user:", error);
+      console.error("Error finding user:", error);
       return false;
     }
   },
-  getUserAnimeStatusListByYearAndSeason: async (year, season) => {
+  findUserAnimeStatusListByYearAndSeason: async (year, season) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/user/getUserAnimeStatusListByYearAndSeason/${year}/${season}`,
+        `${gatewayUrl}/query/user/findUserAnimeStatusListByYearAndSeason/${year}/${season}`,
         {
           withCredentials: true,
         }
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting user anime status list:", error);
+      console.error("Error finding user anime status list:", error);
       return {};
     }
   },
-  getUserAnimeStatusById: async (id) => {
+  findUserAnimeStatusById: async (id) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/user/getUserAnimeStatusById`,
+        `${gatewayUrl}/query/user/findUserAnimeStatusById`,
         {
           params: {
             id: id,
@@ -42,7 +42,7 @@ const UserApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting user anime status:", error);
+      console.error("Error finding user anime status:", error);
       return null;
     }
   },
