@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.common.collect;
+package com.hogimn.myanimechart.common.poll;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

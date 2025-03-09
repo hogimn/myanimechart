@@ -2,7 +2,7 @@ package com.hogimn.myanimechart.collector.poll;
 
 import com.hogimn.myanimechart.common.batch.BatchDto;
 import com.hogimn.myanimechart.common.batch.BatchService;
-import com.hogimn.myanimechart.common.collect.PollCollectionStatusService;
+import com.hogimn.myanimechart.common.poll.PollCollectionStatusService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;

@@ -3,9 +3,10 @@ package com.hogimn.myanimechart.collector.poll;
 import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
-import com.hogimn.myanimechart.common.collect.CollectionStatus;
-import com.hogimn.myanimechart.common.collect.PollCollectionStatusEntity;
-import com.hogimn.myanimechart.common.collect.PollCollectionStatusService;
+import com.hogimn.myanimechart.common.poll.CollectionStatus;
+import com.hogimn.myanimechart.common.poll.PollCollectionStatusDto;
+import com.hogimn.myanimechart.common.poll.PollCollectionStatusEntity;
+import com.hogimn.myanimechart.common.poll.PollCollectionStatusService;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingEntity;
 import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingService;
@@ -191,7 +192,7 @@ public class PollCollectService {
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
         savePollCollectionStatusForEnd(animeEntity.getId());
-        
+
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
 
@@ -208,7 +209,12 @@ public class PollCollectService {
         pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
         pollCollectionStatusEntity.setFinishedAt(now);
         pollCollectionStatusEntity.setUpdatedAt(now);
-        pollCollectionStatusService.save(pollCollectionStatusEntity);
+
+        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
+                .from(pollCollectionStatusEntity);
+
+        serviceRegistryService.send(
+                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
     }
 
     private void savePollCollectionStatusForEnd(long animeId) {
@@ -224,7 +230,12 @@ public class PollCollectService {
         pollCollectionStatusEntity.setStatus(CollectionStatus.COMPLETED);
         pollCollectionStatusEntity.setFinishedAt(now);
         pollCollectionStatusEntity.setUpdatedAt(now);
-        pollCollectionStatusService.save(pollCollectionStatusEntity);
+
+        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
+                .from(pollCollectionStatusEntity);
+
+        serviceRegistryService.send(
+                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
     }
 
     private void savePollCollectionStatusForStart(long animeId) {
@@ -241,7 +252,12 @@ public class PollCollectService {
         pollCollectionStatusEntity.setStartedAt(now);
         pollCollectionStatusEntity.setFinishedAt(null);
         pollCollectionStatusEntity.setUpdatedAt(now);
-        pollCollectionStatusService.save(pollCollectionStatusEntity);
+
+        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
+                .from(pollCollectionStatusEntity);
+
+        serviceRegistryService.send(
+                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {

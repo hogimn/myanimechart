@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.common.collect;
+package com.hogimn.myanimechart.common.poll;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.common.collect;
+package com.hogimn.myanimechart.common.poll;
 
 import com.hogimn.myanimechart.common.util.DateUtil;
 import org.springframework.stereotype.Service;
@@ -11,6 +11,24 @@ public class PollCollectionStatusService {
 
     public PollCollectionStatusService(PollCollectionStatusRepository pollCollectionStatusRepository) {
         this.pollCollectionStatusRepository = pollCollectionStatusRepository;
+    }
+
+    public void save(PollCollectionStatusDto pollCollectionStatus) {
+        PollCollectionStatusEntity pollCollectionStatusEntity =
+                findPollCollectionStatusEntityByAnimeId(
+                        pollCollectionStatus.getAnimeId());
+
+        if (pollCollectionStatusEntity == null) {
+            pollCollectionStatusEntity = new PollCollectionStatusEntity();
+        }
+
+        pollCollectionStatusEntity.setAnimeId(pollCollectionStatus.getAnimeId());
+        pollCollectionStatusEntity.setStatus(pollCollectionStatus.getStatus());
+        pollCollectionStatusEntity.setUpdatedAt(pollCollectionStatus.getUpdatedAt());
+        pollCollectionStatusEntity.setFinishedAt(pollCollectionStatus.getFinishedAt());
+        pollCollectionStatusEntity.setStartedAt(pollCollectionStatus.getStartedAt());
+
+        pollCollectionStatusRepository.save(pollCollectionStatusEntity);
     }
 
     public void save(PollCollectionStatusEntity pollCollectionStatus) {
