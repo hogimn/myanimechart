@@ -4,9 +4,7 @@ import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.poll.PollDto;
-import com.hogimn.myanimechart.common.poll.PollOptionEntity;
-import com.hogimn.myanimechart.common.poll.PollOptionService;
+import com.hogimn.myanimechart.common.poll.*;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.SleepUtil;
@@ -33,17 +31,23 @@ public class PollCollectService {
     private final MyAnimeListProvider myAnimeListProvider;
     private final PollOptionService pollOptionService;
     private final ServiceRegistryService serviceRegistryService;
+    private final AnimeKeywordMappingService animeKeywordMappingService;
+    private final AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService;
 
     public PollCollectService(
             AnimeService animeService,
             MyAnimeListProvider myAnimeListProvider,
             PollOptionService pollOptionService,
-            ServiceRegistryService serviceRegistryService
+            ServiceRegistryService serviceRegistryService,
+            AnimeKeywordMappingService animeKeywordMappingService,
+            AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService
     ) {
         this.animeService = animeService;
         this.myAnimeListProvider = myAnimeListProvider;
         this.pollOptionService = pollOptionService;
         this.serviceRegistryService = serviceRegistryService;
+        this.animeKeywordMappingService = animeKeywordMappingService;
+        this.animeEpisodeTopicMappingService = animeEpisodeTopicMappingService;
     }
 
     public void collectPollByAnimeId(Long animeId) {
@@ -102,11 +106,8 @@ public class PollCollectService {
     }
 
     private String getSearchKeyword(AnimeEntity animeEntity) {
-        // TODO: Create keyword mapping table in database for irregular search keyword
-        if (animeEntity.getTitle().equals("Touhai: Ura Rate Mahjong Touhairoku")) {
-            return "Touhai: Ura Rate Mahjong Touhai Roku Poll Episode Discussion";
-        }
-        return animeEntity.getTitle() + " Poll Episode Discussion";
+        String searchKeyword = animeKeywordMappingService.getSearchKeywordByAnimeId(animeEntity.getId());
+        return searchKeyword != null ? searchKeyword : animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
     private void collectForumTopics(AnimeEntity animeEntity) {
@@ -156,17 +157,31 @@ public class PollCollectService {
                     break;
                 }
 
-                savePoll(topicId, topicTitle, episode, animeEntity);
+                savePoll(topicId, episode, animeEntity.getId());
                 SleepUtil.sleep(60 * 1000);
             }
         } catch (Exception e) {
-            log.error("Failed to get forumTopic  '{} {}': {}", animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+            log.error("Failed to get forumTopic  '{} {}': {}",
+                    animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+        }
+
+        collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
+    }
+
+    private void collectPollByManualAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
+        List<AnimeEpisodeTopicMappingEntity> animeEpisodeTopicMappingEntities = animeEpisodeTopicMappingService
+                .getByAnimeIdEpisode(animeEntity.getId());
+
+        for (AnimeEpisodeTopicMappingEntity animeEpisodeTopicMappingEntity : animeEpisodeTopicMappingEntities) {
+            savePoll(animeEpisodeTopicMappingEntity.getTopicId(),
+                    animeEpisodeTopicMappingEntity.getEpisode(),
+                    animeEpisodeTopicMappingEntity.getAnimeId());
         }
     }
 
     @Synchronized
     private void savePoll(
-            Long topicId, String topicTitle, int episode, AnimeEntity animeEntity) {
+            long topicId, int episode, long animeId) {
         Set<Integer> voteZeroOptions = new HashSet<>();
         voteZeroOptions.add(1);
         voteZeroOptions.add(2);
@@ -176,6 +191,7 @@ public class PollCollectService {
 
         ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
         Poll poll = forumTopicDetail.getPoll();
+        String topicTitle = forumTopicDetail.getTitle();
         PollOption[] options = poll.getOptions();
 
         for (PollOption option : options) {
@@ -189,7 +205,7 @@ public class PollCollectService {
 
                 PollDto pollDto = new PollDto();
                 pollDto.setPollOptionId(pollOptionEntity.getId());
-                pollDto.setAnimeId(animeEntity.getId());
+                pollDto.setAnimeId(animeId);
                 pollDto.setTopicId(topicId);
                 pollDto.setTitle(topicTitle);
                 pollDto.setEpisode(episode);
@@ -205,7 +221,7 @@ public class PollCollectService {
             PollDto pollDto = new PollDto();
             PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntityById(optionId);
             pollDto.setPollOptionId(pollOptionEntity.getId());
-            pollDto.setAnimeId(animeEntity.getId());
+            pollDto.setAnimeId(animeId);
             pollDto.setTopicId(topicId);
             pollDto.setTitle(topicTitle);
             pollDto.setEpisode(episode);
