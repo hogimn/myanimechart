@@ -10,4 +10,6 @@ import java.util.List;
 public interface PollCollectionStatusRepository extends JpaRepository<PollCollectionStatusEntity, Long> {
     List<PollCollectionStatusEntity> findByStatusAndFinishedAt(
             CollectionStatus collectionStatus, LocalDateTime finishedAt);
+
+    List<PollCollectionStatusEntity> findByStatus(CollectionStatus collectionStatus);
 }

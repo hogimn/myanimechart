@@ -47,6 +47,17 @@ public class PollCollectionStatusService {
         return pollCollectionStatusRepository.findById(animeId).orElse(null);
     }
 
+    public void setFailForWait() {
+        List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
+                .findByStatus(CollectionStatus.WAIT);
+
+        for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
+            pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
+            pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
+            pollCollectionStatusRepository.save(pollCollectionStatusEntity);
+        }
+    }
+
     public void setFailForStartedButNotFinished() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
                 .findByStatusAndFinishedAt(CollectionStatus.IN_PROGRESS, null);

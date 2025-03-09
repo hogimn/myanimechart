@@ -31,6 +31,7 @@ public class PollCollectJob {
     @PostConstruct
     public void schedulePollCollectionTask() {
         pollCollectionStatusService.setFailForStartedButNotFinished();
+        pollCollectionStatusService.setFailForWait();
 
         BatchDto batchDto = batchService
                 .findBatchDtoByName(this.getClass().getSimpleName());
