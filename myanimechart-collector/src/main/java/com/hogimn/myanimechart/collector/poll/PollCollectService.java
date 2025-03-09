@@ -128,7 +128,7 @@ public class PollCollectService {
                 long topicId = forumTopic.getID();
                 String topicTitle = forumTopic.getTitle();
 
-                if (isFirstWordMatching(topicTitle, animeEntity.getTitle())) {
+                if (!isFirstWordMatching(topicTitle, animeEntity.getTitle())) {
                     log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
                             topicTitle, animeEntity.getTitle());
                     firstWordDiffCnt++;
