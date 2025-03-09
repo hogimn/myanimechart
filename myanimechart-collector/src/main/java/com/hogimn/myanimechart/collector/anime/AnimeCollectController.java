@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.collector.anime;
 
+import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +17,13 @@ public class AnimeCollectController {
         this.animeCollectService = animeCollectService;
     }
 
+    @ApiLoggable
     @PostMapping("/collectSeasonalAnime")
     public void collectSeasonalAnime() {
         animeCollectService.collectSeasonalAnime(this.getClass().getSimpleName());
     }
 
+    @ApiLoggable
     @PostMapping("/collectAnimeByYearAndSeason")
     public void collectAnimeByYearAndSeason(
             @RequestParam("year") int year, @RequestParam("season") String season
@@ -28,6 +31,7 @@ public class AnimeCollectController {
         animeCollectService.collectAnimeByYearAndSeason(year, season);
     }
 
+    @ApiLoggable
     @PostMapping("/collectAnimeByAnimeId")
     public void collectAnimeByAnimeId(@RequestParam("animeId") long animeId) {
         animeCollectService.collectAnimeByAnimeId(animeId);
