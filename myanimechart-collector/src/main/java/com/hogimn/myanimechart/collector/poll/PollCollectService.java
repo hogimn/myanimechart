@@ -114,8 +114,12 @@ public class PollCollectService {
     }
 
     private String getSearchKeyword(AnimeEntity animeEntity) {
-        String searchKeyword = animeKeywordMappingService.findSearchKeywordByAnimeId(animeEntity.getId());
-        return searchKeyword != null && !searchKeyword.isEmpty() ? searchKeyword : animeEntity.getTitle() + " Poll Episode Discussion";
+        String searchKeyword = animeKeywordMappingService
+                .findSearchKeywordByAnimeId(animeEntity.getId());
+
+        return (searchKeyword != null && !searchKeyword.isEmpty())
+                ? searchKeyword
+                : animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
     @Synchronized
