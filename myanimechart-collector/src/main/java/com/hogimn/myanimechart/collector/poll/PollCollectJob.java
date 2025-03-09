@@ -30,7 +30,7 @@ public class PollCollectJob {
 
     @PostConstruct
     public void schedulePollCollectionTask() {
-        pollCollectionStatusService.deleteAll();
+        pollCollectionStatusService.setFailForStartedButNotFinished();
 
         BatchDto batchDto = batchService
                 .findBatchDtoByName(this.getClass().getSimpleName());
