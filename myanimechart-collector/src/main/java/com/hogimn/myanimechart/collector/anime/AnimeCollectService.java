@@ -89,6 +89,7 @@ public class AnimeCollectService {
         }
     }
 
+    @Synchronized
     public void collectAnime(int year, String season) {
         try {
             List<Anime> animeList = fetchSeasonalAnime(year, season);

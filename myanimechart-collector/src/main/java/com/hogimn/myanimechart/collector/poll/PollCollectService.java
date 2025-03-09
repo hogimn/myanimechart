@@ -84,7 +84,6 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
-    @Synchronized
     private List<ForumTopic> fetchForumTopics(String keyword) {
         List<ForumTopic> forumTopics = new ArrayList<>();
         int offset = 0;
@@ -115,6 +114,7 @@ public class PollCollectService {
         return searchKeyword != null && !searchKeyword.isEmpty() ? searchKeyword : animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
+    @Synchronized
     private void collectForumTopics(AnimeEntity animeEntity) {
         try {
             log.info("Collecting poll for anime: {}", animeEntity.getTitle());
@@ -193,7 +193,6 @@ public class PollCollectService {
     }
 
 
-
     private void collectPollByManualAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
         List<AnimeEpisodeTopicMappingEntity> animeEpisodeTopicMappingEntities = animeEpisodeTopicMappingService
                 .findAnimeEpisodeTopicMappingEntityByAnimeIdEpisode(animeEntity.getId());
@@ -205,7 +204,6 @@ public class PollCollectService {
         }
     }
 
-    @Synchronized
     private void savePoll(
             long topicId, int episode, long animeId) {
         Set<Integer> voteZeroOptions = new HashSet<>();
