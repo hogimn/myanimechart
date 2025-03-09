@@ -174,13 +174,25 @@ public class PollCollectService {
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {
+        if (topicTitle == null || animeTitle == null) {
+            return false;
+        }
+
+        if (topicTitle.isEmpty() || animeTitle.isEmpty()) {
+            return false;
+        }
+
+
         topicTitle = topicTitle.toLowerCase();
         animeTitle = animeTitle.toLowerCase();
-        return topicTitle.startsWith(animeTitle.split(" ")[0]) ||
-                topicTitle.startsWith(animeTitle.split("-")[0]) ||
-                animeTitle.startsWith(topicTitle.split(" ")[0]) ||
-                animeTitle.startsWith(topicTitle.split("-")[0]);
+
+        String topicFirstWord = topicTitle.split("[\\s-]", 2)[0];
+        String animeFirstWord = animeTitle.split("[\\s-]", 2)[0];
+
+        return topicTitle.startsWith(animeFirstWord) || animeTitle.startsWith(topicFirstWord);
     }
+
+
 
     private void collectPollByManualAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
         List<AnimeEpisodeTopicMappingEntity> animeEpisodeTopicMappingEntities = animeEpisodeTopicMappingService
