@@ -70,7 +70,7 @@ const StyledSpin = styled(CommonSpin)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: ${(props) => props?.height || "100vh"};
 `;
 
 const AnimeStatWrapper = styled(CommonCol)`
@@ -600,7 +600,10 @@ const SeasonalAnimeList = ({
                   }}
                 >
                   Update
-                  <StyledSpin spinning={userAnimeUpdating}></StyledSpin>
+                  <StyledSpin
+                    spinning={userAnimeUpdating}
+                    height={"100%"}
+                  ></StyledSpin>
                 </ModalButton>
                 {showUserAnimeStatusDelete && (
                   <ModalButton
@@ -615,7 +618,10 @@ const SeasonalAnimeList = ({
                     }}
                   >
                     Delete
-                    <StyledSpin spinning={userAnimeDeleting}></StyledSpin>
+                    <StyledSpin
+                      spinning={userAnimeDeleting}
+                      height={"100%"}
+                    ></StyledSpin>
                   </ModalButton>
                 )}
               </StyledModalButtons>
