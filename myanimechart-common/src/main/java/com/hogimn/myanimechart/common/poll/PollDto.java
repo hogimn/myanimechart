@@ -21,8 +21,8 @@ public class PollDto {
 
     public static PollDto from(PollEntity pollEntity) {
         PollDto pollDto = new PollDto();
-        pollDto.setAnimeId(pollEntity.getAnime().getId());
-        pollDto.setPollOptionId(pollEntity.getPollOption().getId());
+        pollDto.setAnimeId(pollEntity.getAnimeId());
+        pollDto.setPollOptionId(pollEntity.getPollOptionId());
         pollDto.setTopicId(pollEntity.getTopicId());
         pollDto.setEpisode(pollEntity.getEpisode());
         pollDto.setTitle(pollEntity.getTitle());

@@ -20,6 +20,6 @@ public class PollController {
 
     @PostMapping("/savePoll")
     public void savePoll(@RequestBody PollDto pollDto) {
-        pollFacadeService.upsertPoll(pollDto);
+        pollFacadeService.save(pollDto);
     }
 }

@@ -27,7 +27,7 @@ public class BatchHistoryAspect {
         String batchJobName = SpelUtil.resolveSpelExpression(joinPoint, saveBatchHistory.value());
 
         if (saveBatchHistory.saveDirectly()) {
-            batchHistoryService.saveBatchHistory(batchJobName);
+            batchHistoryService.save(batchJobName);
         } else {
             serviceRegistryService.send(RegisteredService.EXECUTE, "/batch/saveBatchHistory", batchJobName);
         }

@@ -25,7 +25,7 @@ public class AnimeService {
     }
 
     @Transactional
-    public void upsertAnime(AnimeDto animeDto) {
+    public void save(AnimeDto animeDto) {
         if (animeDto == null) {
             return;
         }
@@ -46,7 +46,7 @@ public class AnimeService {
         log.info("Inserted new anime: {}", saved);
     }
 
-    public AnimeEntity getAnimeEntityById(long id) {
+    public AnimeEntity findAnimeEntityById(long id) {
         Optional<AnimeEntity> optional = animeRepository.findById(id);
         if (optional.isPresent()) {
             return optional.get();
@@ -54,35 +54,35 @@ public class AnimeService {
         throw new IllegalArgumentException("Anime not found (" + id + ")");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesByYearAndSeason(int year, String season) {
+    public List<AnimeEntity> findAnimeEntitiesByYearAndSeason(int year, String season) {
         return animeRepository.findByYearAndSeason(year, season);
     }
 
-    public List<AnimeEntity> getAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
-                                                                      int nextYear, String nextSeason) {
+    public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
+                                                                       int nextYear, String nextSeason) {
         return animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(
                 year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesAllSeasonCurrentlyAiring() {
+    public List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring() {
         return animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesForceCollectTrue() {
+    public List<AnimeEntity> findAnimeEntitiesForceCollectTrue() {
         return animeRepository.findByForceCollect("Y");
     }
 
-    public List<AnimeEntity> getAnimeEntitiesByKeyword(String keyword) {
+    public List<AnimeEntity> findAnimeEntitiesByKeyword(String keyword) {
         return animeRepository.findAllByTitleContaining(keyword);
     }
 
-    public List<AnimeDto> getAnimeDtosWithPollByKeyword(String keyword) {
-        List<AnimeEntity> animeEntities = getAnimeEntitiesByKeyword(keyword);
+    public List<AnimeDto> findAnimeDtosWithPollByKeyword(String keyword) {
+        List<AnimeEntity> animeEntities = findAnimeEntitiesByKeyword(keyword);
         return convertToAnimeDtoWithPolls(animeEntities);
     }
 
-    public List<AnimeDto> getAnimeDtosWithPollByYearAndSeason(int year, String season) {
-        List<AnimeEntity> animeEntities = getAnimeEntitiesByYearAndSeason(year, season);
+    public List<AnimeDto> findAnimeDtosWithPollByYearAndSeason(int year, String season) {
+        List<AnimeEntity> animeEntities = findAnimeEntitiesByYearAndSeason(year, season);
         return convertToAnimeDtoWithPolls(animeEntities);
     }
 
@@ -91,10 +91,8 @@ public class AnimeService {
                 .map(AnimeDto::from)
                 .toList();
 
-        for (int i = 0; i < animeDtos.size(); i++) {
-            AnimeEntity animeEntity = animeEntities.get(i);
-            AnimeDto animeDto = animeDtos.get(i);
-            List<PollDto> pollDtos = pollService.getPollDtosByAnime(animeEntity);
+        for (AnimeDto animeDto : animeDtos) {
+            List<PollDto> pollDtos = pollService.findPollDtosByAnimeId(animeDto.getId());
             animeDto.setPolls(pollDtos);
         }
 

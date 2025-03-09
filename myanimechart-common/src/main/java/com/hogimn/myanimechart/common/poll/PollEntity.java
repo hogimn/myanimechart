@@ -1,11 +1,8 @@
 package com.hogimn.myanimechart.common.poll;
 
-import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -17,14 +14,10 @@ import java.time.LocalDateTime;
 @IdClass(PollId.class)
 public class PollEntity {
     @Id
-    @ManyToOne
-    @JoinColumn(name = "anime_id", referencedColumnName = "id")
-    private AnimeEntity anime;
+    private Long animeId;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "poll_option_id", referencedColumnName = "id")
-    private PollOptionEntity pollOption;
+    private Integer pollOptionId;
 
     @Id
     private Long topicId;

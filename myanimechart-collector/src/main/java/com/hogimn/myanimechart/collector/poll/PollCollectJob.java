@@ -27,7 +27,7 @@ public class PollCollectJob {
     @PostConstruct
     public void schedulePollCollectionTask() {
         BatchDto batchDto = batchService
-                .getBatchDtoByName(this.getClass().getSimpleName());
+                .findBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
                 () -> collectPoll(batchDto.getName()),

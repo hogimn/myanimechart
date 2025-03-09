@@ -17,6 +17,6 @@ public class BatchController {
 
     @PostMapping("/saveBatchHistory")
     public void saveBatchHistory(@RequestBody String batchJobName) {
-        batchHistoryService.saveBatchHistory(batchJobName);
+        batchHistoryService.save(batchJobName);
     }
 }

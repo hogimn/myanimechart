@@ -28,7 +28,7 @@ public class AnimeCollectJob {
     @PostConstruct
     public void scheduleAnimeCollectionTask() {
         BatchDto batchDto = batchService
-                .getBatchDtoByName(this.getClass().getSimpleName());
+                .findBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
                 () -> animeCollectService.collectSeasonalAnime(batchDto.getName()),

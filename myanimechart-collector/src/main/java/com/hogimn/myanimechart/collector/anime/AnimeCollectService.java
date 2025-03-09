@@ -61,7 +61,7 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeOldSeasonCurrentlyAiring() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesOldSeasonCurrentlyAiring(
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesOldSeasonCurrentlyAiring(
                 DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
         for (AnimeEntity animeEntity : animeEntities) {
@@ -71,7 +71,7 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeForceCollectTrue() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         for (var animeEntity : animeEntities) {
             collectAnimeByAnimeId(animeEntity.getId());
             SleepUtil.sleep(60 * 1000);

@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BatchHistoryRepository extends JpaRepository<BatchHistoryEntity, BatchHistoryId> {
-    List<BatchHistoryEntity> findByBatchAndRecordedAtBetween(BatchEntity batchEntity, LocalDateTime before, LocalDateTime now);
+    List<BatchHistoryEntity> findByNameAndRecordedAtBetween(String name, LocalDateTime before, LocalDateTime now);
 }

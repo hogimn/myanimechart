@@ -11,5 +11,6 @@ import lombok.Data;
 public class PollOptionEntity {
     @Id
     private Integer id;
+
     private String text;
 }

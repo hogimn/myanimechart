@@ -1,6 +1,5 @@
 package com.hogimn.myanimechart.common.poll;
 
-import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +18,12 @@ public class PollService {
         this.pollRepository = pollRepository;
     }
 
-    private List<PollEntity> getByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(AnimeEntity animeEntity) {
-        return pollRepository.findByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(animeEntity);
+    private List<PollEntity> findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(long animeId) {
+        return pollRepository.findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(animeId);
     }
 
-    public List<PollDto> getPollDtosByAnime(AnimeEntity animeEntity) {
-        List<PollEntity> pollEntities = getByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(animeEntity);
+    public List<PollDto> findPollDtosByAnimeId(long animeId) {
+        List<PollEntity> pollEntities = findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(animeId);
         List<PollEntity> uniquePollEntities = removeDuplicateForum(pollEntities);
 
         return uniquePollEntities.stream().map(PollDto::from).toList();
@@ -34,7 +33,7 @@ public class PollService {
         Map<String, Map<Long, Integer>> episodeOptionVotesMap = new HashMap<>();
 
         for (PollEntity poll : pollEntities) {
-            String key = poll.getEpisode() + "-" + poll.getPollOption().getId();
+            String key = poll.getEpisode() + "-" + poll.getPollOptionId();
             episodeOptionVotesMap.putIfAbsent(key, new HashMap<>());
             episodeOptionVotesMap.get(key).merge(poll.getTopicId(), poll.getVotes(), Integer::sum);
         }
@@ -50,23 +49,17 @@ public class PollService {
 
         return pollEntities.stream()
                 .filter(poll -> {
-                    String key = poll.getEpisode() + "-" + poll.getPollOption().getId();
+                    String key = poll.getEpisode() + "-" + poll.getPollOptionId();
                     return maxTopicMap.get(key).equals(poll.getTopicId());
                 })
                 .toList();
     }
 
 
-    public Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(
-            AnimeEntity anime, PollOptionEntity pollOption, long topicId
+    public Optional<PollEntity> findByAnimeIdAndPollOptionIdAndTopicId(
+            long animeId, int pollOptionId, long topicId
     ) {
-        return pollRepository.findByAnimeAndPollOptionAndTopicId(anime, pollOption, topicId);
-    }
-
-    public Optional<PollEntity> findByAnimeAndPollOptionAndEpisode(
-            AnimeEntity anime, PollOptionEntity pollOption, int episode
-    ) {
-        return pollRepository.findByAnimeAndPollOptionAndTopicId(anime, pollOption, episode);
+        return pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(animeId, pollOptionId, topicId);
     }
 
     public PollEntity save(PollEntity pollEntity) {

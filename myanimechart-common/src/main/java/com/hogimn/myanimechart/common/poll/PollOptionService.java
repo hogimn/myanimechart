@@ -14,7 +14,7 @@ public class PollOptionService {
         this.pollOptionRepository = pollOptionRepository;
     }
 
-    public PollOptionEntity getPollOptionEntity(String text) {
+    public PollOptionEntity findPollOptionEntityByText(String text) {
         Optional<PollOptionEntity> option = pollOptionRepository.findByText(text);
         if (option.isPresent()) {
             return option.get();
@@ -23,7 +23,7 @@ public class PollOptionService {
         }
     }
 
-    public PollOptionEntity getPollOptionEntityById(int id) {
+    public PollOptionEntity findPollOptionEntityById(int id) {
         Optional<PollOptionEntity> option = pollOptionRepository.findById(id);
         if (option.isPresent()) {
             return option.get();

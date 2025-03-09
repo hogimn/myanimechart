@@ -22,11 +22,11 @@ public class UserService {
         this.myAnimeListProvider = myAnimeListProvider;
     }
 
-    public UserDto getUserDto() {
+    public UserDto findUserDtoByToken() {
         return UserDto.from(myAnimeListProvider.getMyAnimeListWithToken().getAuthenticatedUser());
     }
 
-    public List<AnimeListStatusDto> getUserAnimeListStatusDtosByYearAndSeason(int year, String season) throws InterruptedException {
+    public List<AnimeListStatusDto> findUserAnimeListStatusDtosByYearAndSeason(int year, String season) throws InterruptedException {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -62,7 +62,7 @@ public class UserService {
                 .toList();
     }
 
-    public AnimeListStatusDto getAnimeListStatusDtoById(int id) throws InterruptedException {
+    public AnimeListStatusDto findAnimeListStatusDtoById(int id) throws InterruptedException {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 

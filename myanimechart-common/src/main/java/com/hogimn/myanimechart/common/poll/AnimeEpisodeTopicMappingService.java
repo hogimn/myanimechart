@@ -12,7 +12,7 @@ public class AnimeEpisodeTopicMappingService {
         this.episodeTopicMappingRepository = episodeTopicMappingRepository;
     }
 
-    public List<AnimeEpisodeTopicMappingEntity> getByAnimeIdEpisode(long animeId) {
+    public List<AnimeEpisodeTopicMappingEntity> findAnimeEpisodeTopicMappingEntityByAnimeIdEpisode(long animeId) {
         return episodeTopicMappingRepository.findByAnimeId(animeId);
     }
 }

@@ -56,12 +56,12 @@ public class PollCollectService {
     }
 
     public void collectPollByAnimeId(long animeId) {
-        AnimeEntity animeEntity = animeService.getAnimeEntityById(animeId);
+        AnimeEntity animeEntity = animeService.findAnimeEntityById(animeId);
         collectForumTopics(animeEntity);
     }
 
     public void collectPollByYearAndSeason(int year, String season) {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesByYearAndSeason(year, season);
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeason(year, season);
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -73,13 +73,13 @@ public class PollCollectService {
     }
 
     private void collectPollForceCollectTrue() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesForceCollectTrue();
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.forEach(this::collectForumTopics);
     }
 
     private void collectPollAllSeasonCurrentlyAiring() {
-        List<AnimeEntity> animeEntities = animeService.getAnimeEntitiesAllSeasonCurrentlyAiring();
-        List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.getAnimeEntitiesForceCollectTrue();
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesAllSeasonCurrentlyAiring();
+        List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.addAll(animeEntitiesForceCollectTrue);
         animeEntities.forEach(this::collectForumTopics);
     }
@@ -111,8 +111,8 @@ public class PollCollectService {
     }
 
     private String getSearchKeyword(AnimeEntity animeEntity) {
-        String searchKeyword = animeKeywordMappingService.getSearchKeywordByAnimeId(animeEntity.getId());
-        return searchKeyword != null ? searchKeyword : animeEntity.getTitle() + " Poll Episode Discussion";
+        String searchKeyword = animeKeywordMappingService.findSearchKeywordByAnimeId(animeEntity.getId());
+        return searchKeyword != null && !searchKeyword.isEmpty() ? searchKeyword : animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
     private void collectForumTopics(AnimeEntity animeEntity) {
@@ -175,7 +175,7 @@ public class PollCollectService {
 
     private void collectPollByManualAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
         List<AnimeEpisodeTopicMappingEntity> animeEpisodeTopicMappingEntities = animeEpisodeTopicMappingService
-                .getByAnimeIdEpisode(animeEntity.getId());
+                .findAnimeEpisodeTopicMappingEntityByAnimeIdEpisode(animeEntity.getId());
 
         for (AnimeEpisodeTopicMappingEntity animeEpisodeTopicMappingEntity : animeEpisodeTopicMappingEntities) {
             savePoll(animeEpisodeTopicMappingEntity.getTopicId(),
@@ -203,7 +203,7 @@ public class PollCollectService {
             try {
                 int votes = option.getVotes();
                 String text = option.getText();
-                PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntity(text);
+                PollOptionEntity pollOptionEntity = pollOptionService.findPollOptionEntityByText(text);
 
                 Integer optionId = pollOptionEntity.getId();
                 voteZeroOptions.remove(optionId);
@@ -224,7 +224,7 @@ public class PollCollectService {
 
         voteZeroOptions.forEach((optionId) -> {
             PollDto pollDto = new PollDto();
-            PollOptionEntity pollOptionEntity = pollOptionService.getPollOptionEntityById(optionId);
+            PollOptionEntity pollOptionEntity = pollOptionService.findPollOptionEntityById(optionId);
             pollDto.setPollOptionId(pollOptionEntity.getId());
             pollDto.setAnimeId(animeId);
             pollDto.setTopicId(topicId);

@@ -30,7 +30,7 @@ public class BatchMonitorService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "checkBatchNotExecuted")
     public void checkBatchNotExecuted(String batchJobName) {
-        List<BatchDto> batchDtos = batchService.getAllBatchDtos();
+        List<BatchDto> batchDtos = batchService.findAllBatchDtos();
         for (BatchDto batchDto : batchDtos) {
             String cron = batchDto.getCron();
             long period = CronUtil.getPeriodAsSeconds(cron);

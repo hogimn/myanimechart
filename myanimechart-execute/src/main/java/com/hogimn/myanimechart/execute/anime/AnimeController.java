@@ -20,6 +20,6 @@ public class AnimeController {
 
     @PostMapping("/saveAnime")
     public void saveAnime(@RequestBody AnimeDto animeDto) {
-        animeService.upsertAnime(animeDto);
+        animeService.save(animeDto);
     }
 }

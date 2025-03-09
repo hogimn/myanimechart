@@ -28,7 +28,7 @@ public class BatchMonitorJob {
 
     @PostConstruct
     public void scheduleBatchMonitorTask() {
-        BatchDto batchDto = batchService.getBatchDtoByName(this.getClass().getSimpleName());
+        BatchDto batchDto = batchService.findBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
                 () -> checkBatchNotExecuted(batchDto.getName()),

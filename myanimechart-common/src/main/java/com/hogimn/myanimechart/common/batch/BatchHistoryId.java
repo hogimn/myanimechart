@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BatchHistoryId implements Serializable {
-    private String batch;
+    private String name;
     private LocalDateTime recordedAt;
 }

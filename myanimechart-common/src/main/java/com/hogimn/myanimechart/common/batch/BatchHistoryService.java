@@ -20,17 +20,16 @@ public class BatchHistoryService {
     }
 
     @Transactional
-    public void saveBatchHistory(String name) {
-        BatchDto batchDto = batchService.getBatchDtoByName(name);
+    public void save(String name) {
+        BatchDto batchDto = batchService.findBatchDtoByName(name);
         batchHistoryRepository.save(BatchHistoryEntity.from(batchDto));
     }
 
     public boolean checkBatchExecutedWithinPeriod(String name, long seconds) {
         LocalDateTime now = DateUtil.now();
         LocalDateTime beforePeriod = now.minusSeconds(seconds + seconds / 6);
-        BatchDto batchDto = batchService.getBatchDtoByName(name);
         List<BatchHistoryEntity> batchHistoryEntityList = batchHistoryRepository
-                .findByBatchAndRecordedAtBetween(BatchEntity.from(batchDto), beforePeriod, now);
+                .findByNameAndRecordedAtBetween(name, beforePeriod, now);
 
         return !batchHistoryEntityList.isEmpty();
     }

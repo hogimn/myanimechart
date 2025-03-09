@@ -25,24 +25,24 @@ public class UserController {
     }
 
     @ApiLoggable
-    @GetMapping("/getUser")
-    public UserDto getUser() {
-        return userService.getUserDto();
+    @GetMapping("/findUser")
+    public UserDto findUser() {
+        return userService.findUserDtoByToken();
     }
 
     @ApiLoggable
-    @GetMapping("/getUserAnimeStatusListByYearAndSeason/{year}/{season}")
-    public List<AnimeListStatusDto> getUserAnimeStatusListByYearAndSeason(
+    @GetMapping("/findUserAnimeStatusListByYearAndSeason/{year}/{season}")
+    public List<AnimeListStatusDto> findUserAnimeStatusListByYearAndSeason(
             @PathVariable int year, @PathVariable String season
     ) throws InterruptedException {
-        return userService.getUserAnimeListStatusDtosByYearAndSeason(year, season);
+        return userService.findUserAnimeListStatusDtosByYearAndSeason(year, season);
     }
 
     @ApiLoggable
-    @GetMapping("/getUserAnimeStatusById")
-    public AnimeListStatusDto getUserAnimeStatusById(@RequestParam("id") int id)
+    @GetMapping("/findUserAnimeStatusById")
+    public AnimeListStatusDto findUserAnimeStatusById(@RequestParam("id") int id)
             throws InterruptedException {
-        return userService.getAnimeListStatusDtoById(id);
+        return userService.findAnimeListStatusDtoById(id);
     }
 
     @ApiLoggable

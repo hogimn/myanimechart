@@ -10,7 +10,7 @@ public class AnimeKeywordMappingService {
         this.keywordMappingRepository = keywordMappingRepository;
     }
 
-    public String getSearchKeywordByAnimeId(long animeId) {
+    public String findSearchKeywordByAnimeId(long animeId) {
         return keywordMappingRepository.findByAnimeId(animeId)
                 .map(AnimeKeywordMappingEntity::getSearchKeyword)
                 .orElse(null);

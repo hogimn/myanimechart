@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PollId implements Serializable {
-    private Long anime;
-    private Integer pollOption;
+    private Long animeId;
+    private Integer pollOptionId;
     private Long topicId;
 }

@@ -16,7 +16,7 @@ public class BatchService {
         this.batchRepository = batchRepository;
     }
 
-    public BatchDto getBatchDtoByName(String name) {
+    public BatchDto findBatchDtoByName(String name) {
         Optional<BatchEntity> optional = batchRepository.findById(name);
         if (optional.isPresent()) {
             return BatchDto.from(optional.get());
@@ -24,7 +24,7 @@ public class BatchService {
         throw new IllegalArgumentException("Batch not found (" + name + ")");
     }
 
-    public List<BatchDto> getAllBatchDtos() {
+    public List<BatchDto> findAllBatchDtos() {
         return batchRepository.findAll().stream().map(BatchDto::from).collect(Collectors.toList());
     }
 }
