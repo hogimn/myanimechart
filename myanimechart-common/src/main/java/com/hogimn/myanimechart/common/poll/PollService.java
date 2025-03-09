@@ -1,8 +1,11 @@
 package com.hogimn.myanimechart.common.poll;
 
+import com.hogimn.myanimechart.common.util.DateUtil;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -68,5 +71,36 @@ public class PollService {
 
     public void delete(PollEntity found) {
         pollRepository.delete(found);
+    }
+
+    @Transactional
+    public void save(PollDto pollDto) {
+        Optional<PollEntity> optional = findByAnimeIdAndPollOptionIdAndTopicId(
+                pollDto.getAnimeId(), pollDto.getPollOptionId(), pollDto.getTopicId());
+        LocalDateTime now = DateUtil.now();
+        if (optional.isPresent()) {
+            PollEntity found = optional.get();
+            found.setAnimeId(pollDto.getAnimeId());
+            found.setPollOptionId(pollDto.getPollOptionId());
+            found.setTopicId(pollDto.getTopicId());
+            found.setTitle(pollDto.getTitle());
+            found.setVotes(pollDto.getVotes());
+            found.setUpdatedAt(now);
+            found.setEpisode(pollDto.getEpisode());
+            PollEntity saved = save(found);
+            log.info("Updated existing poll: {}", saved);
+            return;
+        }
+
+        PollEntity newPoll = new PollEntity();
+        newPoll.setAnimeId(pollDto.getAnimeId());
+        newPoll.setPollOptionId(pollDto.getPollOptionId());
+        newPoll.setTopicId(pollDto.getTopicId());
+        newPoll.setTitle(pollDto.getTitle());
+        newPoll.setVotes(pollDto.getVotes());
+        newPoll.setCreatedAt(now);
+        newPoll.setEpisode(pollDto.getEpisode());
+        PollEntity saved = save(newPoll);
+        log.info("Inserted new poll: {}", saved);
     }
 }
