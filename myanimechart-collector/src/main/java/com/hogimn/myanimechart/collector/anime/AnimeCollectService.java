@@ -70,7 +70,7 @@ public class AnimeCollectService {
                 DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
         for (AnimeEntity animeEntity : animeEntities) {
             collectAnimeByAnimeId(animeEntity.getId());
-            SleepUtil.sleep(60 * 1000);
+            SleepUtil.sleep(30 * 1000);
         }
     }
 
@@ -78,7 +78,7 @@ public class AnimeCollectService {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         for (var animeEntity : animeEntities) {
             collectAnimeByAnimeId(animeEntity.getId());
-            SleepUtil.sleep(60 * 1000);
+            SleepUtil.sleep(30 * 1000);
         }
     }
 

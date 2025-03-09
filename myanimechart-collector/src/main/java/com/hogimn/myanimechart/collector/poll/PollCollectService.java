@@ -139,7 +139,7 @@ public class PollCollectService {
         try {
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
-            SleepUtil.sleep(60 * 1000);
+            SleepUtil.sleep(30 * 1000);
 
             int firstWordDiffCnt = 0;
             for (ForumTopic forumTopic : forumTopics) {
@@ -181,18 +181,17 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, episode, animeEntity.getId());
-
-                SleepUtil.sleep(60 * 1000);
+                SleepUtil.sleep(30 * 1000);
             }
         } catch (Exception e) {
+            savePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
-            savePollCollectionStatusForFail(animeEntity.getId());
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
         savePollCollectionStatusForEnd(animeEntity.getId());
-
+        
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
 
