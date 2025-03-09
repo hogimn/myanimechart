@@ -129,8 +129,10 @@ public class PollCollectService {
                 String topicTitle = forumTopic.getTitle();
 
                 if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0]) &&
-                        !topicTitle.startsWith(animeEntity.getTitle().split("-")[0])) {
-                    log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
+                        !topicTitle.startsWith(animeEntity.getTitle().split("-")[0]) &&
+                        !animeEntity.getTitle().startsWith(topicTitle.split(" ")[0]) &&
+                        !animeEntity.getTitle().startsWith(topicTitle.split("-")[0])) {
+                    log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
                             forumTopic.getTitle(), animeEntity.getTitle());
                     firstWordDiffCnt++;
                     if (firstWordDiffCnt > 10) {
