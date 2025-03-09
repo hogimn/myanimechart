@@ -87,8 +87,7 @@ public class PollService {
             found.setVotes(pollDto.getVotes());
             found.setUpdatedAt(now);
             found.setEpisode(pollDto.getEpisode());
-            PollEntity saved = save(found);
-            log.info("Updated existing poll: {}", saved);
+            save(found);
             return;
         }
 
@@ -100,7 +99,6 @@ public class PollService {
         newPoll.setVotes(pollDto.getVotes());
         newPoll.setCreatedAt(now);
         newPoll.setEpisode(pollDto.getEpisode());
-        PollEntity saved = save(newPoll);
-        log.info("Inserted new poll: {}", saved);
+        save(newPoll);
     }
 }

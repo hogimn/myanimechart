@@ -35,15 +35,13 @@ public class AnimeService {
             AnimeEntity animeEntity = optional.get();
             animeEntity.setFrom(animeDto);
             animeEntity.setUpdatedAt(DateUtil.now());
-            AnimeEntity saved = animeRepository.save(animeEntity);
-            log.info("Updated anime: {}", saved);
+            animeRepository.save(animeEntity);
             return;
         }
 
         AnimeEntity animeEntity = AnimeEntity.from(animeDto);
         animeEntity.setCreatedAt(DateUtil.now());
-        AnimeEntity saved = animeRepository.save(animeEntity);
-        log.info("Inserted new anime: {}", saved);
+        animeRepository.save(animeEntity);
     }
 
     public AnimeEntity findAnimeEntityById(long id) {
