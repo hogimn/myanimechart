@@ -9,9 +9,5 @@ import java.util.Optional;
 public interface PollRepository extends JpaRepository<PollEntity, Long> {
     Optional<PollEntity> findByAnimeAndPollOptionAndTopicId(AnimeEntity animeEntity, PollOptionEntity pollOption, long topicId);
 
-    Optional<PollEntity> findByAnimeAndPollOptionAndEpisode(AnimeEntity animeEntity, PollOptionEntity pollOption, int episode);
-
-    List<PollEntity> findByAnime(AnimeEntity animeEntity);
-
     List<PollEntity> findByAnimeOrderByEpisodeAscTopicIdAscPollOptionAsc(AnimeEntity animeEntity);
 }
