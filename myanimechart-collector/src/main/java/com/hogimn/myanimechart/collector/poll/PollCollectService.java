@@ -55,7 +55,7 @@ public class PollCollectService {
         this.animeEpisodeTopicMappingService = animeEpisodeTopicMappingService;
     }
 
-    public void collectPollByAnimeId(Long animeId) {
+    public void collectPollByAnimeId(long animeId) {
         AnimeEntity animeEntity = animeService.getAnimeEntityById(animeId);
         collectForumTopics(animeEntity);
     }
@@ -125,7 +125,7 @@ public class PollCollectService {
 
             int firstWordDiffCnt = 0;
             for (ForumTopic forumTopic : forumTopics) {
-                Long topicId = forumTopic.getID();
+                long topicId = forumTopic.getID();
                 String topicTitle = forumTopic.getTitle();
 
                 if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0])) {

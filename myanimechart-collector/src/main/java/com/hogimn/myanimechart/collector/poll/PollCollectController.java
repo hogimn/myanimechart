@@ -29,7 +29,7 @@ public class PollCollectController {
     }
 
     @PostMapping("/collectPollByAnimeId")
-    public void collectSeasonalPoll(@RequestParam("animeId") Long animeId) {
+    public void collectSeasonalPoll(@RequestParam("animeId") long animeId) {
         pollCollectService.collectPollByAnimeId(animeId);
     }
 }

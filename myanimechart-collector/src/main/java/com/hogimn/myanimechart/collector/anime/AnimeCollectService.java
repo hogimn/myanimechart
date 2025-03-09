@@ -145,7 +145,7 @@ public class AnimeCollectService {
         return animeList;
     }
 
-    public Anime getAnime(Long id) {
+    public Anime getAnime(long id) {
         try {
             return myAnimeListProvider.getMyAnimeList().getAnime(id);
         } catch (Exception e) {

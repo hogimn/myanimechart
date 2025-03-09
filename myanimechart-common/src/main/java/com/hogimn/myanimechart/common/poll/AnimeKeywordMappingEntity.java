@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class AnimeKeywordMappingEntity {
     @Id
-    private long animeId;
+    private Long animeId;
 
     @Column(name = "search_keyword", nullable = false)
     private String searchKeyword;

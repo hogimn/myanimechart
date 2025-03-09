@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class AnimeEpisodeTopicMappingEntity {
     @Id
-    private long animeId;
+    private Long animeId;
 
     @Id
-    private int episode;
+    private Integer episode;
 
     @Id
-    private long topicId;
+    private Long topicId;
 }

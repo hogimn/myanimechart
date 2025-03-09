@@ -46,7 +46,7 @@ public class AnimeService {
         log.info("Inserted new anime: {}", saved);
     }
 
-    public AnimeEntity getAnimeEntityById(Long id) {
+    public AnimeEntity getAnimeEntityById(long id) {
         Optional<AnimeEntity> optional = animeRepository.findById(id);
         if (optional.isPresent()) {
             return optional.get();
