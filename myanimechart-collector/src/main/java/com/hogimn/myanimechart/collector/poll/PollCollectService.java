@@ -3,6 +3,9 @@ package com.hogimn.myanimechart.collector.poll;
 import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
+import com.hogimn.myanimechart.common.collect.CollectionStatus;
+import com.hogimn.myanimechart.common.collect.PollCollectionStatusEntity;
+import com.hogimn.myanimechart.common.collect.PollCollectionStatusService;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingEntity;
 import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingService;
@@ -12,6 +15,7 @@ import com.hogimn.myanimechart.common.poll.PollOptionEntity;
 import com.hogimn.myanimechart.common.poll.PollOptionService;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.util.SleepUtil;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
@@ -22,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +43,7 @@ public class PollCollectService {
     private final ServiceRegistryService serviceRegistryService;
     private final AnimeKeywordMappingService animeKeywordMappingService;
     private final AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService;
+    private final PollCollectionStatusService pollCollectionStatusService;
 
     public PollCollectService(
             AnimeService animeService,
@@ -45,7 +51,8 @@ public class PollCollectService {
             PollOptionService pollOptionService,
             ServiceRegistryService serviceRegistryService,
             AnimeKeywordMappingService animeKeywordMappingService,
-            AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService
+            AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService,
+            PollCollectionStatusService pollCollectionStatusService
     ) {
         this.animeService = animeService;
         this.myAnimeListProvider = myAnimeListProvider;
@@ -53,6 +60,7 @@ public class PollCollectService {
         this.serviceRegistryService = serviceRegistryService;
         this.animeKeywordMappingService = animeKeywordMappingService;
         this.animeEpisodeTopicMappingService = animeEpisodeTopicMappingService;
+        this.pollCollectionStatusService = pollCollectionStatusService;
     }
 
     public void collectPollByAnimeId(long animeId) {
@@ -66,7 +74,7 @@ public class PollCollectService {
     }
 
     @SaveBatchHistory("#batchJobName")
-    @SchedulerLock(name = "collectPoll")
+    @SchedulerLock(name = "collectSeasonalPoll")
     public void collectSeasonalPoll(String batchJobName) {
         log.info("Start of collecting seasonal poll");
 
@@ -126,6 +134,8 @@ public class PollCollectService {
     private void collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
+        savePollCollectionStatusForStart(animeEntity.getId());
+
         try {
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
@@ -171,15 +181,67 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, episode, animeEntity.getId());
+                savePollCollectionStatusForEnd(animeEntity.getId());
+
                 SleepUtil.sleep(60 * 1000);
             }
         } catch (Exception e) {
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+            savePollCollectionStatusForFail(animeEntity.getId());
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
+    }
+
+    private void savePollCollectionStatusForFail(long animeId) {
+        PollCollectionStatusEntity pollCollectionStatusEntity = pollCollectionStatusService
+                .findPollCollectionStatusEntityByAnimeId(animeId);
+
+        if (pollCollectionStatusEntity == null) {
+            pollCollectionStatusEntity = new PollCollectionStatusEntity();
+        }
+
+        LocalDateTime now = DateUtil.now();
+        pollCollectionStatusEntity.setAnimeId(animeId);
+        pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
+        pollCollectionStatusEntity.setFinishedAt(now);
+        pollCollectionStatusEntity.setUpdatedAt(now);
+        pollCollectionStatusService.save(pollCollectionStatusEntity);
+    }
+
+    private void savePollCollectionStatusForEnd(long animeId) {
+        PollCollectionStatusEntity pollCollectionStatusEntity = pollCollectionStatusService
+                .findPollCollectionStatusEntityByAnimeId(animeId);
+
+        if (pollCollectionStatusEntity == null) {
+            pollCollectionStatusEntity = new PollCollectionStatusEntity();
+        }
+
+        LocalDateTime now = DateUtil.now();
+        pollCollectionStatusEntity.setAnimeId(animeId);
+        pollCollectionStatusEntity.setStatus(CollectionStatus.COMPLETED);
+        pollCollectionStatusEntity.setFinishedAt(now);
+        pollCollectionStatusEntity.setUpdatedAt(now);
+        pollCollectionStatusService.save(pollCollectionStatusEntity);
+    }
+
+    private void savePollCollectionStatusForStart(long animeId) {
+        PollCollectionStatusEntity pollCollectionStatusEntity = pollCollectionStatusService
+                .findPollCollectionStatusEntityByAnimeId(animeId);
+
+        if (pollCollectionStatusEntity == null) {
+            pollCollectionStatusEntity = new PollCollectionStatusEntity();
+        }
+
+        LocalDateTime now = DateUtil.now();
+        pollCollectionStatusEntity.setAnimeId(animeId);
+        pollCollectionStatusEntity.setStatus(CollectionStatus.IN_PROGRESS);
+        pollCollectionStatusEntity.setStartedAt(now);
+        pollCollectionStatusEntity.setFinishedAt(null);
+        pollCollectionStatusEntity.setUpdatedAt(now);
+        pollCollectionStatusService.save(pollCollectionStatusEntity);
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {

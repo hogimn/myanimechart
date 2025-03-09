@@ -2,6 +2,7 @@ package com.hogimn.myanimechart.collector.poll;
 
 import com.hogimn.myanimechart.common.batch.BatchDto;
 import com.hogimn.myanimechart.common.batch.BatchService;
+import com.hogimn.myanimechart.common.collect.PollCollectionStatusService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -14,18 +15,23 @@ public class PollCollectJob {
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final PollCollectService pollCollectService;
+    private final PollCollectionStatusService pollCollectionStatusService;
 
     public PollCollectJob(
             BatchService batchService,
             ThreadPoolTaskScheduler threadPoolTaskScheduler,
-            PollCollectService pollCollectService) {
+            PollCollectService pollCollectService,
+            PollCollectionStatusService pollCollectionStatusService) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.pollCollectService = pollCollectService;
+        this.pollCollectionStatusService = pollCollectionStatusService;
     }
 
     @PostConstruct
     public void schedulePollCollectionTask() {
+        pollCollectionStatusService.deleteAll();
+
         BatchDto batchDto = batchService
                 .findBatchDtoByName(this.getClass().getSimpleName());
 
