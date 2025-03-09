@@ -1,0 +1,2 @@
+ALTER TABLE poll_collection_status
+MODIFY COLUMN status ENUM('IN_PROGRESS', 'COMPLETED', 'FAILED', 'WAIT') NOT NULL;
