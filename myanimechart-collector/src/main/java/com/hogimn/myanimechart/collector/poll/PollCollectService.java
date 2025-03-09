@@ -128,7 +128,8 @@ public class PollCollectService {
                 long topicId = forumTopic.getID();
                 String topicTitle = forumTopic.getTitle();
 
-                if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0])) {
+                if (!topicTitle.startsWith(animeEntity.getTitle().split(" ")[0]) &&
+                        !topicTitle.startsWith(animeEntity.getTitle().split("-")[0])) {
                     log.info("Topic name does not start with anime title first word. topic: {},  anime: {}",
                             forumTopic.getTitle(), animeEntity.getTitle());
                     firstWordDiffCnt++;
