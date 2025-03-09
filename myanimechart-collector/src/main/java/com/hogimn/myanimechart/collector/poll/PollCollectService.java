@@ -202,6 +202,11 @@ public class PollCollectService {
         String topicTitle = forumTopicDetail.getTitle();
         PollOption[] options = poll.getOptions();
 
+        if (options == null) {
+            log.info("There is no poll options (null)");
+            return;
+        }
+
         for (PollOption option : options) {
             try {
                 int votes = option.getVotes();
