@@ -131,7 +131,6 @@ public class PollCollectService {
                 : animeEntity.getTitle() + " Poll Episode Discussion";
     }
 
-    @Synchronized
     private void collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 

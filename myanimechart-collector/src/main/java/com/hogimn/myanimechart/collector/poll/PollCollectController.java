@@ -20,7 +20,7 @@ public class PollCollectController {
     @ApiLoggable
     @PostMapping("/collectSeasonalPoll")
     public void collectSeasonalPoll() {
-        pollCollectService.collectSeasonalPoll(this.getClass().getSimpleName());
+        pollCollectService.collectSeasonalPoll("PollCollectJob");
     }
 
     @ApiLoggable

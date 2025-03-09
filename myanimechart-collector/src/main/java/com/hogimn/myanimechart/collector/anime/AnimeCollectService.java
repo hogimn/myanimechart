@@ -82,7 +82,6 @@ public class AnimeCollectService {
         }
     }
 
-    @Synchronized
     public void collectAnimeByAnimeId(long animeId) {
         log.info("Start of collecting anime {}", animeId);
 
@@ -97,7 +96,6 @@ public class AnimeCollectService {
         log.info("End of collecting anime {}", animeId);
     }
 
-    @Synchronized
     public void collectAnime(int year, String season) {
         log.info("Start of collecting anime for season '{} {}'", season, year);
 

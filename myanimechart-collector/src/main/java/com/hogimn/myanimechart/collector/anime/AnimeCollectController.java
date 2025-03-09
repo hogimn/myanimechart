@@ -20,7 +20,7 @@ public class AnimeCollectController {
     @ApiLoggable
     @PostMapping("/collectSeasonalAnime")
     public void collectSeasonalAnime() {
-        animeCollectService.collectSeasonalAnime(this.getClass().getSimpleName());
+        animeCollectService.collectSeasonalAnime("AnimeCollectJob");
     }
 
     @ApiLoggable
