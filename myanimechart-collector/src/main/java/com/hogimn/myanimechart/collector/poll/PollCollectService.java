@@ -181,7 +181,6 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, episode, animeEntity.getId());
-                savePollCollectionStatusForEnd(animeEntity.getId());
 
                 SleepUtil.sleep(60 * 1000);
             }
@@ -192,6 +191,8 @@ public class PollCollectService {
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
+        savePollCollectionStatusForEnd(animeEntity.getId());
+
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
 
