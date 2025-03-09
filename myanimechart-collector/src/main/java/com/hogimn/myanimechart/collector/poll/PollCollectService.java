@@ -68,8 +68,12 @@ public class PollCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectPoll")
     public void collectSeasonalPoll(String batchJobName) {
+        log.info("Start of collecting seasonal poll");
+
         collectPollAllSeasonCurrentlyAiring();
         collectPollForceCollectTrue();
+
+        log.info("End of collecting seasonal poll");
     }
 
     private void collectPollForceCollectTrue() {
@@ -116,9 +120,9 @@ public class PollCollectService {
 
     @Synchronized
     private void collectForumTopics(AnimeEntity animeEntity) {
-        try {
-            log.info("Collecting poll for anime: {}", animeEntity.getTitle());
+        log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
+        try {
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
             SleepUtil.sleep(60 * 1000);
@@ -171,6 +175,7 @@ public class PollCollectService {
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
+        log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {

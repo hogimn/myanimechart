@@ -44,12 +44,16 @@ public class AnimeCollectService {
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectSeasonalAnime")
     public void collectSeasonalAnime(String batchJobName) {
+        log.info("Start of collecting seasonal anime");
+
         collectAnimeCurrentSeason();
         if (DateUtil.changingSeasonMonth()) {
             collectAnimeNextSeason();
         }
         collectAnimeOldSeasonCurrentlyAiring();
         collectAnimeForceCollectTrue();
+
+        log.info("End of collecting seasonal anime");
     }
 
     private void collectAnimeCurrentSeason() {
@@ -80,6 +84,8 @@ public class AnimeCollectService {
 
     @Synchronized
     public void collectAnimeByAnimeId(long animeId) {
+        log.info("Start of collecting anime {}", animeId);
+
         try {
             Anime anime = getAnime(animeId);
             AnimeDto animeDto = AnimeDto.from(anime);
@@ -87,10 +93,14 @@ public class AnimeCollectService {
         } catch (Exception e) {
             log.error("Failed to collect anime '{}': {}", animeId, e.getMessage(), e);
         }
+
+        log.info("End of collecting anime {}", animeId);
     }
 
     @Synchronized
     public void collectAnime(int year, String season) {
+        log.info("Start of collecting anime for season '{} {}'", season, year);
+
         try {
             List<Anime> animeList = fetchSeasonalAnime(year, season);
             for (Anime anime : animeList) {
@@ -119,9 +129,10 @@ public class AnimeCollectService {
         } catch (Exception e) {
             log.error("Failed to retrieve anime for season '{} {}': {}", season, year, e.getMessage(), e);
         }
+
+        log.info("End of collecting anime for season '{} {}'", season, year);
     }
 
-    @Synchronized
     private List<Anime> fetchSeasonalAnime(int year, String season) {
         int offset = 0;
         int limit = 500;
