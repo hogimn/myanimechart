@@ -14,7 +14,7 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
 
     List<PollCollectionStatusEntity> findByStatus(CollectionStatus collectionStatus);
 
-    @Query("SELECT b FROM PollCollectionStatus b " +
+    @Query("SELECT b FROM PollCollectionStatusEntity b " +
             "WHERE b.animeId IN (" +
             "SELECT a.id FROM AnimeEntity a " +
             "WHERE NOT (" +
