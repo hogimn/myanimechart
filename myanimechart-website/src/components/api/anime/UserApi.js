@@ -46,20 +46,20 @@ const UserApi = {
       return null;
     }
   },
-  updateUserAnimeStatus: async (animeListStatusDto) => {
-    if (animeListStatusDto.status === "Select") {
-      animeListStatusDto.status = null;
+  updateUserAnimeStatus: async (animeListStatus) => {
+    if (animeListStatus.status === "Select") {
+      animeListStatus.status = null;
     }
 
-    if (animeListStatusDto.score === 0) {
-      animeListStatusDto.score = null;
+    if (animeListStatus.score === 0) {
+      animeListStatus.score = null;
     }
 
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(
         `${gatewayUrl}/query/user/updateUserAnimeStatus`,
-        animeListStatusDto,
+        animeListStatus,
         {
           withCredentials: true,
         }
@@ -71,12 +71,12 @@ const UserApi = {
     } finally {
     }
   },
-  deleteUserAnimeStatus: async (animeListStatusDto) => {
+  deleteUserAnimeStatus: async (animeListStatus) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(
         `${gatewayUrl}/query/user/deleteUserAnimeStatus`,
-        animeListStatusDto,
+        animeListStatus,
         {
           withCredentials: true,
         }

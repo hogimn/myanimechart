@@ -15,13 +15,13 @@ import AnimePollGraph from "./AnimePollGraph";
 import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
 import CommonModal from "../../../common/basic/CommonModal";
 import { useUser } from "../../../common/context/UserContext";
-import SecurityApi from "../../../api/animestat/SecurityApi";
+import SecurityApi from "../../../api/anime/SecurityApi";
 import CommonInput from "../../../common/basic/CommonInput";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import ModalButton from "../../../common/button/ModalButton";
-import UserApi from "../../../api/animestat/UserApi";
+import UserApi from "../../../api/anime/UserApi";
 import CommonButton from "../../../common/basic/CommonButton";
-import AnimeApi from "../../../api/animestat/AnimeApi";
+import AnimeApi from "../../../api/anime/AnimeApi";
 
 const statusOptions = [
   { value: "watching", label: "Watching" },
@@ -73,7 +73,7 @@ const StyledSpin = styled(CommonSpin)`
   height: ${(props) => props?.height || "100vh"};
 `;
 
-const AnimeStatWrapper = styled(CommonCol)`
+const AnimeWrapper = styled(CommonCol)`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -93,7 +93,7 @@ const AnimeStatWrapper = styled(CommonCol)`
   }
 `;
 
-const AnimeStatSubWrapper = styled.article`
+const AnimeSubWrapper = styled.article`
   background-color: rgba(0, 0, 0, 0.25);
   border: rgba(131, 125, 125, 0.51) 1px solid;
   border-radius: 10px;
@@ -104,7 +104,7 @@ const AnimeStatSubWrapper = styled.article`
   }
 `;
 
-const AnimeWrapper = styled.section`
+const AnimeImageWrapper = styled.section`
   display: flex;
   margin-bottom: 8px;
 `;
@@ -189,10 +189,10 @@ const SeasonalAnimeList = ({
   selected,
 }) => {
   const { user } = useUser();
-  const [animeStats, setAnimeStats] = useState([]);
-  const [sortedAndFilteredStats, setSortedAndFilteredStats] = useState([]);
-  const [currentAnimeStats, setCurrentAnimeStats] = useState([]);
-  const [animeStatsLoading, setAnimeStatsLoading] = useState(false);
+  const [animes, setAnimes] = useState([]);
+  const [sortedAndFilteredAnimes, setSortedAndFilteredAnimes] = useState([]);
+  const [currentPageAnimes, setCurrentPageAnimes] = useState([]);
+  const [animesLoading, setAnimesLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -250,17 +250,17 @@ const SeasonalAnimeList = ({
       return;
     }
 
-    const userAnimeDtos = await UserApi.findUserAnimeStatusListByYearAndSeason(
+    const userAnimes = await UserApi.findUserAnimeStatusListByYearAndSeason(
       year,
       season
     );
 
-    if (userAnimeDtos == null || Object.entries(userAnimeDtos).length === 0) {
+    if (userAnimes == null || Object.entries(userAnimes).length === 0) {
       setUserAnimeDict({});
       return;
     }
-    const userAnimeDict = userAnimeDtos.reduce((acc, userAnimeDto) => {
-      acc[userAnimeDto.animeId] = userAnimeDto;
+    const userAnimeDict = userAnimes.reduce((acc, userAnime) => {
+      acc[userAnime.animeId] = userAnime;
       return acc;
     }, {});
     setUserAnimeDict(userAnimeDict);
@@ -272,21 +272,21 @@ const SeasonalAnimeList = ({
     }
 
     const fetchData = async () => {
-      setAnimeStatsLoading(true);
+      setAnimesLoading(true);
       try {
-        const animeStatsDto = await AnimeApi.findAnimeWithPoll(year, season);
-        setAnimeStats(animeStatsDto);
+        const animes = await AnimeApi.findAnimeWithPoll(year, season);
+        setAnimes(animes);
       } catch (err) {
         setError("Failed to fetch anime data");
       } finally {
-        setAnimeStatsLoading(false);
+        setAnimesLoading(false);
       }
     };
 
     if (year != null && season != null) {
       fetchData();
     } else if (animeList != null) {
-      setAnimeStats(animeList);
+      setAnimes(animeList);
     }
   }, [year, season, animeList, selected]);
 
@@ -299,7 +299,7 @@ const SeasonalAnimeList = ({
   }, [user, refreshUserAnimeStatusDict]);
 
   useEffect(() => {
-    const sortAnimeStats = (data, criterion) => {
+    const sortAnimes = (data, criterion) => {
       return [...data].sort((a, b) => {
         if (criterion === "votes") {
           criterion = "scoringCount";
@@ -326,7 +326,7 @@ const SeasonalAnimeList = ({
       });
     };
 
-    const filterAnimeStats = (data, filterBy) => {
+    const filterAnimes = (data, filterBy) => {
       if (filterBy.type === "all" && filterBy.airStatus === "all") {
         return data;
       }
@@ -339,31 +339,31 @@ const SeasonalAnimeList = ({
       );
     };
 
-    let updatedAnimeStats = animeStats;
+    let updatedAnimes = animes;
     if (sortBy != null) {
-      updatedAnimeStats = sortAnimeStats(updatedAnimeStats, sortBy);
+      updatedAnimes = sortAnimes(updatedAnimes, sortBy);
     }
     if (filterBy != null) {
-      updatedAnimeStats = filterAnimeStats(updatedAnimeStats, filterBy);
+      updatedAnimes = filterAnimes(updatedAnimes, filterBy);
     }
 
-    setSortedAndFilteredStats(updatedAnimeStats);
+    setSortedAndFilteredAnimes(updatedAnimes);
 
     setPage(1);
-  }, [animeStats, sortBy, filterBy, animeList, setPage]);
+  }, [animes, sortBy, filterBy, animeList, setPage]);
 
   useEffect(() => {
     const startIndex = (page - 1) * pageSize;
-    setCurrentAnimeStats(
-      sortedAndFilteredStats.slice(startIndex, startIndex + pageSize)
+    setCurrentPageAnimes(
+      sortedAndFilteredAnimes.slice(startIndex, startIndex + pageSize)
     );
-  }, [page, pageSize, sortedAndFilteredStats]);
+  }, [page, pageSize, sortedAndFilteredAnimes]);
 
   const onPageChange = (page) => {
     setPage(page);
   };
 
-  if (animeStatsLoading) {
+  if (animesLoading) {
     return <StyledSpin tip="Loading..." />;
   }
 
@@ -371,7 +371,7 @@ const SeasonalAnimeList = ({
     return <CommonAlert message={error} type="error" />;
   }
 
-  if (!sortedAndFilteredStats.length) {
+  if (!sortedAndFilteredAnimes.length) {
     return <p>No anime found</p>;
   }
 
@@ -423,8 +423,8 @@ const SeasonalAnimeList = ({
     <>
       <StyledSpin spinning={userAnimeLoading}>
         <CommonRow>
-          {currentAnimeStats.map((anime) => (
-            <AnimeStatWrapper
+          {currentPageAnimes.map((anime) => (
+            <AnimeWrapper
               sm={24}
               md={12}
               lg={12}
@@ -432,8 +432,8 @@ const SeasonalAnimeList = ({
               xxl={8}
               key={`anime-card-${anime.id}`}
             >
-              <AnimeStatSubWrapper>
-                <AnimeWrapper>
+              <AnimeSubWrapper>
+                <AnimeImageWrapper>
                   <ImageWrapper
                     onClick={() =>
                       handleImageClick(
@@ -475,7 +475,7 @@ const SeasonalAnimeList = ({
                     <EditOutlined />
                   </EditButton>
                   <DescriptionSection anime={anime} />
-                </AnimeWrapper>
+                </AnimeImageWrapper>
 
                 <CommonCol
                   key={`anime-graph-${anime.id}`}
@@ -489,15 +489,15 @@ const SeasonalAnimeList = ({
                     <AnimePollGraph polls={anime.polls} />
                   </LazyGraphWrapper>
                 </CommonCol>
-              </AnimeStatSubWrapper>
-            </AnimeStatWrapper>
+              </AnimeSubWrapper>
+            </AnimeWrapper>
           ))}
         </CommonRow>
 
         <CommonPagination
           current={page}
           pageSize={pageSize}
-          total={sortedAndFilteredStats.length}
+          total={sortedAndFilteredAnimes.length}
           onChange={onPageChange}
           style={{ marginTop: "16px", textAlign: "center" }}
           showSizeChanger={false}

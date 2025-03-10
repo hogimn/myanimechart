@@ -4,11 +4,11 @@ import { getImagePath } from "../../../util/pathUtil";
 import { Link } from "react-router-dom";
 import CommonButton from "../basic/CommonButton";
 import { useEffect, useState } from "react";
-import SecurityApi from "../../api/animestat/SecurityApi";
+import SecurityApi from "../../api/anime/SecurityApi";
 import CommonAlert from "../basic/CommonAlert";
 import CommonModal from "../basic/CommonModal";
 import { useUser } from "../context/UserContext";
-import UserApi from "../../api/animestat/UserApi";
+import UserApi from "../../api/anime/UserApi";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -95,9 +95,9 @@ const Header = () => {
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         } else {
-          const userDto = await UserApi.findUser();
-          setUser(userDto);
-          sessionStorage.setItem("user", JSON.stringify(userDto));
+          const user = await UserApi.findUser();
+          setUser(user);
+          sessionStorage.setItem("user", JSON.stringify(user));
         }
       } else {
         setUser(null);
