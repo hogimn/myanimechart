@@ -1,8 +1,10 @@
 package com.hogimn.myanimechart.common.poll;
 
+import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -151,5 +153,17 @@ public class PollCollectionStatusService {
 
         serviceRegistryService.send(
                 RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
+    }
+
+    @SaveBatchHistory("#batchJobName")
+    @SchedulerLock(name = "removeUnusedPollCollectionStatus")
+    public void removeUnusedPollCollectionStatus(String batchJobName) {
+        List<PollCollectionStatusEntity> pollCollectionStatusEntities =
+                pollCollectionStatusRepository.findUnusedPollCollectionStatus(
+                        "currently_airing", "finished_airing");
+
+        for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
+            pollCollectionStatusRepository.delete(pollCollectionStatusEntity);
+        }
     }
 }
