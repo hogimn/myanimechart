@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.common.poll;
 
+import com.hogimn.myanimechart.common.anime.AnimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,15 @@ public class PollCollectionStatusDto {
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
     private LocalDateTime updatedAt;
+    private AnimeDto animeDto;
 
     public static PollCollectionStatusDto from(PollCollectionStatusEntity entity) {
-        return new PollCollectionStatusDto(
-                entity.getAnimeId(),
-                entity.getStatus(),
-                entity.getStartedAt(),
-                entity.getFinishedAt(),
-                entity.getUpdatedAt()
-        );
+       PollCollectionStatusDto pollCollectionStatusDto = new PollCollectionStatusDto();
+       pollCollectionStatusDto.setAnimeId(entity.getAnimeId());
+       pollCollectionStatusDto.setStatus(entity.getStatus());
+       pollCollectionStatusDto.setStartedAt(entity.getStartedAt());
+       pollCollectionStatusDto.setFinishedAt(entity.getFinishedAt());
+       pollCollectionStatusDto.setUpdatedAt(entity.getUpdatedAt());
+       return pollCollectionStatusDto;
     }
 }

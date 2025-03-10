@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.common.poll;
 
+import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
@@ -14,13 +15,16 @@ import java.util.List;
 public class PollCollectionStatusService {
     private final PollCollectionStatusRepository pollCollectionStatusRepository;
     private final ServiceRegistryService serviceRegistryService;
+    private final AnimeService animeService;
 
     public PollCollectionStatusService(
             PollCollectionStatusRepository pollCollectionStatusRepository,
-            ServiceRegistryService serviceRegistryService
+            ServiceRegistryService serviceRegistryService,
+            AnimeService animeService
     ) {
         this.pollCollectionStatusRepository = pollCollectionStatusRepository;
         this.serviceRegistryService = serviceRegistryService;
+        this.animeService = animeService;
     }
 
     public void save(PollCollectionStatusDto pollCollectionStatus) {
@@ -165,5 +169,22 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusRepository.delete(pollCollectionStatusEntity);
         }
+    }
+
+    public List<PollCollectionStatusDto> getAllPollCollectionStatusDtosWithAnimeDto() {
+        List<PollCollectionStatusDto> pollCollectionStatusDtos =
+                pollCollectionStatusRepository
+                        .findAll()
+                        .stream()
+                        .map(PollCollectionStatusDto::from)
+                        .toList();
+
+        for (PollCollectionStatusDto pollCollectionStatusDto : pollCollectionStatusDtos) {
+            pollCollectionStatusDto.setAnimeDto(
+                    animeService.findAnimeDtoById(
+                            pollCollectionStatusDto.getAnimeId()));
+        }
+
+        return pollCollectionStatusDtos;
     }
 }

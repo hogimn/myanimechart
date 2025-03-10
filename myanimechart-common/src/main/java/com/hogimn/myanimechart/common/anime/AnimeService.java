@@ -44,6 +44,10 @@ public class AnimeService {
         animeRepository.save(animeEntity);
     }
 
+    public AnimeDto findAnimeDtoById(long id) {
+        return AnimeDto.from(findAnimeEntityById(id));
+    }
+
     public AnimeEntity findAnimeEntityById(long id) {
         Optional<AnimeEntity> optional = animeRepository.findById(id);
         if (optional.isPresent()) {
