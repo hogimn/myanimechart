@@ -23,6 +23,6 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
             "(EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
             "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
             "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END)))))")
+            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END))))")
     List<PollCollectionStatusEntity> findUnusedPollCollectionStatus(String currentlyAiring, String finishedAiring);
 }
