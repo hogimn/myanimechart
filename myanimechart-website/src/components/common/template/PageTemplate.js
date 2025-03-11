@@ -83,18 +83,6 @@ const SubMenu = styled.ul`
   }
 `;
 
-const MenuButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
-
 const CurrentPagePanel = styled.div`
   border-bottom: 1px solid #555555;
   background-color: #222222;

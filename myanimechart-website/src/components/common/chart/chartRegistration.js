@@ -52,6 +52,7 @@ const verticalHoverLine = {
       ctx.closePath();
 
       ctx.beginPath();
+      ctx.setLineDash([]);
       ctx.arc(tooltipX, tooltipY, 4, 0, Math.PI * 2);
       ctx.fillStyle = dataset.borderColor;
       ctx.fill();
@@ -77,13 +78,6 @@ export const registerCharts = () => {
     verticalHoverLine,
     LineController
   );
-
-  Tooltip.positioners.stat = (elements, position) => {
-    return {
-      x: position.x,
-      y: 110,
-    };
-  };
 
   Tooltip.positioners.poll = (elements, position) => {
     return {

@@ -97,11 +97,8 @@ const AnimePollGraph = ({ polls }) => {
 
   const baseDatasetConfig = {
     tension: 0.3,
-    pointHoverRadius: 6,
-    pointHitRadius: 8,
     borderRadius: 8,
     borderWidth: 1.5,
-    borderDash: [5, 2],
     pointRadius: 3,
   };
 
@@ -152,6 +149,7 @@ const AnimePollGraph = ({ polls }) => {
         mode: "index",
         intersect: false,
         position: "poll",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
         itemSort: (a, b) => {
           return b.datasetIndex - a.datasetIndex;
         },
@@ -236,9 +234,6 @@ const AnimePollGraph = ({ polls }) => {
           color: "rgba(192, 192, 192, 0.57)",
         },
         beginAtZero: false,
-        grid: {
-          drawOnChartArea: false,
-        },
       },
     },
     animation: {
