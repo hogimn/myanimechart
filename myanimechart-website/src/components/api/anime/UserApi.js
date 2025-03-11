@@ -13,11 +13,11 @@ const UserApi = {
       return false;
     }
   },
-  findUserAnimeStatusListByYearAndSeason: async (year, season) => {
+  findUserAnimeStatusesByYearAndSeason: async (year, season) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/user/findUserAnimeStatusListByYearAndSeason/${year}/${season}`,
+        `${gatewayUrl}/query/user/findUserAnimeStatusesByYearAndSeason/${year}/${season}`,
         {
           withCredentials: true,
         }

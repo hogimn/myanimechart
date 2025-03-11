@@ -23,14 +23,14 @@ public class AnimeController {
     }
 
     @ApiLoggable
-    @GetMapping("/findAnimeWithPollByKeyword")
-    public List<AnimeDto> findAnimeWithPollByKeyword(@RequestParam("keyword") String keyword) {
-        return animeService.findAnimeDtosWithPollByKeyword(keyword);
+    @GetMapping("/findAnimesWithPollsByKeyword")
+    public List<AnimeDto> findAnimesWithPollsByKeyword(@RequestParam("keyword") String keyword) {
+        return animeService.findAnimeDtosWithPollDtosByKeyword(keyword);
     }
 
     @ApiLoggable
-    @GetMapping("/findAnimeWithPoll/{year}/{season}")
-    public List<AnimeDto> findAnimeWithPollByYearAndSeason(@PathVariable int year, @PathVariable String season) {
-        return animeService.findAnimeDtosWithPollByYearAndSeason(year, season);
+    @GetMapping("/findAnimesWithPollsByYearAndSeason/{year}/{season}")
+    public List<AnimeDto> findAnimesWithPollsByYearAndSeason(@PathVariable int year, @PathVariable String season) {
+        return animeService.findAnimeDtosWithPollDtosByYearAndSeason(year, season);
     }
 }

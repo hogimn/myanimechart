@@ -78,17 +78,17 @@ public class AnimeService {
         return animeRepository.findAllByTitleContaining(keyword);
     }
 
-    public List<AnimeDto> findAnimeDtosWithPollByKeyword(String keyword) {
+    public List<AnimeDto> findAnimeDtosWithPollDtosByKeyword(String keyword) {
         List<AnimeEntity> animeEntities = findAnimeEntitiesByKeyword(keyword);
-        return convertToAnimeDtoWithPolls(animeEntities);
+        return convertToAnimeDtosWithPollDtos(animeEntities);
     }
 
-    public List<AnimeDto> findAnimeDtosWithPollByYearAndSeason(int year, String season) {
+    public List<AnimeDto> findAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = findAnimeEntitiesByYearAndSeason(year, season);
-        return convertToAnimeDtoWithPolls(animeEntities);
+        return convertToAnimeDtosWithPollDtos(animeEntities);
     }
 
-    private List<AnimeDto> convertToAnimeDtoWithPolls(List<AnimeEntity> animeEntities) {
+    private List<AnimeDto> convertToAnimeDtosWithPollDtos(List<AnimeEntity> animeEntities) {
         List<AnimeDto> animeDtos = animeEntities.stream()
                 .map(AnimeDto::from)
                 .toList();

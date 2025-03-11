@@ -250,7 +250,7 @@ const SeasonalAnimeList = ({
       return;
     }
 
-    const userAnimes = await UserApi.findUserAnimeStatusListByYearAndSeason(
+    const userAnimes = await UserApi.findUserAnimeStatusesByYearAndSeason(
       year,
       season
     );
@@ -274,7 +274,10 @@ const SeasonalAnimeList = ({
     const fetchData = async () => {
       setAnimesLoading(true);
       try {
-        const animes = await AnimeApi.findAnimeWithPoll(year, season);
+        const animes = await AnimeApi.findAnimesWithPollsByYearAndSeason(
+          year,
+          season
+        );
         setAnimes(animes);
       } catch (err) {
         setError("Failed to fetch anime data");

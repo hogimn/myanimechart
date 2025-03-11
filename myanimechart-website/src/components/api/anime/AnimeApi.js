@@ -1,30 +1,30 @@
 import axios from "axios";
 
 const AnimeApi = {
-  findAnimeWithPollByKeyword: async (keyword) => {
+  findAnimesWithPollsByKeyword: async (keyword) => {
     const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
       const response = await axios.get(
-        `${gatewayUrl}/query/anime/findAnimeWithPollByKeyword`,
+        `${gatewayUrl}/query/anime/findAnimesWithPollsByKeyword`,
         {
           params: { keyword },
         }
       );
       return response.data;
     } catch (error) {
-      console.error("Error finding anime with poll by keyword:", error);
+      console.error("Error finding animes with polls by keyword:", error);
       throw error;
     }
   },
-  findAnimeWithPoll: async (year, season) => {
+  findAnimesWithPollsByYearAndSeason: async (year, season) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/anime/findAnimeWithPoll/${year}/${season}`
+        `${gatewayUrl}/query/anime/findAnimesWithPollsByYearAndSeason/${year}/${season}`
       );
       return response.data;
     } catch (error) {
-      console.error("Error finding anime with poll:", error);
+      console.error("Error finding animes with polls:", error);
       throw error;
     }
   },

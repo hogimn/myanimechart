@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @ApiLoggable
-    @GetMapping("/findUserAnimeStatusListByYearAndSeason/{year}/{season}")
-    public List<AnimeListStatusDto> findUserAnimeStatusListByYearAndSeason(
+    @GetMapping("/findUserAnimeStatusesByYearAndSeason/{year}/{season}")
+    public List<AnimeListStatusDto> findUserAnimeStatusesByYearAndSeason(
             @PathVariable int year, @PathVariable String season
     ) throws InterruptedException {
         return userService.findUserAnimeListStatusDtosByYearAndSeason(year, season);
