@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
@@ -141,12 +141,15 @@ const AnimePollGraph = ({ polls }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    interaction: {
-      mode: "point",
-      intersect: true,
-    },
     plugins: {
       tooltip: {
+        animation: {
+          duration: 0,
+        },
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
         position: "poll",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         itemSort: (a, b) => {
@@ -259,6 +262,19 @@ const AnimePollGraph = ({ polls }) => {
       }
     },
   };
+
+  useEffect(() => {
+    const handleTouchEnd = (event) => {
+      if (event.target.tagName.toLowerCase() !== "canvas") {
+        chartRef.current.canvas.dispatchEvent(new Event("mouseout"));
+      }
+    };
+
+    document.addEventListener("touchend", handleTouchEnd);
+    return () => {
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   return (
     <>
