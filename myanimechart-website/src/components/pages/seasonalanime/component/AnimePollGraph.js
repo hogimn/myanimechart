@@ -101,6 +101,7 @@ const AnimePollGraph = ({ polls }) => {
     borderRadius: 8,
     borderWidth: 1.5,
     pointRadius: 3,
+    borderDash: [4.5, 4.5],
   };
 
   const chartData = {
@@ -154,6 +155,12 @@ const AnimePollGraph = ({ polls }) => {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         itemSort: (a, b) => {
           return b.datasetIndex - a.datasetIndex;
+        },
+        titleFont: {
+          size: 8,
+        },
+        bodyFont: {
+          size: 8,
         },
         callbacks: {
           labelColor: (tooltipItem, chart) => {

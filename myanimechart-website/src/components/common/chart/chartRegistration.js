@@ -61,18 +61,6 @@ const verticalHoverLine = {
   },
 };
 
-const eventCapture = {
-  id: "eventCapture",
-  beforeEvent(chart, args, pluginOptions) {
-    const event = args.event;
-    console.log(event.type);
-    if (event.type === "mousedown") {
-      chart.canvas.dispatchEvent(new Event("mousedown"));
-      chart.tooltip.update();
-    }
-  },
-};
-
 export const registerCharts = () => {
   Chart.register(
     CategoryScale,
@@ -88,8 +76,7 @@ export const registerCharts = () => {
     Filler,
     increaseLegendSpacing,
     verticalHoverLine,
-    LineController,
-    eventCapture
+    LineController
   );
 
   Tooltip.positioners.poll = (elements, position) => {
