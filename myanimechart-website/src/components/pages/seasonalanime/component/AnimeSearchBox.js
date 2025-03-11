@@ -12,7 +12,7 @@ const SearchBoxWrapper = styled.div`
   margin-right: 10px;
 
   .ant-input-affix-wrapper {
-    width: 400px;
+    width: 315px;
   }
 `;
 

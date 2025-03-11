@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Wrapper = styled.section`
   width: 100%;
-  height: 225px;
+  height: 190px;
 
   canvas {
     touch-action: pan-y !important;

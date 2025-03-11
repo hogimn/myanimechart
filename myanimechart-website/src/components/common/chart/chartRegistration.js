@@ -21,7 +21,7 @@ const increaseLegendSpacing = {
 
     chart.legend.fit = function fit() {
       originalFit.bind(chart.legend)();
-      this.height += 50;
+      this.height += 0;
     };
   },
 };
