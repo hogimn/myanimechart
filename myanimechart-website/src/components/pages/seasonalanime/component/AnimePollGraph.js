@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
@@ -43,6 +43,23 @@ const AnimePollGraph = ({ polls }) => {
 
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleTouchEnd = (event) => {
+      console.log(event.target.tagName);
+      if (event.target && event.target.tagName.toLowerCase() !== "canvas") {
+        if (chartRef.current) {
+          chartRef.current.canvas.dispatchEvent(new Event("mouseout"));
+        }
+      }
+    };
+
+    document.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   const zoomOptions = {
     zoom: {
