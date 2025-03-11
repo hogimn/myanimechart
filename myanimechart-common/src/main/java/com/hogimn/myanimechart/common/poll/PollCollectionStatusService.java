@@ -42,11 +42,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setFinishedAt(pollCollectionStatus.getFinishedAt());
         pollCollectionStatusEntity.setStartedAt(pollCollectionStatus.getStartedAt());
 
-        pollCollectionStatusRepository.save(pollCollectionStatusEntity);
-    }
-
-    public void save(PollCollectionStatusEntity pollCollectionStatus) {
-        pollCollectionStatusRepository.save(pollCollectionStatus);
+        save(pollCollectionStatusEntity);
     }
 
     public PollCollectionStatusEntity findPollCollectionStatusEntityByAnimeId(long animeId) {
@@ -60,7 +56,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            pollCollectionStatusRepository.save(pollCollectionStatusEntity);
+            save(pollCollectionStatusEntity);
         }
     }
 
@@ -71,7 +67,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            pollCollectionStatusRepository.save(pollCollectionStatusEntity);
+            save(pollCollectionStatusEntity);
         }
     }
 
@@ -186,5 +182,9 @@ public class PollCollectionStatusService {
         }
 
         return pollCollectionStatusDtos;
+    }
+
+    public void save(PollCollectionStatusEntity pollCollectionStatus) {
+        pollCollectionStatusRepository.save(pollCollectionStatus);
     }
 }
