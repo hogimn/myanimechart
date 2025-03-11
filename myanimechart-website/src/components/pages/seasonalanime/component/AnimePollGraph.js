@@ -3,7 +3,6 @@ import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
-import StyledZoomButton from "../../../common/button/ZoomButton";
 import ModalButton from "../../../common/button/ModalButton";
 
 const StyledTotalVotes = styled.div`
@@ -44,24 +43,20 @@ const AnimePollGraph = ({ polls }) => {
 
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [zoomEnabled, setZoomEnabled] = useState(false);
-
-  const handleZoomToggle = () => {
-    setZoomEnabled((prev) => !prev);
-  };
 
   const zoomOptions = {
     zoom: {
       wheel: {
-        enabled: zoomEnabled,
+        enabled: true,
+        modifierKey: "ctrl",
       },
       pinch: {
-        enabled: zoomEnabled,
+        enabled: true,
       },
       mode: "x",
     },
     pan: {
-      enabled: zoomEnabled,
+      enabled: true,
       mode: "x",
     },
   };
@@ -273,11 +268,6 @@ const AnimePollGraph = ({ polls }) => {
 
   return (
     <>
-      <StyledZoomButton
-        zoomEnabled={zoomEnabled}
-        top={"35px"}
-        onClick={handleZoomToggle}
-      />
       <Bar ref={chartRef} options={options} data={chartData} />
 
       {isModalOpen && modalData && (

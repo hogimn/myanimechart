@@ -1,7 +1,7 @@
 import PageTemplate from "../../common/template/PageTemplate";
 import SeasonalTabs from "./component/SeasonalTabs";
 
-const AnimeStat = () => {
+const SeasonalAnime = () => {
   return (
     <PageTemplate>
       <SeasonalTabs></SeasonalTabs>
@@ -9,4 +9,4 @@ const AnimeStat = () => {
   );
 };
 
-export default AnimeStat;
+export default SeasonalAnime;
