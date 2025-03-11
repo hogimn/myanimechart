@@ -39,7 +39,7 @@ const MenuWrapper = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 18px;
+  font-size: 13px;
   position: relative;
 `;
 
@@ -72,7 +72,7 @@ const SubMenu = styled.ul`
 
   li {
     font-weight: normal;
-    font-size: 13px;
+    font-size: 11px;
     padding: 8px;
     cursor: pointer;
 
@@ -87,8 +87,8 @@ const CurrentPagePanel = styled.div`
   border-bottom: 1px solid #555555;
   background-color: #222222;
   color: white;
-  padding: 10px;
-  font-size: 16px;
+  padding: 7px 10px;
+  font-size: 15px;
   font-weight: bold;
 `;
 
