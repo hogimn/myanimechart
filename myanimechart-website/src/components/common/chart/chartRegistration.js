@@ -82,7 +82,7 @@ export const registerCharts = () => {
   Tooltip.positioners.poll = (elements, position) => {
     return {
       x: position.x,
-      y: 120,
+      y: 0,
     };
   };
 

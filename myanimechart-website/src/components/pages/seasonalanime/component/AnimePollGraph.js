@@ -142,14 +142,12 @@ const AnimePollGraph = ({ polls }) => {
     maintainAspectRatio: false,
     interaction: {
       mode: "index",
-      intersect: false,
+      intersect: true,
     },
     plugins: {
       tooltip: {
-        mode: "index",
-        intersect: false,
         position: "poll",
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
         itemSort: (a, b) => {
           return b.datasetIndex - a.datasetIndex;
         },
