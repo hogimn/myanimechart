@@ -15,7 +15,8 @@ const StyledLink = styled(Link)`
   color: inherit;
 
   h2 {
-    margin-bottom: 0;
+    margin-top: 9px;
+    margin-bottom: -7px;
   }
 
   p {
