@@ -5,6 +5,7 @@ import { formatDate } from "../../../util/dateUtil";
 import CommonSpin from "../../common/basic/CommonSpin";
 import CollectorApi from "../../api/anime/CollectorApi";
 import CommonAlert from "../../common/basic/CommonAlert";
+import { capitalizeFirstLetter } from "../../../util/strUtil";
 
 const PollCollectionStatus = () => {
   const [animeList, setAnimeList] = useState([]);
@@ -42,6 +43,9 @@ const PollCollectionStatus = () => {
                 <AnimeImage src={animeDto.image} alt={animeDto.title} />
                 <AnimeInfo>
                   <AnimeTitle>{animeDto.title}</AnimeTitle>
+                  <SeasonText>
+                    {capitalizeFirstLetter(animeDto.season)} {animeDto.year}
+                  </SeasonText>
                   <StatusText status={status}>{status}</StatusText>
                   <TimeText>Last Start: {formatDate(startedAt)}</TimeText>
                   <TimeText>Last End: {formatDate(finishedAt)}</TimeText>
@@ -54,6 +58,12 @@ const PollCollectionStatus = () => {
     </PageTemplate>
   );
 };
+
+const SeasonText = styled.div`
+  color: rgb(168, 192, 238);
+  font-size: 0.9rem;
+  margin: 3px 0;
+`;
 
 const Container = styled.div`
   padding: 20px;
