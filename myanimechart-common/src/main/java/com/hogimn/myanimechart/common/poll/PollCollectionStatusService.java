@@ -167,7 +167,7 @@ public class PollCollectionStatusService {
         }
     }
 
-    public List<PollCollectionStatusDto> getAllPollCollectionStatusDtosWithAnimeDto() {
+    public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
         List<PollCollectionStatusDto> pollCollectionStatusDtos =
                 pollCollectionStatusRepository
                         .findAll()

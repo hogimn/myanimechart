@@ -48,8 +48,8 @@ public class PollCollectController {
     }
 
     @ApiLoggable
-    @GetMapping("/getAllPollCollectionStatusWithAnime")
-    public List<PollCollectionStatusDto> getAllPollCollectionStatusWithAnime() {
-        return pollCollectionStatusService.getAllPollCollectionStatusDtosWithAnimeDto();
+    @GetMapping("/findAllPollCollectionStatusWithAnime")
+    public List<PollCollectionStatusDto> findAllPollCollectionStatusWithAnime() {
+        return pollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
     }
 }

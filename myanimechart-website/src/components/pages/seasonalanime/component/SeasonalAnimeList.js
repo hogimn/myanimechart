@@ -280,7 +280,7 @@ const SeasonalAnimeList = ({
         );
         setAnimes(animes);
       } catch (err) {
-        setError("Failed to fetch anime data");
+        setError("Failed to fetch seasonal anime");
       } finally {
         setAnimesLoading(false);
       }

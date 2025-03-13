@@ -56,3 +56,11 @@ export const getNextSeasonYear = () => {
     ? currentYear + 1
     : currentYear;
 };
+
+export const formatDate = (isoString) => {
+  if (!isoString) {
+    return "Not Yet";
+  }
+  const date = new Date(isoString);
+  return date.toLocaleString();
+};
