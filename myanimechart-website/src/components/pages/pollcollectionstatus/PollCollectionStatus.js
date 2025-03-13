@@ -104,7 +104,7 @@ const StatusText = styled.div`
       ? "#4caf50"
       : status === "WAIT"
       ? "#9e9e9e"
-      : status === "FAIL"
+      : status === "FAILED"
       ? "#f44336"
       : "#2196f3"};
   font-weight: bold;
