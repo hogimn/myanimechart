@@ -27,12 +27,9 @@ const PollCollectionStatus = () => {
     fetchData();
   }, []);
 
-  if (error) {
-    return <CommonAlert message={error} type="error" />;
-  }
-
   return (
     <PageTemplate>
+      {error && <CommonAlert message={error} type="error" />}
       <Container>
         {loading ? (
           <LoaderContainer>
