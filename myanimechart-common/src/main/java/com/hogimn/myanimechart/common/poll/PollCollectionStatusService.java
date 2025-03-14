@@ -1,11 +1,9 @@
 package com.hogimn.myanimechart.common.poll;
 
 import com.hogimn.myanimechart.common.anime.AnimeService;
-import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -157,5 +155,22 @@ public class PollCollectionStatusService {
 
     public void save(PollCollectionStatusEntity pollCollectionStatus) {
         pollCollectionStatusRepository.save(pollCollectionStatus);
+    }
+
+    public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
+        List<PollCollectionStatusDto> pollCollectionStatusDtos =
+                pollCollectionStatusRepository
+                        .findAllOrderByYearAndSeasonAndScore()
+                        .stream()
+                        .map(PollCollectionStatusDto::from)
+                        .toList();
+
+        for (PollCollectionStatusDto pollCollectionStatusDto : pollCollectionStatusDtos) {
+            pollCollectionStatusDto.setAnimeDto(
+                    animeService.findAnimeDtoById(
+                            pollCollectionStatusDto.getAnimeId()));
+        }
+
+        return pollCollectionStatusDtos;
     }
 }
