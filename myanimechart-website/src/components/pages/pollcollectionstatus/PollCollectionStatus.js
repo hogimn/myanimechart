@@ -122,6 +122,10 @@ const PollCollectionStatus = () => {
 
 const Container = styled.div`
   padding: 20px;
+
+  .ant-pagination {
+    margin-top: 10px;
+  }
 `;
 
 const LoaderContainer = styled.div`
@@ -159,8 +163,10 @@ const AnimeInfo = styled.div`
 `;
 
 const AnimeTitle = styled.div`
-  color: white;
+  color: #a7ccf1;
+  font-size: 1rem;
   font-weight: bold;
+  line-height: normal;
 `;
 
 const StatusText = styled.div`
