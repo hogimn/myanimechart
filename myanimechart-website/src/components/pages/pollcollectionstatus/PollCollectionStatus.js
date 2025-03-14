@@ -32,9 +32,8 @@ const PollCollectionStatus = () => {
           {}
         );
         setAnimeGroups(groupedData);
-        // Initialize current page state for each group
         const initialPageState = Object.keys(groupedData).reduce((acc, key) => {
-          acc[key] = 1; // Start from the first page
+          acc[key] = 1;
           return acc;
         }, {});
         setCurrentPage(initialPageState);
@@ -56,7 +55,7 @@ const PollCollectionStatus = () => {
   };
 
   const getPaginatedItems = (groupKey, items) => {
-    const startIndex = (currentPage[groupKey] - 1) * 5; // 페이지당 5개씩 보여주기
+    const startIndex = (currentPage[groupKey] - 1) * 5;
     const endIndex = startIndex + 5;
     return items.slice(startIndex, endIndex);
   };
@@ -70,7 +69,10 @@ const PollCollectionStatus = () => {
             <CommonSpin size="large" />
           </LoaderContainer>
         ) : (
-          <CommonCollapse defaultActiveKey={[Object.keys(animeGroups)[0]]}>
+          <CommonCollapse
+            accordion
+            defaultActiveKey={[Object.keys(animeGroups)[0]]}
+          >
             {Object.entries(animeGroups).map(([key, animeList]) => {
               const [year, season] = key.split("-");
               const paginatedItems = getPaginatedItems(key, animeList);
