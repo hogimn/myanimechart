@@ -64,3 +64,24 @@ export const formatDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleString();
 };
+
+export const getSeasonIndex = (season) =>
+  seasons.findIndex((s) => s.season === season);
+
+export const getPreviousSeasonFromSeason = (season) => {
+  const index = getSeasonIndex(season);
+  return seasons[index === 0 ? seasons.length - 1 : index - 1].season;
+};
+
+export const getNextSeasonFromSeason = (season) => {
+  const index = getSeasonIndex(season);
+  return seasons[(index + 1) % seasons.length].season;
+};
+
+export const getPreviousSeasonYearFromYearAndSeason = (year, season) => {
+  return season === "winter" ? year - 1 : year;
+};
+
+export const getNextSeasonYearFromYearAndSeason = (year, season) => {
+  return season === "fall" ? year + 1 : year;
+};

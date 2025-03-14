@@ -8,7 +8,6 @@ const StyledTabs = styled(Tabs)`
   }
 
   .ant-tabs-tab-active {
-    font-size: 0.9rem;
     background-color: rgba(65, 65, 65, 0.7);
   }
 
