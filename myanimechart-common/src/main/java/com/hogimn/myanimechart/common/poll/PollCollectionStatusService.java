@@ -31,7 +31,7 @@ public class PollCollectionStatusService {
 
     public void setFailForWait() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
-                .findByStatus(CollectionStatus.WAIT);
+                .findByStatusWithLock(CollectionStatus.WAIT);
 
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
@@ -42,7 +42,7 @@ public class PollCollectionStatusService {
 
     public void setFailForStartedButNotFinished() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
-                .findByStatusAndFinishedAt(CollectionStatus.IN_PROGRESS, null);
+                .findByStatusAndFinishedAtWithLock(CollectionStatus.IN_PROGRESS, null);
 
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
