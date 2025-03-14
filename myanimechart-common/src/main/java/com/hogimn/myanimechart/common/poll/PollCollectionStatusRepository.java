@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -16,7 +15,7 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
             WHERE p.status = :collectionStatus AND p.finishedAt IS NULL
             """)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<PollCollectionStatusEntity> findByStatusAndFinishedAtIsNullWithLock(CollectionStatus collectionStatus)
+    List<PollCollectionStatusEntity> findByStatusAndFinishedAtIsNullWithLock(CollectionStatus collectionStatus);
 
     @Query("""
             SELECT p FROM PollCollectionStatusEntity p
