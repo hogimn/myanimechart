@@ -6,12 +6,16 @@ import CommonSpin from "../../common/basic/CommonSpin";
 import CollectorApi from "../../api/anime/CollectorApi";
 import CommonAlert from "../../common/basic/CommonAlert";
 import { capitalizeFirstLetter } from "../../../util/strUtil";
+import CommonPagination from "../../common/basic/CommonPagination";
+import CommonCollapse from "../../common/basic/CommonCollapse";
+
+const { Panel } = CommonCollapse;
 
 const PollCollectionStatus = () => {
   const [animeGroups, setAnimeGroups] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [openGroup, setOpenGroup] = useState(null);
+  const [currentPage, setCurrentPage] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +32,12 @@ const PollCollectionStatus = () => {
           {}
         );
         setAnimeGroups(groupedData);
-        setOpenGroup(Object.keys(groupedData)[0]);
+        // Initialize current page state for each group
+        const initialPageState = Object.keys(groupedData).reduce((acc, key) => {
+          acc[key] = 1; // Start from the first page
+          return acc;
+        }, {});
+        setCurrentPage(initialPageState);
       } catch (err) {
         setError("Failed to fetch poll collection status");
       } finally {
@@ -39,8 +48,17 @@ const PollCollectionStatus = () => {
     fetchData();
   }, []);
 
-  const toggleGroup = (key) => {
-    setOpenGroup(openGroup === key ? null : key);
+  const handlePageChange = (page, groupKey) => {
+    setCurrentPage((prev) => ({
+      ...prev,
+      [groupKey]: page,
+    }));
+  };
+
+  const getPaginatedItems = (groupKey, items) => {
+    const startIndex = (currentPage[groupKey] - 1) * 5; // 페이지당 5개씩 보여주기
+    const endIndex = startIndex + 5;
+    return items.slice(startIndex, endIndex);
   };
 
   return (
@@ -52,21 +70,18 @@ const PollCollectionStatus = () => {
             <CommonSpin size="large" />
           </LoaderContainer>
         ) : (
-          Object.entries(animeGroups).map(([key, animeList]) => {
-            const [year, season] = key.split("-");
-            return (
-              <Group key={key}>
-                <GroupHeader
-                  onClick={() => {
-                    toggleGroup(key);
-                    window.scrollTo(0, 0);
-                  }}
+          <CommonCollapse defaultActiveKey={[Object.keys(animeGroups)[0]]}>
+            {Object.entries(animeGroups).map(([key, animeList]) => {
+              const [year, season] = key.split("-");
+              const paginatedItems = getPaginatedItems(key, animeList);
+
+              return (
+                <Panel
+                  header={`${year} ${capitalizeFirstLetter(season)}`}
+                  key={key}
                 >
-                  {year} {capitalizeFirstLetter(season)}
-                </GroupHeader>
-                {openGroup === key && (
                   <List>
-                    {animeList.map(
+                    {paginatedItems.map(
                       ({ animeDto, status, startedAt, finishedAt }) => (
                         <ListItem key={animeDto.id} status={status}>
                           <AnimeImage
@@ -87,10 +102,18 @@ const PollCollectionStatus = () => {
                       )
                     )}
                   </List>
-                )}
-              </Group>
-            );
-          })
+                  <CommonPagination
+                    current={currentPage[key]}
+                    pageSize={5}
+                    total={animeList.length}
+                    onChange={(page) => handlePageChange(page, key)}
+                    showSizeChanger={false}
+                    hideOnSinglePage
+                  />
+                </Panel>
+              );
+            })}
+          </CommonCollapse>
         )}
       </Container>
     </PageTemplate>
@@ -106,19 +129,6 @@ const LoaderContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 50vh;
-`;
-
-const Group = styled.div`
-  margin-bottom: 15px;
-`;
-
-const GroupHeader = styled.div`
-  background-color: #2e51a2;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
 `;
 
 const List = styled.div`
