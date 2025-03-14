@@ -54,7 +54,7 @@ public class PollCollectionStatusService {
         }
     }
 
-    public void savePollCollectionStatusForFail(long animeId) {
+    public void sendSavePollCollectionStatusForFail(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
 
@@ -70,7 +70,7 @@ public class PollCollectionStatusService {
         sendSave(pollCollectionStatusEntity);
     }
 
-    public void savePollCollectionStatusForEnd(long animeId) {
+    public void sendSavePollCollectionStatusForEnd(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
 
@@ -86,7 +86,7 @@ public class PollCollectionStatusService {
         sendSave(pollCollectionStatusEntity);
     }
 
-    public void savePollCollectionStatusForStart(long animeId) {
+    public void sendSavePollCollectionStatusForStart(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
 
@@ -103,7 +103,7 @@ public class PollCollectionStatusService {
         sendSave(pollCollectionStatusEntity);
     }
 
-    public void savePollCollectionStatusForWait(long animeId) {
+    public void sendSavePollCollectionStatusForWait(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
 

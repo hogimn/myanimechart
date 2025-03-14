@@ -60,14 +60,14 @@ public class PollCollectService {
 
     public void collectPollByAnimeId(long animeId) {
         AnimeEntity animeEntity = animeService.findAnimeEntityById(animeId);
-        pollCollectionStatusService.savePollCollectionStatusForWait(animeEntity.getId());
+        pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId());
         collectForumTopics(animeEntity);
     }
 
     public void collectPollByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.savePollCollectionStatusForWait(animeEntity.getId()));
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -85,7 +85,7 @@ public class PollCollectService {
     private void collectPollForceCollectTrue() {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.savePollCollectionStatusForWait(animeEntity.getId()));
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -94,7 +94,7 @@ public class PollCollectService {
         List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.addAll(animeEntitiesForceCollectTrue);
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.savePollCollectionStatusForWait(animeEntity.getId()));
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -135,7 +135,7 @@ public class PollCollectService {
     private void collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
-        pollCollectionStatusService.savePollCollectionStatusForStart(animeEntity.getId());
+        pollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
 
         try {
             String keyword = getSearchKeyword(animeEntity);
@@ -185,13 +185,13 @@ public class PollCollectService {
                 SleepUtil.sleep(30 * 1000);
             }
         } catch (Exception e) {
-            pollCollectionStatusService.savePollCollectionStatusForFail(animeEntity.getId());
+            pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
-        pollCollectionStatusService.savePollCollectionStatusForEnd(animeEntity.getId());
+        pollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
 
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
