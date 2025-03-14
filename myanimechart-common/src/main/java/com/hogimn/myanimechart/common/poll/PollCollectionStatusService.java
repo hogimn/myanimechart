@@ -53,7 +53,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            sendSave(pollCollectionStatusEntity);
+            save(pollCollectionStatusEntity);
         }
     }
 
@@ -64,7 +64,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            sendSave(pollCollectionStatusEntity);
+            save(pollCollectionStatusEntity);
         }
     }
 
@@ -130,6 +130,10 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setStatus(CollectionStatus.WAIT);
         pollCollectionStatusEntity.setUpdatedAt(now);
         sendSave(pollCollectionStatusEntity);
+    }
+
+    public void save(PollCollectionStatusEntity pollCollectionStatusEntity) {
+        pollCollectionStatusRepository.save(pollCollectionStatusEntity);
     }
 
     public void sendSave(PollCollectionStatusEntity pollCollectionStatusEntity) {
