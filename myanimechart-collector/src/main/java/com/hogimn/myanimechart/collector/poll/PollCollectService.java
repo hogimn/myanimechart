@@ -142,7 +142,6 @@ public class PollCollectService {
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
             SleepUtil.sleep(30 * 1000);
 
-            int firstWordDiffCnt = 0;
             for (ForumTopic forumTopic : forumTopics) {
                 long topicId = forumTopic.getID();
                 String topicTitle = forumTopic.getTitle();
@@ -150,23 +149,18 @@ public class PollCollectService {
                 if (!isFirstWordMatching(topicTitle, animeEntity.getTitle())) {
                     log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
                             topicTitle, animeEntity.getTitle());
-                    firstWordDiffCnt++;
-                    if (firstWordDiffCnt > 10) {
-                        break;
-                    } else {
-                        continue;
-                    }
+                    continue;
                 }
 
                 if (!topicTitle.endsWith("Discussion")) {
                     log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
-                    break;
+                    continue;
                 }
 
                 if (checkMangaTopic(topicTitle)) {
                     log.info("Topic name is manga discussion. topic: {},  anime: {}",
                             forumTopic.getTitle(), animeEntity.getTitle());
-                    break;
+                    continue;
                 }
 
                 if (!checkTitleSame(topicTitle, animeEntity.getTitle())) {
@@ -178,7 +172,7 @@ public class PollCollectService {
                 int episode = getEpisodeFromTopicTitle(topicTitle);
                 if (episode == -1) {
                     log.error("Failed to get episode from topic title: {}", topicTitle);
-                    break;
+                    continue;
                 }
 
                 savePoll(topicId, episode, animeEntity.getId());
@@ -289,8 +283,8 @@ public class PollCollectService {
         }
 
 
-        topicTitle = topicTitle.toLowerCase().replaceAll("[. :;\\-!?]", "");
-        animeTitle = animeTitle.toLowerCase().replaceAll("[. :;\\-!?]", "");
+        topicTitle = topicTitle.toLowerCase().replaceAll("[\\[\\]\". :;\\-!?]", "");
+        animeTitle = animeTitle.toLowerCase().replaceAll("[\\[\\]\". :;\\-!?]", "");
 
         int indexOfEpisode = topicTitle.lastIndexOf("episode");
         if (indexOfEpisode == -1) {
