@@ -548,24 +548,30 @@ const SeasonalAnimeList = ({
                     <CommonInput
                       value={selectedUserAnimeStatus?.watchedEpisodes}
                       placeholder="Ep."
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const newWatchedEpisodes = event.target.value;
                         setSelectedUserAnimeStatus({
                           ...selectedUserAnimeStatus,
-                          watchedEpisodes: event.target.value,
-                        })
-                      }
+                          watchedEpisodes: newWatchedEpisodes,
+                        });
+                      }}
                     />
                     {"/ "}
                     {selectedAnime?.episodes}
                     <PlusButton
                       icon={<PlusOutlined />}
                       onClick={() => {
-                        const newWatchedEpisodes = isNaN(
+                        let newWatchedEpisodes = isNaN(
                           parseInt(selectedUserAnimeStatus?.watchedEpisodes)
                         )
                           ? 1
                           : parseInt(selectedUserAnimeStatus?.watchedEpisodes) +
                             1;
+
+                        if (newWatchedEpisodes >= selectedAnime?.episodes) {
+                          newWatchedEpisodes = selectedAnime?.episodes;
+                        }
+
                         setSelectedUserAnimeStatus({
                           ...selectedUserAnimeStatus,
                           watchedEpisodes: newWatchedEpisodes.toString(),
