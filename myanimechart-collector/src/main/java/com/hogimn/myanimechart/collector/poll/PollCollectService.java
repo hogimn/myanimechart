@@ -200,11 +200,11 @@ public class PollCollectService {
         }
 
 
-        topicTitle = topicTitle.toLowerCase();
-        animeTitle = animeTitle.toLowerCase();
+        topicTitle = topicTitle.toLowerCase().replaceAll("[\\[\\]\".:;\\-!?]", "");
+        animeTitle = animeTitle.toLowerCase().replaceAll("[\\[\\]\".:;\\-!?]", "");
 
-        String topicFirstWord = topicTitle.split("[\\s-]", 2)[0];
-        String animeFirstWord = animeTitle.split("[\\s-]", 2)[0];
+        String topicFirstWord = topicTitle.split("\\s", 2)[0];
+        String animeFirstWord = animeTitle.split("\\s", 2)[0];
 
         return topicTitle.startsWith(animeFirstWord) || animeTitle.startsWith(topicFirstWord);
     }
