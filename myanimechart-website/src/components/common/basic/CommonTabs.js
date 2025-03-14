@@ -9,12 +9,12 @@ const StyledTabs = styled(Tabs)`
 
   .ant-tabs-tab-active {
     font-size: 0.9rem;
-    background-color: rgba(66, 84, 122, 0.7);
+    background-color: rgba(65, 65, 65, 0.7);
   }
 
   .ant-tabs-nav-wrap {
     border-radius: 9px;
-    background-color: rgba(30, 34, 39, 0.45);
+    background-color: rgba(34, 34, 34, 0.45);
   }
 `;
 

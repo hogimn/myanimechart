@@ -2,12 +2,7 @@ import React from "react";
 import { Select } from "antd";
 import styled from "styled-components";
 
-const StyledSelect = styled(Select)`
-  .ant-select-selector {
-    background-color: rgba(36, 46, 66, 0.7) !important;
-    border: 1px solid rgba(25, 26, 46, 0.7) !important;
-  }
-`;
+const StyledSelect = styled(Select)``;
 
 const CommonSelect = ({
   options,
