@@ -157,10 +157,10 @@ const AnimePollGraph = ({ polls }) => {
           return b.datasetIndex - a.datasetIndex;
         },
         titleFont: {
-          size: 8,
+          size: 9,
         },
         bodyFont: {
-          size: 8,
+          size: 9,
         },
         callbacks: {
           labelColor: (tooltipItem, chart) => {
