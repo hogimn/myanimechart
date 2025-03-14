@@ -65,7 +65,7 @@ public class PollCollectService {
     }
 
     public void collectPollByYearAndSeason(int year, String season) {
-        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeason(year, season);
+        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
                 pollCollectionStatusService.savePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);

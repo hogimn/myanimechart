@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
-    List<AnimeEntity> findByYearAndSeason(Integer year, String season);
+    List<AnimeEntity> findByYearAndSeasonOrderByScoreDesc(Integer year, String season);
 
     @Query("SELECT a FROM AnimeEntity a WHERE NOT (a.year = :year AND a.season = :season) " +
             "AND NOT (a.year = :nextYear AND a.season = :nextSeason) " +

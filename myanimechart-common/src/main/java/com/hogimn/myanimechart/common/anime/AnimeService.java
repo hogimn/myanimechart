@@ -56,8 +56,8 @@ public class AnimeService {
         throw new IllegalArgumentException("Anime not found (" + id + ")");
     }
 
-    public List<AnimeEntity> findAnimeEntitiesByYearAndSeason(int year, String season) {
-        return animeRepository.findByYearAndSeason(year, season);
+    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(int year, String season) {
+        return animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
     }
 
     public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
@@ -84,7 +84,7 @@ public class AnimeService {
     }
 
     public List<AnimeDto> findAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
-        List<AnimeEntity> animeEntities = findAnimeEntitiesByYearAndSeason(year, season);
+        List<AnimeEntity> animeEntities = findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
         return convertToAnimeDtosWithPollDtos(animeEntities);
     }
 
