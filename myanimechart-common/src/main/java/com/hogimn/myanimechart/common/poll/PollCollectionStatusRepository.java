@@ -25,4 +25,21 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
             "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
             "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END))))")
     List<PollCollectionStatusEntity> findUnusedPollCollectionStatus(String currentlyAiring, String finishedAiring);
+
+    @Query("""
+            SELECT a
+            FROM PollCollectionStatusEntity a
+            JOIN AnimeEntity b ON a.animeId = b.id
+            ORDER BY
+                b.year DESC,
+                CASE b.season
+                    WHEN 'fall' THEN 1
+                    WHEN 'summer' THEN 2
+                    WHEN 'spring' THEN 3
+                    WHEN 'winter' THEN 4
+                    ELSE 5
+                END,
+                b.score DESC
+            """)
+    List<PollCollectionStatusEntity> findAllOrderByYearAndSeasonAndScore();
 }

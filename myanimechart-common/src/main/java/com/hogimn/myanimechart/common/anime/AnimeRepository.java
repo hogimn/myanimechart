@@ -26,7 +26,17 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
             "(EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
             "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
             "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END))")
+            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END)) " +
+            "ORDER BY " +
+            "  a.year DESC, " +
+            "  CASE a.season " +
+            "    WHEN 'fall' THEN 1 " +
+            "    WHEN 'summer' THEN 2 " +
+            "    WHEN 'spring' THEN 3 " +
+            "    WHEN 'winter' THEN 4 " +
+            "    ELSE 5 " +
+            "  END, " +
+            "  a.score DESC")
     List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring(String currentlyAiring, String finishedAiring);
 
     List<AnimeEntity> findAllByTitleContaining(String title);

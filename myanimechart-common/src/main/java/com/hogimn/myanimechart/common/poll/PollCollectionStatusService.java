@@ -170,7 +170,7 @@ public class PollCollectionStatusService {
     public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
         List<PollCollectionStatusDto> pollCollectionStatusDtos =
                 pollCollectionStatusRepository
-                        .findAll()
+                        .findAllOrderByYearAndSeasonAndScore()
                         .stream()
                         .map(PollCollectionStatusDto::from)
                         .toList();
