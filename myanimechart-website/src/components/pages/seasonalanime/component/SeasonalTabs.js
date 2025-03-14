@@ -124,11 +124,9 @@ const SeasonalTabs = () => {
   const handleTabChange = (key) => {
     if (key === "prev") {
       updateSeasons("prev");
-      setActiveTab("1");
       setPage(1);
     } else if (key === "next") {
       updateSeasons("next");
-      setActiveTab("2");
       setPage(1);
     } else {
       setActiveTab(key);
