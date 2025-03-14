@@ -152,15 +152,15 @@ const AnimePollGraph = ({ polls }) => {
           intersect: false,
         },
         position: "poll",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
         itemSort: (a, b) => {
           return b.datasetIndex - a.datasetIndex;
         },
         titleFont: {
-          size: 9,
+          size: 10,
         },
         bodyFont: {
-          size: 9,
+          size: 10,
         },
         callbacks: {
           labelColor: (tooltipItem, chart) => {
