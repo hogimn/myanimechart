@@ -56,7 +56,12 @@ const PollCollectionStatus = () => {
             const [year, season] = key.split("-");
             return (
               <Group key={key}>
-                <GroupHeader onClick={() => toggleGroup(key)}>
+                <GroupHeader
+                  onClick={() => {
+                    toggleGroup(key);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   {year} {capitalizeFirstLetter(season)}
                 </GroupHeader>
                 {openGroup === key && (
