@@ -12,11 +12,11 @@ import java.util.List;
 @Repository
 public interface PollCollectionStatusRepository extends JpaRepository<PollCollectionStatusEntity, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<PollCollectionStatusEntity> findByStatusAndFinishedAtWithLock(
+    List<PollCollectionStatusEntity> findByStatusAndFinishedAt(
             CollectionStatus collectionStatus, LocalDateTime finishedAt);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<PollCollectionStatusEntity> findByStatusWithLock(CollectionStatus collectionStatus);
+    List<PollCollectionStatusEntity> findByStatus(CollectionStatus collectionStatus);
 
     @Query("SELECT b FROM PollCollectionStatusEntity b " +
             "WHERE b.animeId IN (" +
