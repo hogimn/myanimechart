@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Slf4j
@@ -29,6 +30,7 @@ public class PollCollectJob {
     }
 
     @PostConstruct
+    @Transactional
     public void schedulePollCollectionTask() {
         pollCollectionStatusService.setFailForStartedButNotFinished();
         pollCollectionStatusService.setFailForWait();
