@@ -155,35 +155,6 @@ public class PollCollectionStatusService {
                 RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
     }
 
-    @SaveBatchHistory("#batchJobName")
-    @SchedulerLock(name = "removeUnusedPollCollectionStatus")
-    public void removeUnusedPollCollectionStatus(String batchJobName) {
-        List<PollCollectionStatusEntity> pollCollectionStatusEntities =
-                pollCollectionStatusRepository.findUnusedPollCollectionStatus(
-                        "currently_airing", "finished_airing");
-
-        for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
-            pollCollectionStatusRepository.delete(pollCollectionStatusEntity);
-        }
-    }
-
-    public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
-        List<PollCollectionStatusDto> pollCollectionStatusDtos =
-                pollCollectionStatusRepository
-                        .findAllOrderByYearAndSeasonAndScore()
-                        .stream()
-                        .map(PollCollectionStatusDto::from)
-                        .toList();
-
-        for (PollCollectionStatusDto pollCollectionStatusDto : pollCollectionStatusDtos) {
-            pollCollectionStatusDto.setAnimeDto(
-                    animeService.findAnimeDtoById(
-                            pollCollectionStatusDto.getAnimeId()));
-        }
-
-        return pollCollectionStatusDtos;
-    }
-
     public void save(PollCollectionStatusEntity pollCollectionStatus) {
         pollCollectionStatusRepository.save(pollCollectionStatus);
     }
