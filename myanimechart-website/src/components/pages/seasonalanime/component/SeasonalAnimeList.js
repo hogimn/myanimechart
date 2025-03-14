@@ -386,15 +386,15 @@ const SeasonalAnimeList = ({
 
     switch (userAnimeStatus.status) {
       case "watching":
-        return "rgb(65, 129, 105, 0.8)";
+        return "rgba(65, 129, 105, 0.8)";
       case "completed":
-        return "rgb(70, 91, 136, 0.8)";
+        return "rgba(70, 91, 136, 0.8)";
       case "on_hold":
-        return "rgb(150, 148, 72, 0.8)";
+        return "rgba(150, 148, 72, 0.8)";
       case "dropped":
-        return "rgb(136, 60, 60, 0.8)";
+        return "rgba(136, 60, 60, 0.8)";
       case "plan_to_watch":
-        return "rgb(78, 78, 78, 0.8)";
+        return "rgba(109, 109, 109, 0.8)";
       default:
         return null;
     }
@@ -416,7 +416,7 @@ const SeasonalAnimeList = ({
       case "dropped":
         return "rgb(136, 60, 60)";
       case "plan_to_watch":
-        return "rgb(78, 78, 78)";
+        return "rgb(109, 109, 109)";
       default:
         return null;
     }
@@ -522,12 +522,20 @@ const SeasonalAnimeList = ({
                   <CommonSelect
                     value={selectedUserAnimeStatus?.status}
                     options={statusOptions}
-                    onChange={(value) =>
-                      setSelectedUserAnimeStatus({
-                        ...selectedUserAnimeStatus,
-                        status: value,
-                      })
-                    }
+                    onChange={(value) => {
+                      if (value === "completed") {
+                        setSelectedUserAnimeStatus({
+                          ...selectedUserAnimeStatus,
+                          status: value,
+                          watchedEpisodes: selectedAnime?.episodes,
+                        });
+                      } else {
+                        setSelectedUserAnimeStatus({
+                          ...selectedUserAnimeStatus,
+                          status: value,
+                        });
+                      }
+                    }}
                   />
                 </StyledCol>
               </SelectWrapper>
