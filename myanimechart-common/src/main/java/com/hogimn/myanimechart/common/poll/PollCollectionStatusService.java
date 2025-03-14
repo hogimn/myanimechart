@@ -30,6 +30,7 @@ public class PollCollectionStatusService {
         return pollCollectionStatusRepository.findById(animeId).orElse(null);
     }
 
+    @Transactional
     public void setFailForWait() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
                 .findByStatusWithLock(CollectionStatus.WAIT);
@@ -53,7 +54,6 @@ public class PollCollectionStatusService {
         }
     }
 
-    @Transactional
     public void savePollCollectionStatusForFail(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
