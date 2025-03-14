@@ -112,12 +112,6 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    double score = anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0;
-                    if (score == 0.0) {
-                        log.info("Skipping anime '{}': Score {} (expected: > 0.0)", anime.getTitle(), score);
-                        continue;
-                    }
-
                     AnimeDto animeDto = AnimeDto.from(anime);
                     serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 } catch (Exception e) {
