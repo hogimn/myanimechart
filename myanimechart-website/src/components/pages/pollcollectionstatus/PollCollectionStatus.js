@@ -8,16 +8,27 @@ import CommonAlert from "../../common/basic/CommonAlert";
 import { capitalizeFirstLetter } from "../../../util/strUtil";
 
 const PollCollectionStatus = () => {
-  const [animeList, setAnimeList] = useState([]);
+  const [animeGroups, setAnimeGroups] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [openGroup, setOpenGroup] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const data = await CollectorApi.findAllPollCollectionStatusWithAnime();
-        setAnimeList(data);
+        const groupedData = data.reduce(
+          (acc, { animeDto, status, startedAt, finishedAt }) => {
+            const key = `${animeDto.year}-${animeDto.season}`;
+            if (!acc[key]) acc[key] = [];
+            acc[key].push({ animeDto, status, startedAt, finishedAt });
+            return acc;
+          },
+          {}
+        );
+        setAnimeGroups(groupedData);
+        setOpenGroup(Object.keys(groupedData)[0]);
       } catch (err) {
         setError("Failed to fetch poll collection status");
       } finally {
@@ -28,6 +39,10 @@ const PollCollectionStatus = () => {
     fetchData();
   }, []);
 
+  const toggleGroup = (key) => {
+    setOpenGroup(openGroup === key ? null : key);
+  };
+
   return (
     <PageTemplate>
       {error && <CommonAlert message={error} type="error" />}
@@ -37,33 +52,45 @@ const PollCollectionStatus = () => {
             <CommonSpin size="large" />
           </LoaderContainer>
         ) : (
-          <List>
-            {animeList.map(({ animeDto, status, startedAt, finishedAt }) => (
-              <ListItem key={animeDto.id} status={status}>
-                <AnimeImage src={animeDto.image} alt={animeDto.title} />
-                <AnimeInfo>
-                  <AnimeTitle>{animeDto.title}</AnimeTitle>
-                  <SeasonText>
-                    {capitalizeFirstLetter(animeDto.season)} {animeDto.year}
-                  </SeasonText>
-                  <StatusText status={status}>{status}</StatusText>
-                  <TimeText>Last Start: {formatDate(startedAt)}</TimeText>
-                  <TimeText>Last End: {formatDate(finishedAt)}</TimeText>
-                </AnimeInfo>
-              </ListItem>
-            ))}
-          </List>
+          Object.entries(animeGroups).map(([key, animeList]) => {
+            const [year, season] = key.split("-");
+            return (
+              <Group key={key}>
+                <GroupHeader onClick={() => toggleGroup(key)}>
+                  {year} {capitalizeFirstLetter(season)}
+                </GroupHeader>
+                {openGroup === key && (
+                  <List>
+                    {animeList.map(
+                      ({ animeDto, status, startedAt, finishedAt }) => (
+                        <ListItem key={animeDto.id} status={status}>
+                          <AnimeImage
+                            src={animeDto.image}
+                            alt={animeDto.title}
+                          />
+                          <AnimeInfo>
+                            <AnimeTitle>{animeDto.title}</AnimeTitle>
+                            <StatusText status={status}>{status}</StatusText>
+                            <TimeText>
+                              Last Start: {formatDate(startedAt)}
+                            </TimeText>
+                            <TimeText>
+                              Last End: {formatDate(finishedAt)}
+                            </TimeText>
+                          </AnimeInfo>
+                        </ListItem>
+                      )
+                    )}
+                  </List>
+                )}
+              </Group>
+            );
+          })
         )}
       </Container>
     </PageTemplate>
   );
 };
-
-const SeasonText = styled.div`
-  color: rgb(168, 192, 238);
-  font-size: 0.9rem;
-  margin: 3px 0;
-`;
 
 const Container = styled.div`
   padding: 20px;
@@ -76,10 +103,24 @@ const LoaderContainer = styled.div`
   height: 50vh;
 `;
 
+const Group = styled.div`
+  margin-bottom: 15px;
+`;
+
+const GroupHeader = styled.div`
+  background-color: #2e51a2;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+`;
+
 const List = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 5px;
 `;
 
 const ListItem = styled.div`
