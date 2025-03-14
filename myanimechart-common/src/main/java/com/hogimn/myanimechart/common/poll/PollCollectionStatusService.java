@@ -25,7 +25,7 @@ public class PollCollectionStatusService {
         this.animeService = animeService;
     }
 
-    public void save(PollCollectionStatusDto pollCollectionStatus) {
+    public void sendSave(PollCollectionStatusDto pollCollectionStatus) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(
                         pollCollectionStatus.getAnimeId());
@@ -39,8 +39,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setUpdatedAt(pollCollectionStatus.getUpdatedAt());
         pollCollectionStatusEntity.setFinishedAt(pollCollectionStatus.getFinishedAt());
         pollCollectionStatusEntity.setStartedAt(pollCollectionStatus.getStartedAt());
-
-        save(pollCollectionStatusEntity);
+        sendSave(pollCollectionStatusEntity);
     }
 
     public PollCollectionStatusEntity findPollCollectionStatusEntityByAnimeId(long animeId) {
@@ -54,7 +53,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            save(pollCollectionStatusEntity);
+            sendSave(pollCollectionStatusEntity);
         }
     }
 
@@ -65,7 +64,7 @@ public class PollCollectionStatusService {
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
             pollCollectionStatusEntity.setUpdatedAt(DateUtil.now());
-            save(pollCollectionStatusEntity);
+            sendSave(pollCollectionStatusEntity);
         }
     }
 
@@ -82,12 +81,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
         pollCollectionStatusEntity.setFinishedAt(now);
         pollCollectionStatusEntity.setUpdatedAt(now);
-
-        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
-                .from(pollCollectionStatusEntity);
-
-        serviceRegistryService.send(
-                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
+        sendSave(pollCollectionStatusEntity);
     }
 
     public void savePollCollectionStatusForEnd(long animeId) {
@@ -103,12 +97,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setStatus(CollectionStatus.COMPLETED);
         pollCollectionStatusEntity.setFinishedAt(now);
         pollCollectionStatusEntity.setUpdatedAt(now);
-
-        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
-                .from(pollCollectionStatusEntity);
-
-        serviceRegistryService.send(
-                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
+        sendSave(pollCollectionStatusEntity);
     }
 
     public void savePollCollectionStatusForStart(long animeId) {
@@ -125,12 +114,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setStartedAt(now);
         pollCollectionStatusEntity.setFinishedAt(null);
         pollCollectionStatusEntity.setUpdatedAt(now);
-
-        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
-                .from(pollCollectionStatusEntity);
-
-        serviceRegistryService.send(
-                RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
+        sendSave(pollCollectionStatusEntity);
     }
 
     public void savePollCollectionStatusForWait(long animeId) {
@@ -145,16 +129,15 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setAnimeId(animeId);
         pollCollectionStatusEntity.setStatus(CollectionStatus.WAIT);
         pollCollectionStatusEntity.setUpdatedAt(now);
+        sendSave(pollCollectionStatusEntity);
+    }
 
+    public void sendSave(PollCollectionStatusEntity pollCollectionStatusEntity) {
         PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
                 .from(pollCollectionStatusEntity);
 
         serviceRegistryService.send(
                 RegisteredService.EXECUTE, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
-    }
-
-    public void save(PollCollectionStatusEntity pollCollectionStatus) {
-        pollCollectionStatusRepository.save(pollCollectionStatus);
     }
 
     public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {

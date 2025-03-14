@@ -32,6 +32,6 @@ public class PollController {
 
     @PostMapping("/savePollCollectionStatus")
     public void savePollCollectionStatus(@RequestBody PollCollectionStatusDto pollCollectionStatusDto) {
-        pollCollectionStatusService.save(pollCollectionStatusDto);
+        pollCollectionStatusService.sendSave(pollCollectionStatusDto);
     }
 }
