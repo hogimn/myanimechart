@@ -132,7 +132,7 @@ public class PollCollectionStatusService {
         pollCollectionStatusEntity.setUpdatedAt(pollCollectionStatus.getUpdatedAt());
         pollCollectionStatusEntity.setFinishedAt(pollCollectionStatus.getFinishedAt());
         pollCollectionStatusEntity.setStartedAt(pollCollectionStatus.getStartedAt());
-        sendSave(pollCollectionStatusEntity);
+        save(pollCollectionStatusEntity);
     }
 
     public void save(PollCollectionStatusEntity pollCollectionStatusEntity) {
