@@ -13,10 +13,10 @@ import java.util.List;
 public interface PollCollectionStatusRepository extends JpaRepository<PollCollectionStatusEntity, Long> {
     @Query("""
             SELECT p FROM PollCollectionStatusEntity p
-            WHERE p.status = :collectionStatus AND p.finishedAt = :finishedAt
+            WHERE p.status = :collectionStatus AND p.finishedAt IS :finishedAt
             """)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<PollCollectionStatusEntity> findByStatusAndFinishedAtWithLock(
+    List<PollCollectionStatusEntity> findByStatusAndFinishedAtIsNullWithLock(
             CollectionStatus collectionStatus, LocalDateTime finishedAt);
 
     @Query("""

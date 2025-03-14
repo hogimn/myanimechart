@@ -45,7 +45,7 @@ public class PollCollectionStatusService {
     @Transactional
     public void setFailForStartedButNotFinished() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
-                .findByStatusAndFinishedAtWithLock(CollectionStatus.IN_PROGRESS, null);
+                .findByStatusAndFinishedAtIsNullWithLock(CollectionStatus.IN_PROGRESS, null);
 
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
