@@ -30,7 +30,6 @@ public class PollCollectJob {
     }
 
     @PostConstruct
-    @Transactional
     public void schedulePollCollectionTask() {
         pollCollectionStatusService.setFailForStartedButNotFinished();
         pollCollectionStatusService.setFailForWait();

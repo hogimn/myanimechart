@@ -4,6 +4,7 @@ import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.DateUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class PollCollectionStatusService {
 
     public void setFailForWait() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
-                .findByStatus(CollectionStatus.WAIT);
+                .findByStatusWithLock(CollectionStatus.WAIT);
 
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
@@ -40,9 +41,10 @@ public class PollCollectionStatusService {
         }
     }
 
+    @Transactional
     public void setFailForStartedButNotFinished() {
         List<PollCollectionStatusEntity> pollCollectionStatusEntities = pollCollectionStatusRepository
-                .findByStatusAndFinishedAt(CollectionStatus.IN_PROGRESS, null);
+                .findByStatusAndFinishedAtWithLock(CollectionStatus.IN_PROGRESS, null);
 
         for (PollCollectionStatusEntity pollCollectionStatusEntity : pollCollectionStatusEntities) {
             pollCollectionStatusEntity.setStatus(CollectionStatus.FAILED);
@@ -51,6 +53,7 @@ public class PollCollectionStatusService {
         }
     }
 
+    @Transactional
     public void savePollCollectionStatusForFail(long animeId) {
         PollCollectionStatusEntity pollCollectionStatusEntity =
                 findPollCollectionStatusEntityByAnimeId(animeId);
