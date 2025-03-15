@@ -254,13 +254,17 @@ const SeasonalAnimeList = ({
 
     if (userAnimes == null || Object.entries(userAnimes).length === 0) {
       setUserAnimeDict({});
+      sessionStorage.setItem("userAnimes", "");
       return;
     }
+
     const userAnimeDict = userAnimes.reduce((acc, userAnime) => {
       acc[userAnime.animeId] = userAnime;
       return acc;
     }, {});
+
     setUserAnimeDict(userAnimeDict);
+    sessionStorage.setItem("userAnimes", JSON.stringify(userAnimeDict));
   }, [user]);
 
   useEffect(() => {
@@ -295,7 +299,14 @@ const SeasonalAnimeList = ({
       await refreshUserAnimeStatusDict();
     };
 
-    fetchData();
+    const userAnimes = sessionStorage.getItem("userAnimes");
+    if (userAnimes) {
+      console.log("hello");
+      setUserAnimeDict(JSON.parse(userAnimes));
+    } else {
+      setUserAnimeDict(userAnimes);
+      fetchData();
+    }
   }, [user, refreshUserAnimeStatusDict]);
 
   useEffect(() => {

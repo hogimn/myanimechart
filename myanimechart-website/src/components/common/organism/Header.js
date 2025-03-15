@@ -92,7 +92,7 @@ const Header = () => {
       setIsAuthenticated(authenticated);
 
       if (authenticated) {
-        let storedUser = sessionStorage.getItem("user");
+        const storedUser = sessionStorage.getItem("user");
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         } else {
