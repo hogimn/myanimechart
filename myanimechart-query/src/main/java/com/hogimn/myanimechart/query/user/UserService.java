@@ -27,7 +27,7 @@ public class UserService {
         return UserDto.from(myAnimeListProvider.getMyAnimeListWithToken().getAuthenticatedUser());
     }
 
-    public List<AnimeListStatusDto> findUserAnimeListStatusDtosByYearAndSeason(int year, String season) throws InterruptedException {
+    public List<AnimeListStatusDto> findAllUserAnimeStatuses() {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -56,18 +56,12 @@ public class UserService {
         }
 
         return animeListStatuses
-                .parallelStream()
-                .filter(animeListStatus ->
-                        animeListStatus.getAnime().getStartSeason() != null
-                                && animeListStatus.getAnime().getStartSeason().getYear() != null
-                                && animeListStatus.getAnime().getStartSeason().getYear() == year
-                                && animeListStatus.getAnime().getStartSeason().getSeason() != null
-                                && animeListStatus.getAnime().getStartSeason().getSeason().field().equals(season))
+                .stream()
                 .map(AnimeListStatusDto::from)
                 .toList();
     }
 
-    public AnimeListStatusDto findAnimeListStatusDtoById(int id) throws InterruptedException {
+    public AnimeListStatusDto findAnimeListStatusDtoById(int id) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 

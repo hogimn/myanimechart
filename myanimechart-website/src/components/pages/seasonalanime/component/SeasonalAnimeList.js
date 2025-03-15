@@ -250,10 +250,7 @@ const SeasonalAnimeList = ({
       return;
     }
 
-    const userAnimes = await UserApi.findUserAnimeStatusesByYearAndSeason(
-      year,
-      season
-    );
+    const userAnimes = await UserApi.findAllUserAnimeStatuses();
 
     if (userAnimes == null || Object.entries(userAnimes).length === 0) {
       setUserAnimeDict({});
@@ -264,7 +261,7 @@ const SeasonalAnimeList = ({
       return acc;
     }, {});
     setUserAnimeDict(userAnimeDict);
-  }, [user, year, season]);
+  }, [user]);
 
   useEffect(() => {
     if (!selected) {

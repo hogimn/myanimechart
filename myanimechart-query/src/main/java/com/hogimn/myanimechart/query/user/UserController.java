@@ -31,17 +31,14 @@ public class UserController {
     }
 
     @ApiLoggable
-    @GetMapping("/findUserAnimeStatusesByYearAndSeason/{year}/{season}")
-    public List<AnimeListStatusDto> findUserAnimeStatusesByYearAndSeason(
-            @PathVariable int year, @PathVariable String season
-    ) throws InterruptedException {
-        return userService.findUserAnimeListStatusDtosByYearAndSeason(year, season);
+    @GetMapping("/findAllUserAnimeStatuses")
+    public List<AnimeListStatusDto> findAllUserAnimeStatuses() {
+        return userService.findAllUserAnimeStatuses();
     }
 
     @ApiLoggable
     @GetMapping("/findUserAnimeStatusById")
-    public AnimeListStatusDto findUserAnimeStatusById(@RequestParam("id") int id)
-            throws InterruptedException {
+    public AnimeListStatusDto findUserAnimeStatusById(@RequestParam("id") int id) {
         return userService.findAnimeListStatusDtoById(id);
     }
 
