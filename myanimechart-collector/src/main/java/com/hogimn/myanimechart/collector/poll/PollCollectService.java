@@ -137,6 +137,7 @@ public class PollCollectService {
 
         pollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
 
+        boolean isFail = false;
         try {
             String keyword = getSearchKeyword(animeEntity);
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
@@ -182,10 +183,14 @@ public class PollCollectService {
             pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
+            isFail = true;
         }
 
         collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
-        pollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
+
+        if (!isFail) {
+            pollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
+        }
 
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
