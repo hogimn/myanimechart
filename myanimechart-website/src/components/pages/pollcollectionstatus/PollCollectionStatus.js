@@ -8,6 +8,7 @@ import CommonAlert from "../../common/basic/CommonAlert";
 import { capitalizeFirstLetter } from "../../../util/strUtil";
 import CommonPagination from "../../common/basic/CommonPagination";
 import CommonCollapse from "../../common/basic/CommonCollapse";
+import AnimeImage from "../seasonalanime/component/AnimeImage";
 
 const { Panel } = CommonCollapse;
 
@@ -86,10 +87,12 @@ const PollCollectionStatus = () => {
                     {paginatedItems.map(
                       ({ animeDto, status, startedAt, finishedAt }) => (
                         <ListItem key={animeDto.id} status={status}>
-                          <AnimeImage
-                            src={animeDto.image}
-                            alt={animeDto.title}
-                          />
+                          <ImageWrapper>
+                            <AnimeImage
+                              src={animeDto.image}
+                              alt={animeDto.title}
+                            />
+                          </ImageWrapper>
                           <AnimeInfo>
                             <AnimeTitle>{animeDto.title}</AnimeTitle>
                             <StatusText status={status}>{status}</StatusText>
@@ -152,12 +155,6 @@ const ListItem = styled.div`
   align-items: center;
 `;
 
-const AnimeImage = styled.img`
-  width: 70px;
-  height: 100px;
-  border-radius: 4px;
-`;
-
 const AnimeInfo = styled.div`
   margin-left: 10px;
   display: flex;
@@ -187,6 +184,13 @@ const StatusText = styled.div`
 const TimeText = styled.div`
   color: #ccc;
   font-size: 0.8em;
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  width: 80px;
+  height: 120px;
+  cursor: pointer;
 `;
 
 export default PollCollectionStatus;

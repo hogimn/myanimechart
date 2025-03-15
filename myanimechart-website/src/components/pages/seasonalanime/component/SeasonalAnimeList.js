@@ -303,7 +303,6 @@ const SeasonalAnimeList = ({
     if (userAnimes) {
       setUserAnimeDict(JSON.parse(userAnimes));
     } else {
-      setUserAnimeDict(userAnimes);
       fetchData();
     }
   }, [user, refreshUserAnimeStatusDict]);

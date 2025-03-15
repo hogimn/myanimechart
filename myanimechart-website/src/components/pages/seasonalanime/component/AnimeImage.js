@@ -5,7 +5,6 @@ import useLazyLoad from "../../../hook/useLazyLoad";
 const ImageContainer = styled.div`
   width: 180px;
   height: 100%;
-  position: relative;
 `;
 
 const StyledAnimeImage = styled.img`
