@@ -59,3 +59,18 @@ export const toDateLabel = (str) => {
   }
   return str.split("T")[0];
 };
+
+export const toCollectionStatusLabel = (str) => {
+  switch (str) {
+    case "COMPLETED":
+      return "Completed";
+    case "WAIT":
+      return "Wait";
+    case "FAILED":
+      return "Failed";
+    case "IN_PROGRESS":
+      return "InProgress";
+    default:
+      return str;
+  }
+};

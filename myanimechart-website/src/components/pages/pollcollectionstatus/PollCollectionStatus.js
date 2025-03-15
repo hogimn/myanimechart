@@ -5,7 +5,10 @@ import { formatDate } from "../../../util/dateUtil";
 import CommonSpin from "../../common/basic/CommonSpin";
 import CollectorApi from "../../api/anime/CollectorApi";
 import CommonAlert from "../../common/basic/CommonAlert";
-import { capitalizeFirstLetter } from "../../../util/strUtil";
+import {
+  capitalizeFirstLetter,
+  toCollectionStatusLabel,
+} from "../../../util/strUtil";
 import CommonPagination from "../../common/basic/CommonPagination";
 import CommonCollapse from "../../common/basic/CommonCollapse";
 import AnimeImage from "../seasonalanime/component/AnimeImage";
@@ -95,7 +98,9 @@ const PollCollectionStatus = () => {
                           </ImageWrapper>
                           <AnimeInfo>
                             <AnimeTitle>{animeDto.title}</AnimeTitle>
-                            <StatusText status={status}>{status}</StatusText>
+                            <StatusText status={status}>
+                              {toCollectionStatusLabel(status)}
+                            </StatusText>
                             <TimeText>
                               Last Start: {formatDate(startedAt)}
                             </TimeText>
@@ -172,12 +177,12 @@ const StatusText = styled.div`
   margin: 5px 0;
   color: ${({ status }) =>
     status === "COMPLETED"
-      ? "#4caf50"
+      ? "rgb(86, 228, 157)"
       : status === "WAIT"
-      ? "#9e9e9e"
+      ? "rgb(92, 92, 92)"
       : status === "FAILED"
-      ? "#f44336"
-      : "#2196f3"};
+      ? "rgb(230, 100, 111)"
+      : "rgb(121, 148, 224)"};
   font-weight: bold;
 `;
 
