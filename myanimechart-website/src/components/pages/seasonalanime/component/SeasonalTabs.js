@@ -179,6 +179,11 @@ const SeasonalTabs = () => {
         >
           <CommonSelect.Option value="score">Score</CommonSelect.Option>
           <CommonSelect.Option value="votes">Votes</CommonSelect.Option>
+          <CommonSelect.Option value="rank">Rank</CommonSelect.Option>
+          <CommonSelect.Option value="members">Members</CommonSelect.Option>
+          <CommonSelect.Option value="popularity">
+            Popularity
+          </CommonSelect.Option>
         </CommonSelect>
       </SelectWrapper>
       {input.length > 0 || searchResults.length > 0 ? (
