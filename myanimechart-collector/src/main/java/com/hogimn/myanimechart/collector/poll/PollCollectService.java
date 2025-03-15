@@ -119,6 +119,8 @@ public class PollCollectService {
             } else {
                 break;
             }
+
+            SleepUtil.sleep(30 * 1000);
         }
         return forumTopics;
     }

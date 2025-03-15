@@ -145,6 +145,8 @@ public class AnimeCollectService {
             } else {
                 break;
             }
+
+            SleepUtil.sleep(30 * 1000);
         }
         return animeList;
     }
