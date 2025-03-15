@@ -70,7 +70,7 @@ const PollCollectionStatus = () => {
       <Container>
         {loading ? (
           <LoaderContainer>
-            <CommonSpin size="large" />
+            <CommonSpin />
           </LoaderContainer>
         ) : (
           <CommonCollapse

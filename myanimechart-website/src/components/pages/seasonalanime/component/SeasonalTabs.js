@@ -16,6 +16,7 @@ import AnimeApi from "../../../api/anime/AnimeApi";
 import AnimeSearchBox from "./AnimeSearchBox";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import { toAirStatusLabel, toTypeLabel } from "../../../../util/strUtil";
+import CommonSpin from "../../../common/basic/CommonSpin";
 
 const SelectWrapper = styled.div`
   margin-bottom: 16px;
@@ -39,6 +40,13 @@ const CustomTabs = styled(CommonTabs)`
   }
 `;
 
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+`;
+
 const SeasonalTabs = () => {
   const [sortBy, setSortBy] = useState("score");
   const [filterBy, setFilterBy] = useState({ type: "all", airStatus: "all" });
@@ -46,6 +54,7 @@ const SeasonalTabs = () => {
   const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   let pageSize = 12;
 
@@ -55,9 +64,12 @@ const SeasonalTabs = () => {
       setSearchResults([]);
       return;
     }
+
+    setLoading(true);
     const data = await AnimeApi.findAnimesWithPollsByKeyword(keyword);
     setSearchResults(data);
     setPage(1);
+    setLoading(false);
   };
 
   const [seasonData, setSeasonData] = useState([
@@ -186,7 +198,11 @@ const SeasonalTabs = () => {
           </CommonSelect.Option>
         </CommonSelect>
       </SelectWrapper>
-      {input.length > 0 || searchResults.length > 0 ? (
+      {loading ? (
+        <LoadingWrapper>
+          <CommonSpin />
+        </LoadingWrapper>
+      ) : input.length > 0 || searchResults.length > 0 ? (
         <SeasonalAnimeList
           animeList={searchResults}
           sortBy={sortBy}
