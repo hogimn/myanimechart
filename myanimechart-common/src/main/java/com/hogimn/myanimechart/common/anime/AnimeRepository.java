@@ -8,35 +8,53 @@ import java.util.List;
 public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<AnimeEntity> findByYearAndSeasonOrderByScoreDesc(Integer year, String season);
 
-    @Query("SELECT a FROM AnimeEntity a WHERE NOT (a.year = :year AND a.season = :season) " +
-            "AND NOT (a.year = :nextYear AND a.season = :nextSeason) " +
-            "AND (a.airStatus = :currentlyAiring OR" +
-            " (a.airStatus = :finishedAiring AND " +
-            "(EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
-            "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
-            "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END)))")
+    @Query("""
+            SELECT a FROM AnimeEntity a
+            WHERE
+              NOT (a.year = :year AND a.season = :season)
+              AND NOT (a.year = :nextYear AND a.season = :nextSeason)
+              AND (
+                a.airStatus = :currentlyAiring
+                OR (
+                  a.airStatus = :finishedAiring
+                  AND (
+                    EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
+                    OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
+                      WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
+                      ELSE EXTRACT(MONTH FROM a.endDate) + 1 END
+                  )
+                )
+              )
+            """)
     List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(Integer year, String season,
                                                                 Integer nextYear, String nextSeason,
                                                                 String currentlyAiring, String finishedAiring);
 
-    @Query("SELECT a FROM AnimeEntity a " +
-            "WHERE a.airStatus = :currentlyAiring OR " +
-            "(a.airStatus = :finishedAiring AND " +
-            "(EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) " +
-            "OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE " +
-            "WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1 " +
-            "ELSE EXTRACT(MONTH FROM a.endDate) + 1 END)) " +
-            "ORDER BY " +
-            "  a.year DESC, " +
-            "  CASE a.season " +
-            "    WHEN 'fall' THEN 1 " +
-            "    WHEN 'summer' THEN 2 " +
-            "    WHEN 'spring' THEN 3 " +
-            "    WHEN 'winter' THEN 4 " +
-            "    ELSE 5 " +
-            "  END, " +
-            "  a.score DESC")
+    @Query("""
+            SELECT a FROM AnimeEntity a
+            WHERE
+              a.airStatus = :currentlyAiring
+              OR (
+                a.airStatus = :finishedAiring
+                AND (
+                  EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
+                  OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
+                    WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
+                    ELSE EXTRACT(MONTH FROM a.endDate) + 1 END
+                )
+              )
+            ORDER BY
+              a.year DESC,
+              CASE a.season
+                WHEN 'fall' THEN 1
+                WHEN 'summer' THEN 2
+                WHEN 'spring' THEN 3
+                WHEN 'winter' THEN 4
+                ELSE 5
+              END,
+              a.score DESC,
+              a.rank
+            """)
     List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring(String currentlyAiring, String finishedAiring);
 
     List<AnimeEntity> findAllByTitleContaining(String title);

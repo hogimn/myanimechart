@@ -37,7 +37,8 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
                     WHEN 'winter' THEN 4
                     ELSE 5
                 END,
-                b.score DESC
+                b.score DESC,
+                b.rank
             """)
     List<PollCollectionStatusEntity> findAllOrderByYearAndSeasonAndScore();
 }
