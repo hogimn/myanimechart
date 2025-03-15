@@ -58,12 +58,14 @@ public class PollCollectService {
         this.pollCollectionStatusService = pollCollectionStatusService;
     }
 
+    @SchedulerLock(name = "collectPollByAnimeId")
     public void collectPollByAnimeId(long animeId) {
         AnimeEntity animeEntity = animeService.findAnimeEntityById(animeId);
         pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId());
         collectForumTopics(animeEntity);
     }
 
+    @SchedulerLock(name = "collectPollByYearAndSeason")
     public void collectPollByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
