@@ -301,7 +301,6 @@ const SeasonalAnimeList = ({
 
     const userAnimes = sessionStorage.getItem("userAnimes");
     if (userAnimes) {
-      console.log("hello");
       setUserAnimeDict(JSON.parse(userAnimes));
     } else {
       setUserAnimeDict(userAnimes);
