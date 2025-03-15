@@ -142,6 +142,10 @@ const AnimePollGraph = ({ polls }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
     plugins: {
       tooltip: {
         animation: {
