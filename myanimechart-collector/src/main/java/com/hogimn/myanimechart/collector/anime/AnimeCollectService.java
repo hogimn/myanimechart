@@ -140,6 +140,8 @@ public class AnimeCollectService {
 
             animeList.addAll(tempAnimeList);
 
+            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, animeList.size());
+
             if (tempAnimeList.size() >= limit) {
                 offset += limit;
             } else {

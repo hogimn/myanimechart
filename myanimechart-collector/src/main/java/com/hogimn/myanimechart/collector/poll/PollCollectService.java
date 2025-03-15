@@ -114,6 +114,8 @@ public class PollCollectService {
 
             forumTopics.addAll(tempForumTopics);
 
+            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, forumTopics.size());
+
             if (tempForumTopics.size() >= limit) {
                 offset += limit;
             } else {

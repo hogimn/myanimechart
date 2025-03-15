@@ -44,6 +44,8 @@ public class UserService {
 
             animeListStatuses.addAll(tempAnimeListStatuses);
 
+            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, animeListStatuses.size());
+
             if (tempAnimeListStatuses.size() >= limit) {
                 offset += limit;
             } else {
@@ -82,12 +84,14 @@ public class UserService {
 
             animeListStatuses.addAll(tempAnimeListStatuses);
 
+            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, animeListStatuses.size());
+
             if (tempAnimeListStatuses.size() >= limit) {
                 offset += limit;
             } else {
                 break;
             }
-            
+
             SleepUtil.sleep(30 * 1000);
         }
 
