@@ -458,19 +458,19 @@ const SeasonalAnimeList = ({
                       </span>
                       <span>
                         <FaVoteYea title="Votes" />
-                        {anime.scoringCount.toLocaleString("en-US")}
+                        {anime.scoringCount?.toLocaleString("en-US") || "N/A"}
                       </span>
                       <span>
                         <FaTrophy title="Rank" />
-                        {anime.rank.toLocaleString("en-US")}
+                        {anime.rank?.toLocaleString("en-US") || "N/A"}
                       </span>
                       <span>
                         <FaUserFriends title="Members" />
-                        {anime.members.toLocaleString("en-US")}
+                        {anime.members?.toLocaleString("en-US") || "N/A"}
                       </span>
                       <span>
                         <MdTrendingUp title="Popularity" />
-                        {anime.popularity.toLocaleString("en-US")}
+                        {anime.popularity?.toLocaleString("en-US") || "N/A"}
                       </span>
                     </OverlayBox>
                   </ImageWrapper>

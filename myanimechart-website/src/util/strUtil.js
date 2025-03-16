@@ -50,7 +50,7 @@ export const toEpisodeLabel = (str) => {
 };
 
 export const toScoreLabel = (str) => {
-  return str.toFixed(2);
+  return str?.toFixed(2) || "N/A";
 };
 
 export const toDateLabel = (str) => {
