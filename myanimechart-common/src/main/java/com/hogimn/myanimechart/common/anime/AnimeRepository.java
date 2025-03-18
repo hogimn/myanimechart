@@ -9,7 +9,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     @Query("""
              SELECT a, b
              FROM AnimeEntity a
-               JOIN PollEntity b ON a.id = b.animeId
+               LEFT JOIN PollEntity b ON a.id = b.animeId
              WHERE
                a.year = :year AND a.season = :season
              ORDER BY
@@ -23,9 +23,8 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<AnimeEntity> findByYearAndSeasonOrderByScoreDesc(Integer year, String season);
 
     @Query("""
-            SELECT a, b
+            SELECT a
             FROM AnimeEntity a
-              JOIN PollEntity b ON a.id = b.animeId
             WHERE
               NOT (a.year = :year AND a.season = :season)
               AND NOT (a.year = :nextYear AND a.season = :nextSeason)
@@ -48,7 +47,8 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                                                                 String currentlyAiring, String finishedAiring);
 
     @Query("""
-            SELECT a FROM AnimeEntity a
+            SELECT a
+            FROM AnimeEntity a
             WHERE
               a.airStatus = :currentlyAiring
               OR (
@@ -76,16 +76,16 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring(String currentlyAiring, String finishedAiring);
 
     @Query("""
-             SELECT a, b
-             FROM AnimeEntity a
-               JOIN PollEntity b ON a.id = b.animeId
-             WHERE
-               a.title LIKE CONCAT('%', :title, '%')
-             ORDER BY
-               a.id DESC,
-               b.episode,
-               b.topicId,
-               b.pollOptionId
+            SELECT a, b
+            FROM AnimeEntity a
+              LEFT JOIN PollEntity b ON a.id = b.animeId
+            WHERE
+              a.title LIKE CONCAT('%', :title, '%')
+            ORDER BY
+              a.id DESC,
+              b.episode,
+              b.topicId,
+              b.pollOptionId
             """)
     List<Object[]> findAllWithPollsByTitleContaining(String title);
 

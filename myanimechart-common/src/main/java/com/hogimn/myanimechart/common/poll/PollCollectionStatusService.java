@@ -151,7 +151,7 @@ public class PollCollectionStatusService {
 
     public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
         return pollCollectionStatusRepository
-                .findAllOrderByYearAndSeasonAndScore()
+                .findAllWithAnimeOrderByYearAndSeasonAndScore()
                 .stream()
                 .map(objectList -> {
                     PollCollectionStatusEntity pollCollectionStatusEntity =
