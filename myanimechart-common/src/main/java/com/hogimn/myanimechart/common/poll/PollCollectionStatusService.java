@@ -1,5 +1,7 @@
 package com.hogimn.myanimechart.common.poll;
 
+import com.hogimn.myanimechart.common.anime.AnimeDto;
+import com.hogimn.myanimechart.common.anime.AnimeEntity;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
@@ -148,19 +150,18 @@ public class PollCollectionStatusService {
     }
 
     public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
-        List<PollCollectionStatusDto> pollCollectionStatusDtos =
-                pollCollectionStatusRepository
-                        .findAllOrderByYearAndSeasonAndScore()
-                        .stream()
-                        .map(PollCollectionStatusDto::from)
-                        .toList();
-
-        for (PollCollectionStatusDto pollCollectionStatusDto : pollCollectionStatusDtos) {
-            pollCollectionStatusDto.setAnimeDto(
-                    animeService.findAnimeDtoById(
-                            pollCollectionStatusDto.getAnimeId()));
-        }
-
-        return pollCollectionStatusDtos;
+        return pollCollectionStatusRepository
+                .findAllOrderByYearAndSeasonAndScore()
+                .stream()
+                .map(objectList -> {
+                    PollCollectionStatusEntity pollCollectionStatusEntity =
+                            (PollCollectionStatusEntity) objectList[0];
+                    AnimeEntity animeEntity = (AnimeEntity) objectList[1];
+                    PollCollectionStatusDto pollCollectionStatusDto =
+                            PollCollectionStatusDto.from(pollCollectionStatusEntity);
+                    pollCollectionStatusDto.setAnimeDto(AnimeDto.from(animeEntity));
+                    return pollCollectionStatusDto;
+                })
+                .toList();
     }
 }

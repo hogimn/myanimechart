@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.common.anime;
 
+import com.hogimn.myanimechart.common.poll.PollEntity;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.poll.PollDto;
 import com.hogimn.myanimechart.common.poll.PollService;
@@ -7,7 +8,9 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -44,10 +47,6 @@ public class AnimeService {
         animeRepository.save(animeEntity);
     }
 
-    public AnimeDto findAnimeDtoById(long id) {
-        return AnimeDto.from(findAnimeEntityById(id));
-    }
-
     public AnimeEntity findAnimeEntityById(long id) {
         Optional<AnimeEntity> optional = animeRepository.findById(id);
         if (optional.isPresent()) {
@@ -74,30 +73,43 @@ public class AnimeService {
         return animeRepository.findByForceCollect("Y");
     }
 
-    public List<AnimeEntity> findAnimeEntitiesByKeyword(String keyword) {
-        return animeRepository.findAllByTitleContaining(keyword);
+    public List<AnimeDto> findAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
+        List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
+        return convertToAnimeDtos(results);
     }
 
     public List<AnimeDto> findAnimeDtosWithPollDtosByKeyword(String keyword) {
-        List<AnimeEntity> animeEntities = findAnimeEntitiesByKeyword(keyword);
-        return convertToAnimeDtosWithPollDtos(animeEntities);
+        List<Object[]> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
+        return convertToAnimeDtos(results);
     }
 
-    public List<AnimeDto> findAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
-        List<AnimeEntity> animeEntities = findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
-        return convertToAnimeDtosWithPollDtos(animeEntities);
-    }
+    private List<AnimeDto> convertToAnimeDtos(List<Object[]> results) {
+        List<AnimeDto> animeDtos = new ArrayList<>();
+        List<PollDto> pollDtos = new ArrayList<>();
+        AnimeDto prevAnimeDto = null;
 
-    private List<AnimeDto> convertToAnimeDtosWithPollDtos(List<AnimeEntity> animeEntities) {
-        List<AnimeDto> animeDtos = animeEntities.stream()
-                .map(AnimeDto::from)
-                .toList();
+        for (var result : results) {
+            AnimeEntity animeEntity = (AnimeEntity) result[0];
+            PollEntity pollEntity = (PollEntity) result[1];
+            AnimeDto animeDto = AnimeDto.from(animeEntity);
+            PollDto pollDto = PollDto.from(pollEntity);
 
-        for (AnimeDto animeDto : animeDtos) {
-            List<PollDto> pollDtos = pollService.findPollDtosByAnimeId(animeDto.getId());
-            animeDto.setPolls(pollDtos);
+            if (prevAnimeDto == null) {
+                prevAnimeDto = animeDto;
+            } else if (Objects.equals(animeDto.getId(), prevAnimeDto.getId())) {
+                pollDtos.add(pollDto);
+            } else {
+                prevAnimeDto.setPolls(pollDtos);
+                pollDtos = new ArrayList<>();
+                animeDtos.add(prevAnimeDto);
+                prevAnimeDto = animeDto;
+            }
         }
 
+        if (prevAnimeDto != null) {
+            prevAnimeDto.setPolls(pollDtos);
+            animeDtos.add(prevAnimeDto);
+        }
         return animeDtos;
     }
 }

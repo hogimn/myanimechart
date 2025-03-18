@@ -19,26 +19,26 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
 
     @Query("""
             SELECT p FROM PollCollectionStatusEntity p
-             WHERE p.status = :collectionStatus
+            WHERE p.status = :collectionStatus
             """)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<PollCollectionStatusEntity> findByStatusWithLock(CollectionStatus collectionStatus);
 
     @Query("""
-            SELECT a
+            SELECT a, b
             FROM PollCollectionStatusEntity a
-            JOIN AnimeEntity b ON a.animeId = b.id
+              JOIN AnimeEntity b ON a.animeId = b.id
             ORDER BY
-                b.year DESC,
-                CASE b.season
-                    WHEN 'fall' THEN 1
-                    WHEN 'summer' THEN 2
-                    WHEN 'spring' THEN 3
-                    WHEN 'winter' THEN 4
-                    ELSE 5
-                END,
-                b.score DESC,
-                b.rank
+              b.year DESC,
+              CASE b.season
+                WHEN 'fall' THEN 1
+                WHEN 'summer' THEN 2
+                WHEN 'spring' THEN 3
+                WHEN 'winter' THEN 4
+                ELSE 5
+              END,
+              b.score DESC,
+              b.rank
             """)
-    List<PollCollectionStatusEntity> findAllOrderByYearAndSeasonAndScore();
+    List<Object[]> findAllOrderByYearAndSeasonAndScore();
 }
