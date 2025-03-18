@@ -13,7 +13,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
              WHERE
                a.year = :year AND a.season = :season
              ORDER BY
-               a.score DESC,
+               a.id DESC,
                b.episode,
                b.topicId,
                b.pollOptionId
@@ -82,7 +82,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
              WHERE
                a.title LIKE CONCAT('%', :title, '%')
              ORDER BY
-               a.score DESC,
+               a.id DESC,
                b.episode,
                b.topicId,
                b.pollOptionId
