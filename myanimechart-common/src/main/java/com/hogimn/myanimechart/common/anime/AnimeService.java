@@ -92,6 +92,13 @@ public class AnimeService {
             AnimeEntity animeEntity = (AnimeEntity) result[0];
             PollEntity pollEntity = (PollEntity) result[1];
             AnimeDto animeDto = AnimeDto.from(animeEntity);
+
+            if (pollEntity == null) {
+                animeDtos.add(animeDto);
+                prevAnimeDto = animeDto;
+                continue;
+            }
+
             PollDto pollDto = PollDto.from(pollEntity);
 
             if (prevAnimeDto == null) {
