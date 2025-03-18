@@ -17,6 +17,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                 a.airStatus = :currentlyAiring
                 OR (
                   a.airStatus = :finishedAiring
+                  AND EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
                   AND (
                     EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
                     OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
@@ -36,6 +37,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
               a.airStatus = :currentlyAiring
               OR (
                 a.airStatus = :finishedAiring
+                AND EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
                 AND (
                   EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
                   OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
