@@ -95,26 +95,23 @@ public class AnimeService {
 
             if (pollEntity == null) {
                 animeDtos.add(animeDto);
-                prevAnimeDto = animeDto;
-                continue;
-            }
-
-            PollDto pollDto = PollDto.from(pollEntity);
-
-            if (prevAnimeDto == null) {
-                prevAnimeDto = animeDto;
-            } else if (Objects.equals(animeDto.getId(), prevAnimeDto.getId())) {
+            } else if (pollDtos.isEmpty() ||
+                    Objects.equals(animeDto.getId(), prevAnimeDto.getId())) {
+                PollDto pollDto = PollDto.from(pollEntity);
                 pollDtos.add(pollDto);
             } else {
                 prevAnimeDto.setPolls(pollDtos);
                 pollDtos = new ArrayList<>();
                 animeDtos.add(prevAnimeDto);
-                prevAnimeDto = animeDto;
             }
+
+            prevAnimeDto = animeDto;
         }
 
         if (prevAnimeDto != null) {
-            prevAnimeDto.setPolls(pollDtos);
+            if (!pollDtos.isEmpty()) {
+                prevAnimeDto.setPolls(pollDtos);
+            }
             animeDtos.add(prevAnimeDto);
         }
         return animeDtos;
