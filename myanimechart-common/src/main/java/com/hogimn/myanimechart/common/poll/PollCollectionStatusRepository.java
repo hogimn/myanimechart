@@ -27,7 +27,7 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
     @Query("""
             SELECT a, b
             FROM PollCollectionStatusEntity a
-              JOIN AnimeEntity b ON a.animeId = b.id
+              LEFT JOIN AnimeEntity b ON a.animeId = b.id
             ORDER BY
               b.year DESC,
               CASE b.season
