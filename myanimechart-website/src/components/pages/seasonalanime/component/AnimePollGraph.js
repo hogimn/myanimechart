@@ -39,11 +39,12 @@ const ProgressBarFill = styled.div`
   width: ${(props) => props.width}%;
 `;
 
-const AnimePollGraph = ({ polls = [] }) => {
+const AnimePollGraph = ({ polls }) => {
   const chartRef = useRef(null);
 
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const validPolls = polls ?? [];
 
   const zoomOptions = {
     zoom: {
@@ -62,14 +63,16 @@ const AnimePollGraph = ({ polls = [] }) => {
     },
   };
 
-  const episodes = Array.from(new Set(polls.map((poll) => poll.episode))).sort(
-    (a, b) => a - b
-  );
+  const episodes = Array.from(
+    new Set(validPolls.map((poll) => poll.episode))
+  ).sort((a, b) => a - b);
 
   const pollOptions = [1, 2, 3, 4, 5];
 
   const dataPerEpisode = episodes.map((episode) => {
-    const pollsForEpisode = polls.filter((poll) => poll.episode === episode);
+    const pollsForEpisode = validPolls.filter(
+      (poll) => poll.episode === episode
+    );
     const totalVotes = pollsForEpisode.reduce(
       (sum, poll) => sum + poll.votes,
       0
