@@ -39,7 +39,7 @@ const ProgressBarFill = styled.div`
   width: ${(props) => props.width}%;
 `;
 
-const AnimePollGraph = ({ polls }) => {
+const AnimePollGraph = ({ polls = [] }) => {
   const chartRef = useRef(null);
 
   const [modalData, setModalData] = useState(null);
