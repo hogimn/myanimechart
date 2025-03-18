@@ -88,23 +88,23 @@ public class AnimeDto {
         animeDto.setScore(anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0);
         animeDto.setMembers(anime.getUserListingCount());
         animeDto.setYear(anime.getStartSeason().getYear());
-        animeDto.setSource(anime.getSource().field());
+        animeDto.setSource(anime.getSource() != null ? anime.getSource().field() : anime.getRawSource());
         animeDto.setGenre(Arrays.stream(anime.getGenres()).map(Genre::getName).toList());
         animeDto.setStudios(Arrays.stream(anime.getStudios()).map(IDN::getName).toList());
         animeDto.setRank(anime.getRank());
         animeDto.setPopularity(anime.getPopularity());
         animeDto.setScoringCount(anime.getUserScoringCount());
         animeDto.setEpisodes(anime.getEpisodes());
-        animeDto.setAirStatus(anime.getStatus().field());
+        animeDto.setAirStatus(anime.getStatus() != null ? anime.getStatus().field() : anime.getRawStatus());
         animeDto.setTitle(anime.getTitle());
-        animeDto.setType(anime.getType().field());
+        animeDto.setType(anime.getType() != null ? anime.getType().field() : anime.getRawType());
         animeDto.setStartDate(anime.getStartDate() != null ? anime.getStartDate().getDate() : null);
         animeDto.setEndDate(anime.getEndDate() != null ? anime.getEndDate().getDate() : null);
         animeDto.setEnglishTitle(anime.getAlternativeTitles().getEnglish());
         animeDto.setJapaneseTitle(anime.getAlternativeTitles().getJapanese());
         animeDto.setSynopsis(anime.getSynopsis());
-        animeDto.setRating(anime.getRating().field());
-        animeDto.setNsfw(anime.getNSFW().field());
+        animeDto.setRating(anime.getRating() != null ? anime.getRating().field() : anime.getRawRating());
+        animeDto.setNsfw(anime.getNSFW() != null ? anime.getNSFW().field() : anime.getRawNSFW());
         return animeDto;
     }
 }
