@@ -32,12 +32,22 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                 a.airStatus = :currentlyAiring
                 OR (
                   a.airStatus = :finishedAiring
-                  AND EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
                   AND (
-                    EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
-                    OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
-                      WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
-                      ELSE EXTRACT(MONTH FROM a.endDate) + 1 END
+                    (
+                      EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
+                      AND EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
+                    )
+                    OR
+                    (
+                      EXTRACT(YEAR FROM a.endDate) = CASE
+                        WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN EXTRACT(YEAR FROM CURRENT_TIMESTAMP) + 1
+                        ELSE EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
+                        END
+                      AND EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
+                        WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
+                        ELSE EXTRACT(MONTH FROM a.endDate) + 1
+                        END
+                    )
                   )
                 )
               )
@@ -53,12 +63,22 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
               a.airStatus = :currentlyAiring
               OR (
                 a.airStatus = :finishedAiring
-                AND EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
                 AND (
-                  EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
-                  OR EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
-                    WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
-                    ELSE EXTRACT(MONTH FROM a.endDate) + 1 END
+                  (
+                    EXTRACT(YEAR FROM a.endDate) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
+                    AND EXTRACT(MONTH FROM a.endDate) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP)
+                  )
+                  OR
+                  (
+                    EXTRACT(YEAR FROM a.endDate) = CASE
+                      WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN EXTRACT(YEAR FROM CURRENT_TIMESTAMP) + 1
+                      ELSE EXTRACT(YEAR FROM CURRENT_TIMESTAMP)
+                      END
+                    AND EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = CASE
+                      WHEN EXTRACT(MONTH FROM a.endDate) = 12 THEN 1
+                      ELSE EXTRACT(MONTH FROM a.endDate) + 1
+                      END
+                  )
                 )
               )
             ORDER BY
