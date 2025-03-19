@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -84,40 +86,26 @@ public class AnimeService {
     }
 
     private List<AnimeDto> convertToAnimeDtos(List<Object[]> results) {
-        List<AnimeDto> animeDtos = new ArrayList<>();
-        List<PollDto> pollDtos = new ArrayList<>();
-        AnimeDto prevAnimeDto = null;
+        Map<Long, AnimeDto> animeDtoMap = new HashMap<>();
 
         for (var result : results) {
             AnimeEntity animeEntity = (AnimeEntity) result[0];
             PollEntity pollEntity = (PollEntity) result[1];
-            AnimeDto animeDto = AnimeDto.from(animeEntity);
 
-            if (pollEntity == null) {
-                if (!pollDtos.isEmpty()) {
-                    prevAnimeDto.setPolls(pollDtos);
-                    animeDtos.add(prevAnimeDto);
-                }
-                animeDtos.add(animeDto);
-            } else if (pollDtos.isEmpty() ||
-                    Objects.equals(animeDto.getId(), prevAnimeDto.getId())) {
+            long animeId = animeEntity.getId();
+            AnimeDto animeDto = animeDtoMap.computeIfAbsent(animeId,
+                    id -> AnimeDto.from(animeEntity));
+
+            if (animeDto.getPolls() == null) {
+                animeDto.setPolls(new ArrayList<>());
+            }
+
+            if (pollEntity != null) {
                 PollDto pollDto = PollDto.from(pollEntity);
-                pollDtos.add(pollDto);
-            } else {
-                prevAnimeDto.setPolls(pollDtos);
-                pollDtos = new ArrayList<>();
-                animeDtos.add(prevAnimeDto);
-            }
-
-            prevAnimeDto = animeDto;
-        }
-
-        if (prevAnimeDto != null) {
-            if (!pollDtos.isEmpty()) {
-                prevAnimeDto.setPolls(pollDtos);
-                animeDtos.add(prevAnimeDto);
+                animeDto.getPolls().add(pollDto);
             }
         }
-        return animeDtos;
+
+        return new ArrayList<>(animeDtoMap.values());
     }
 }
