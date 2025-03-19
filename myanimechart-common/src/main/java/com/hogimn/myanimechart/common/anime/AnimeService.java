@@ -94,6 +94,10 @@ public class AnimeService {
             AnimeDto animeDto = AnimeDto.from(animeEntity);
 
             if (pollEntity == null) {
+                if (!pollDtos.isEmpty()) {
+                    prevAnimeDto.setPolls(pollDtos);
+                    animeDtos.add(prevAnimeDto);
+                }
                 animeDtos.add(animeDto);
             } else if (pollDtos.isEmpty() ||
                     Objects.equals(animeDto.getId(), prevAnimeDto.getId())) {
@@ -111,8 +115,8 @@ public class AnimeService {
         if (prevAnimeDto != null) {
             if (!pollDtos.isEmpty()) {
                 prevAnimeDto.setPolls(pollDtos);
+                animeDtos.add(prevAnimeDto);
             }
-            animeDtos.add(prevAnimeDto);
         }
         return animeDtos;
     }
