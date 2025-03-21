@@ -49,7 +49,7 @@ const LoadingWrapper = styled.div`
 
 const SeasonalTabs = () => {
   const [sortBy, setSortBy] = useState("score");
-  const [filterBy, setFilterBy] = useState({ type: "all", airStatus: "all" });
+  const [filterBy, setFilterBy] = useState({ type: "tv", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
   const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
