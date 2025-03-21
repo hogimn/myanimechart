@@ -6,6 +6,7 @@ import {
   toSourceLabel,
   toTypeLabel,
 } from "../../../../util/strUtil";
+import TitleLink from "../../../common/link/TitleLink";
 
 const ListBox = styled.div`
   display: flex;
@@ -142,15 +143,6 @@ const TitleContainer = styled.span`
   }
 `;
 
-const Link = styled.a`
-  color: #1890ff;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const AnimeDetails = styled.div`
   padding: 10px;
   font-size: 0.8rem;
@@ -193,12 +185,12 @@ const DescriptionSection = ({ anime }) => {
   return (
     <DescriptionContainer ref={containerRef} expanded={expanded}>
       <HeaderContainer>
-        <Link href={anime.link} target="_blank" rel="noopener noreferrer">
+        <TitleLink href={anime.link} target="_blank" rel="noopener noreferrer">
           <TitleContainer>
             <Title>{anime.title}</Title>
             <SubTitle>{anime.englishTitle}</SubTitle>
           </TitleContainer>
-        </Link>
+        </TitleLink>
       </HeaderContainer>
       <Box>
         <Dot

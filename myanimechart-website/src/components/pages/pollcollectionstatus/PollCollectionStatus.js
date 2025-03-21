@@ -12,6 +12,7 @@ import {
 import CommonPagination from "../../common/basic/CommonPagination";
 import CommonCollapse from "../../common/basic/CommonCollapse";
 import AnimeImage from "../seasonalanime/component/AnimeImage";
+import TitleLink from "../../common/link/TitleLink";
 
 const { Panel } = CommonCollapse;
 
@@ -97,7 +98,13 @@ const PollCollectionStatus = () => {
                             />
                           </ImageWrapper>
                           <AnimeInfo>
-                            <AnimeTitle>{animeDto.title}</AnimeTitle>
+                            <TitleLink
+                              href={animeDto.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <AnimeTitle>{animeDto.title}</AnimeTitle>
+                            </TitleLink>
                             <StatusText status={status}>
                               {toCollectionStatusLabel(status)}
                             </StatusText>
