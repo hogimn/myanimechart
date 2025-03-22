@@ -28,10 +28,11 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                LEFT JOIN PollCollectionStatusEntity b ON a.id = b.animeId
              WHERE
                a.year = :year AND a.season = :season
+               AND b.status = :status
              ORDER BY
                a.score DESC
             """)
-    List<AnimeEntity> findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(Integer year, String season);
+    List<AnimeEntity> findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(Integer year, String season, String status);
 
     @Query("""
             SELECT a

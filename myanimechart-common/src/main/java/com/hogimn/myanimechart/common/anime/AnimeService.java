@@ -62,7 +62,7 @@ public class AnimeService {
     }
 
     public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(int year, String season) {
-        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season);
+        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season, "FAILED");
     }
 
     public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
