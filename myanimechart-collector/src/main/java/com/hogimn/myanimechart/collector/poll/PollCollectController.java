@@ -42,7 +42,7 @@ public class PollCollectController {
     }
 
     @ApiLoggable
-    @GetMapping("/resumeCollectPollByYearAndSeason")
+    @PostMapping("/resumeCollectPollByYearAndSeason")
     public void resumeCollectPollByYearAndSeason(
             @RequestParam("year") int year, @RequestParam("season") String season
     ) {
