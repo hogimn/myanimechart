@@ -113,6 +113,13 @@ public class AnimeCollectService {
                     }
 
                     AnimeDto animeDto = AnimeDto.from(anime);
+
+                    if (animeDto.getScore() == 0.0) {
+                        log.info("Skipping anime '{}': Score {} (expected: >= 0)",
+                                animeDto.getTitle(), animeDto.getScore());
+                        continue;
+                    }
+                    
                     serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
