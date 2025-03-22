@@ -61,6 +61,10 @@ public class AnimeService {
         return animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
     }
 
+    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(int year, String season) {
+        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season);
+    }
+
     public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
                                                                        int nextYear, String nextSeason) {
         return animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(

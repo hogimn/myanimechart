@@ -42,6 +42,14 @@ public class PollCollectController {
     }
 
     @ApiLoggable
+    @GetMapping("/resumeCollectPollByYearAndSeason")
+    public void resumeCollectPollByYearAndSeason(
+            @RequestParam("year") int year, @RequestParam("season") String season
+    ) {
+        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
+    }
+
+    @ApiLoggable
     @PostMapping("/collectPollByAnimeId")
     public void collectSeasonalPoll(@RequestParam("animeId") long animeId) {
         pollCollectService.collectPollByAnimeId(animeId);

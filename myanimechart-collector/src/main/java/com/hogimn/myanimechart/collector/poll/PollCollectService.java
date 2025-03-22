@@ -332,4 +332,12 @@ public class PollCollectService {
             return -1;
         }
     }
+
+    public void resumeCollectPollByYearAndSeason(int year, String season) {
+        List<AnimeEntity> animeEntities = animeService
+                .findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season);
+        animeEntities.forEach(animeEntity ->
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+        animeEntities.forEach(this::collectForumTopics);
+    }
 }

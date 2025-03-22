@@ -23,6 +23,17 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<AnimeEntity> findByYearAndSeasonOrderByScoreDesc(Integer year, String season);
 
     @Query("""
+             SELECT a
+             FROM AnimeEntity a
+               LEFT JOIN PollCollectionStatusEntity b ON a.id = b.animeId
+             WHERE
+               a.year = :year AND a.season = :season
+             ORDER BY
+               a.score DESC
+            """)
+    List<AnimeEntity> findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(Integer year, String season);
+
+    @Query("""
             SELECT a
             FROM AnimeEntity a
             WHERE
