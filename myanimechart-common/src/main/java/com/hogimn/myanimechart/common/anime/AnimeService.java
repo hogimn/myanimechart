@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.common.anime;
 
+import com.hogimn.myanimechart.common.poll.CollectionStatus;
 import com.hogimn.myanimechart.common.poll.PollEntity;
 import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.poll.PollDto;
@@ -62,7 +63,7 @@ public class AnimeService {
     }
 
     public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(int year, String season) {
-        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season, "FAILED");
+        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season, CollectionStatus.FAILED);
     }
 
     public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,

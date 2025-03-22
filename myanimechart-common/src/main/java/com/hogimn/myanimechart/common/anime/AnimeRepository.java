@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.common.anime;
 
+import com.hogimn.myanimechart.common.poll.CollectionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -32,7 +33,8 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
              ORDER BY
                a.score DESC
             """)
-    List<AnimeEntity> findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(Integer year, String season, String status);
+    List<AnimeEntity> findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(
+            Integer year, String season, CollectionStatus status);
 
     @Query("""
             SELECT a
