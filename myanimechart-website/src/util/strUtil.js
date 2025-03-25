@@ -8,10 +8,6 @@ export const toTypeLabel = (str) => {
       return "ONA";
     case "movie":
       return "Movie";
-    case "music":
-      return "Music";
-    case "pv":
-      return "PV";
     case "tv_special":
       return "TV Special";
     default:
