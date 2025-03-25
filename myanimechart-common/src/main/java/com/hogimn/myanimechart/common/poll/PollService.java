@@ -21,21 +21,10 @@ public class PollService {
         this.pollRepository = pollRepository;
     }
 
-    private List<PollEntity> findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(long animeId) {
-        return pollRepository.findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(animeId);
-    }
-
-    public List<PollDto> findPollDtosByAnimeId(long animeId) {
-        List<PollEntity> pollEntities = findByAnimeIdOrderByEpisodeAscTopicIdAscPollOptionIdAsc(animeId);
-        List<PollEntity> uniquePollEntities = removeDuplicateForum(pollEntities);
-
-        return uniquePollEntities.stream().map(PollDto::from).toList();
-    }
-
-    private List<PollEntity> removeDuplicateForum(List<PollEntity> pollEntities) {
+    public List<PollDto> removeDuplicateForum(List<PollDto> pollDtos) {
         Map<String, Map<Long, Integer>> episodeOptionVotesMap = new HashMap<>();
 
-        for (PollEntity poll : pollEntities) {
+        for (PollDto poll : pollDtos) {
             String key = poll.getEpisode() + "-" + poll.getPollOptionId();
             episodeOptionVotesMap.putIfAbsent(key, new HashMap<>());
             episodeOptionVotesMap.get(key).merge(poll.getTopicId(), poll.getVotes(), Integer::sum);
@@ -50,7 +39,7 @@ public class PollService {
             );
         }
 
-        return pollEntities.stream()
+        return pollDtos.stream()
                 .filter(poll -> {
                     String key = poll.getEpisode() + "-" + poll.getPollOptionId();
                     return maxTopicMap.get(key).equals(poll.getTopicId());
@@ -65,8 +54,8 @@ public class PollService {
         return pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(animeId, pollOptionId, topicId);
     }
 
-    public PollEntity save(PollEntity pollEntity) {
-        return pollRepository.save(pollEntity);
+    public void save(PollEntity pollEntity) {
+        pollRepository.save(pollEntity);
     }
 
     public void delete(PollEntity found) {

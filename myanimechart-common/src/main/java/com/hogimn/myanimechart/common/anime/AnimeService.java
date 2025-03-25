@@ -111,6 +111,15 @@ public class AnimeService {
             }
         }
 
+        for (var entry : animeDtoMap.entrySet()) {
+            AnimeDto animeDto = entry.getValue();
+            List<PollDto> pollDtos = animeDto.getPolls();
+            if (pollDtos != null && !pollDtos.isEmpty()) {
+                List<PollDto> uniquePollDtos = pollService.removeDuplicateForum(pollDtos);
+                animeDto.setPolls(uniquePollDtos);
+            }
+        }
+
         return new ArrayList<>(animeDtoMap.values());
     }
 }
