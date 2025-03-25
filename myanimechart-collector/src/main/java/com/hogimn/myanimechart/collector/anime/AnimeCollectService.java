@@ -119,6 +119,13 @@ public class AnimeCollectService {
                                 animeDto.getTitle(), animeDto.getScore());
                         continue;
                     }
+
+                    if (Objects.equals(animeDto.getType(), "pv")
+                            || Objects.equals(animeDto.getType(), "music")) {
+                        log.info("Skipping anime '{}': Type {} (expected: not pv and music)",
+                                animeDto.getTitle(), animeDto.getType());
+                        continue;
+                    }
                     
                     serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 } catch (Exception e) {
