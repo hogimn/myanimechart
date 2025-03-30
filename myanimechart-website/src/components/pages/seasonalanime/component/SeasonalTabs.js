@@ -165,11 +165,6 @@ const SeasonalTabs = () => {
         >
           <CommonSelect.Option value="all">All</CommonSelect.Option>
           <CommonSelect.Option value="tv">TV</CommonSelect.Option>
-          <CommonSelect.Option value="ona">ONA</CommonSelect.Option>
-          <CommonSelect.Option value="movie">Movie</CommonSelect.Option>
-          <CommonSelect.Option value="tv_special">
-            TV Special
-          </CommonSelect.Option>
         </CommonSelect>
         <CommonSelect
           value={`Air Status: ${toAirStatusLabel(filterBy.airStatus)}`}
