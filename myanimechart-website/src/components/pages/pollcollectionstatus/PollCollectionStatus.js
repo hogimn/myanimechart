@@ -21,6 +21,7 @@ const PollCollectionStatus = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState({});
+  const [activePanel, setActivePanel] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +43,28 @@ const PollCollectionStatus = () => {
           return acc;
         }, {});
         setCurrentPage(initialPageState);
+
+        const inProgressAnime = data.find(
+          ({ status }) => status === "IN_PROGRESS"
+        );
+        if (inProgressAnime) {
+          const groupKey = `${inProgressAnime.animeDto.year}-${inProgressAnime.animeDto.season}`;
+
+          if (groupedData[groupKey]) {
+            setActivePanel([groupKey]);
+            const page = Math.ceil(
+              (groupedData[groupKey].findIndex(
+                ({ animeDto }) => animeDto.id === inProgressAnime.animeDto.id
+              ) +
+                1) /
+                5
+            );
+            setCurrentPage((prev) => ({
+              ...prev,
+              [groupKey]: page,
+            }));
+          }
+        }
       } catch (err) {
         setError("Failed to fetch poll collection status");
       } finally {
@@ -76,7 +99,7 @@ const PollCollectionStatus = () => {
         ) : (
           <CommonCollapse
             accordion
-            defaultActiveKey={[Object.keys(animeGroups)[0]]}
+            defaultActiveKey={activePanel} // 활성화된 Panel 설정
           >
             {Object.entries(animeGroups).map(([key, animeList]) => {
               const [year, season] = key.split("-");
