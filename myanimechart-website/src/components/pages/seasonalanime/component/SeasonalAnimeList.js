@@ -282,6 +282,8 @@ const SeasonalAnimeList = ({
       return;
     }
 
+    let isMounted = true;
+
     const fetchData = async () => {
       setAnimesLoading(true);
       try {
@@ -289,11 +291,17 @@ const SeasonalAnimeList = ({
           year,
           season
         );
-        setAnimes(animes);
+        if (isMounted) {
+          setAnimes(animes);
+        }
       } catch (err) {
-        setError("Failed to fetch seasonal anime");
+        if (isMounted) {
+          setError("Failed to fetch seasonal anime");
+        }
       } finally {
-        setAnimesLoading(false);
+        if (isMounted) {
+          setAnimesLoading(false);
+        }
       }
     };
 
@@ -302,6 +310,10 @@ const SeasonalAnimeList = ({
     } else if (animeList != null) {
       setAnimes(animeList);
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [year, season, animeList, selected]);
 
   useEffect(() => {
