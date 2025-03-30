@@ -5,7 +5,7 @@ INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
 VALUES (49709, 'Fumetsu no Anata e 2nd Season');
 
 INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
-VALUES (49709, 'Shin Tennis no Ouji-sama: U-17 World Cup');
+VALUES (50099, 'Shin Tennis no Ouji-sama: U-17 World Cup');
 
 INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
 VALUES (48417, 'Maou Gakuin no Futekigousha: Shijou Saikyou no Maou no Shiso, Tensei shite Shison-tachi no Gakkou e Kayou II');
