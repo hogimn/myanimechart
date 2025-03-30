@@ -206,13 +206,23 @@ const SeasonalAnimeList = ({
   const [userAnimeLoading, setUserAnimeLoading] = useState(false);
   const [userAnimeDeleting, setUserAnimeDeleting] = useState(false);
   const [userAnimeUpdating, setUserAnimeUpdating] = useState(false);
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   const handleImageClick = (src) => {
-    setSelectedImage(src);
+    setIsLoadingImage(true);
+    setSelectedImage(null);
+
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      setSelectedImage(src);
+      setIsLoadingImage(false);
+    };
   };
 
   const closeModal = () => {
     setSelectedImage(null);
+    setIsLoadingImage(false);
   };
 
   const openEditModal = async (anime) => {
@@ -658,16 +668,18 @@ const SeasonalAnimeList = ({
           footer={null}
           centered
         >
-          <img
-            src={selectedImage}
-            alt="Anime"
-            style={{
-              width: "100%",
-              height: "auto",
-              maxHeight: "80vh",
-              objectFit: "contain",
-            }}
-          />
+          {!isLoadingImage && selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Anime"
+              style={{
+                width: "100%",
+                height: "auto",
+                maxHeight: "80vh",
+                objectFit: "contain",
+              }}
+            />
+          )}
         </CommonModal>
       </StyledSpin>
     </>
