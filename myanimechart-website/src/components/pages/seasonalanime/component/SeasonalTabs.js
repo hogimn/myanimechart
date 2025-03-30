@@ -163,7 +163,6 @@ const SeasonalTabs = () => {
           value={`Type: ${toTypeLabel(filterBy.type)}`}
           onChange={(value) => setFilterBy({ ...filterBy, type: value })}
         >
-          <CommonSelect.Option value="all">All</CommonSelect.Option>
           <CommonSelect.Option value="tv">TV</CommonSelect.Option>
         </CommonSelect>
         <CommonSelect
