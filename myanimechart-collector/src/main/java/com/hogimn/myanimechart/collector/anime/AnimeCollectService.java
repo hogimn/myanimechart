@@ -120,13 +120,12 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    if (Objects.equals(animeDto.getType(), "pv")
-                            || Objects.equals(animeDto.getType(), "music")) {
-                        log.info("Skipping anime '{}': Type {} (expected: not pv and music)",
+                    if (!Objects.equals(animeDto.getType(), "tv")) {
+                        log.info("Skipping anime '{}': Type {} (expected: tv)",
                                 animeDto.getTitle(), animeDto.getType());
                         continue;
                     }
-                    
+
                     serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
