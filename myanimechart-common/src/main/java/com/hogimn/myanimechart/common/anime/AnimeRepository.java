@@ -130,7 +130,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
              FROM AnimeEntity a
                LEFT JOIN PollCollectionStatusEntity b ON a.id = b.animeId
              WHERE
-               AND b.status = :status
+               b.status = :status
              ORDER BY
                a.score DESC
             """)
