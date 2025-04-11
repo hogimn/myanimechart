@@ -44,5 +44,6 @@ public class PollCollectJob {
 
     public void collectPoll(String batchJobName) {
         pollCollectService.collectSeasonalPoll(batchJobName);
+        pollCollectService.resumeFailedCollection();
     }
 }

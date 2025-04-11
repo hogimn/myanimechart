@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -121,5 +120,9 @@ public class AnimeService {
         }
 
         return new ArrayList<>(animeDtoMap.values());
+    }
+
+    public List<AnimeEntity> findFailedCollectionAnimes() {
+        return animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
     }
 }

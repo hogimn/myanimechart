@@ -124,4 +124,15 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<Object[]> findAllWithPollsByTitleContaining(String title);
 
     List<AnimeEntity> findByForceCollect(String forceCollect);
+
+    @Query("""
+             SELECT a
+             FROM AnimeEntity a
+               LEFT JOIN PollCollectionStatusEntity b ON a.id = b.animeId
+             WHERE
+               AND b.status = :status
+             ORDER BY
+               a.score DESC
+            """)
+    List<AnimeEntity> findAnimesByCollectionStatus(CollectionStatus status);
 }

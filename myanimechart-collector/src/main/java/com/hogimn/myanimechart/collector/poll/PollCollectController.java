@@ -42,14 +42,6 @@ public class PollCollectController {
     }
 
     @ApiLoggable
-    @PostMapping("/resumeCollectPollByYearAndSeason")
-    public void resumeCollectPollByYearAndSeason(
-            @RequestParam("year") int year, @RequestParam("season") String season
-    ) {
-        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
-    }
-
-    @ApiLoggable
     @PostMapping("/collectPollByAnimeId")
     public void collectSeasonalPoll(@RequestParam("animeId") long animeId) {
         pollCollectService.collectPollByAnimeId(animeId);
@@ -59,5 +51,19 @@ public class PollCollectController {
     @GetMapping("/findAllPollCollectionStatusWithAnime")
     public List<PollCollectionStatusDto> findAllPollCollectionStatusWithAnime() {
         return pollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
+    }
+
+    @ApiLoggable
+    @PostMapping("/resumeCollectPollByYearAndSeason")
+    public void resumeCollectPollByYearAndSeason(
+            @RequestParam("year") int year, @RequestParam("season") String season
+    ) {
+        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
+    }
+
+    @ApiLoggable
+    @PostMapping("/resumeFailedCollection")
+    public void resumeFailedCollection() {
+        pollCollectService.resumeFailedCollection();
     }
 }
