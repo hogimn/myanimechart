@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import ModalButton from "../../../common/button/ModalButton";
@@ -59,6 +60,23 @@ const EpisodeItem = styled.li`
     text-decoration: underline;
   }
 `;
+
+const zoomOptions = {
+  zoom: {
+    wheel: {
+      enabled: true,
+      modifierKey: "ctrl",
+    },
+    pinch: {
+      enabled: true,
+    },
+    mode: "x",
+  },
+  pan: {
+    enabled: true,
+    mode: "x",
+  },
+};
 
 const AnimePollGraph = ({ polls }) => {
   const chartRef = useRef(null);
@@ -156,6 +174,24 @@ const AnimePollGraph = ({ polls }) => {
     },
     plugins: {
       tooltip: {
+        animation: {
+          duration: 0,
+        },
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
+        position: "poll",
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
+        itemSort: (a, b) => {
+          return b.datasetIndex - a.datasetIndex;
+        },
+        titleFont: {
+          size: 10,
+        },
+        bodyFont: {
+          size: 10,
+        },
         callbacks: {
           labelColor: (tooltipItem, chart) => {
             const datasetIndex = tooltipItem.datasetIndex;
@@ -191,20 +227,56 @@ const AnimePollGraph = ({ polls }) => {
       },
       legend: {
         position: "top",
+        labels: {
+          color: "#ffffff",
+          boxHeight: 7,
+          usePointStyle: true,
+          generateLabels: (chart) => {
+            const labels =
+              ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
+            return labels.reverse().map((label) => {
+              label.fillStyle = label.strokeStyle;
+              if (label.hidden) {
+                label.fontColor = "rgba(255, 255, 255, 0.4)";
+                label.lineWidth = 0;
+              } else {
+                label.fontColor = "rgba(255, 255, 255, 0.8)";
+                label.lineWidth = 5;
+              }
+              return label;
+            });
+          },
+        },
       },
+      zoom: zoomOptions,
     },
     scales: {
       x: {
         stacked: true,
+        ticks: {
+          color: "rgba(192, 192, 192, 0.57)",
+          autoSkipPadding: 10,
+          maxRotation: 0,
+          minRotation: 0,
+        },
       },
       y: {
         position: "right",
         stacked: true,
+        ticks: {
+          color: "rgba(192, 192, 192, 0.57)",
+        },
       },
       y1: {
         position: "left",
         beginAtZero: false,
+        ticks: {
+          color: "rgba(192, 192, 192, 0.57)",
+        },
       },
+    },
+    animation: {
+      duration: 600,
     },
     onClick: (event, elements) => {
       if (elements.length > 0) {
@@ -212,6 +284,18 @@ const AnimePollGraph = ({ polls }) => {
         const episodeIndex = element.index;
         const data = dataPerEpisode[episodeIndex];
 
+        setModalData({
+          episode: data.episode,
+          totalVotes: data.totalVotes,
+          averageScore: averageScores[episodeIndex],
+          votesBreakdown: pollOptions.map((option, index) => {
+            const votes = data.optionVotes[index];
+            const percentage = ((votes / data.totalVotes) * 100).toFixed(1);
+            return { option, votes, percentage };
+          }),
+          topicId: data.topicId,
+        });
+        setIsModalOpen(true);
         openEpisodeModal(data.episode);
       }
     },
