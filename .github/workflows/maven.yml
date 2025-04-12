@@ -39,7 +39,7 @@ jobs:
         git config user.email "hogimn@gmail.com"
     - name: Install dependencies
       working-directory: ./myanimechart-website
-      run: yarn install
+      run: yarn install --network-timeout 600000
     - name: Build website
       working-directory: ./myanimechart-website
       run: cross-env REACT_APP_GATEWAY_URL=${{ secrets.API_GATEWAY }} react-scripts build
