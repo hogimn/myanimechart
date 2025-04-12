@@ -1,6 +1,6 @@
 import PageTemplate from "../../common/template/PageTemplate";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { act, useCallback, useEffect, useState } from "react";
 import { formatDate } from "../../../util/dateUtil";
 import CommonSpin from "../../common/basic/CommonSpin";
 import CollectorApi from "../../api/anime/CollectorApi";
@@ -23,13 +23,37 @@ const PollCollectionStatus = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState({});
   const [activePanel, setActivePanel] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [rawData, setRawData] = useState([]);
+
+  const activateInProgressPanel = (data, groupedData) => {
+    const inProgressAnime = data.find(({ status }) => status === "IN_PROGRESS");
+    if (inProgressAnime) {
+      const groupKey = `${inProgressAnime.animeDto.year}-${inProgressAnime.animeDto.season}`;
+      if (groupedData[groupKey]) {
+        setActivePanel([groupKey]);
+        const page = Math.ceil(
+          (groupedData[groupKey].findIndex(
+            ({ animeDto }) => animeDto.id === inProgressAnime.animeDto.id
+          ) +
+            1) /
+            5
+        );
+        setCurrentPage((prev) => ({
+          ...prev,
+          [groupKey]: page,
+        }));
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const data = await CollectorApi.findAllPollCollectionStatusWithAnime();
-        // 그룹별 데이터 생성 (year-season)
+        setRawData(data);
+
         const groupedData = data.reduce(
           (acc, { animeDto, status, startedAt, finishedAt }) => {
             const key = `${animeDto.year}-${animeDto.season}`;
@@ -40,42 +64,22 @@ const PollCollectionStatus = () => {
           {}
         );
         setAnimeGroups(groupedData);
-        // 페이지 초기화 (각 그룹당 첫 페이지)
+
         const initialPageState = Object.keys(groupedData).reduce((acc, key) => {
           acc[key] = 1;
           return acc;
         }, {});
         setCurrentPage(initialPageState);
 
-        // 각 status별 건수 계산
         const counts = data.reduce((acc, { status }) => {
           acc[status] = (acc[status] || 0) + 1;
           return acc;
         }, {});
         setStatusCounts(counts);
 
-        // IN_PROGRESS 상태인 항목 기준으로 초기 패널/페이지 설정
-        const inProgressAnime = data.find(
-          ({ status }) => status === "IN_PROGRESS"
-        );
-        if (inProgressAnime) {
-          const groupKey = `${inProgressAnime.animeDto.year}-${inProgressAnime.animeDto.season}`;
-          if (groupedData[groupKey]) {
-            setActivePanel([groupKey]);
-            const page = Math.ceil(
-              (groupedData[groupKey].findIndex(
-                ({ animeDto }) => animeDto.id === inProgressAnime.animeDto.id
-              ) +
-                1) /
-                5
-            );
-            setCurrentPage((prev) => ({
-              ...prev,
-              [groupKey]: page,
-            }));
-          }
-        }
+        activateInProgressPanel(data, groupedData);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch poll collection status");
       } finally {
         setLoading(false);
@@ -92,9 +96,24 @@ const PollCollectionStatus = () => {
     }));
   };
 
+  const handleStatusFilter = (status) => {
+    setStatusFilter((prev) => (prev === status ? null : status));
+    if (status) {
+      setActivePanel(null);
+    } else {
+      activateInProgressPanel(rawData, animeGroups);
+    }
+  };
+
+  const getPaginatedFilteredItems = (groupKey, items) => {
+    const startIndex = 0;
+    let endIndex = startIndex + 5;
+    return items.slice(startIndex, endIndex);
+  };
+
   const getPaginatedItems = (groupKey, items) => {
     const startIndex = (currentPage[groupKey] - 1) * 5;
-    const endIndex = startIndex + 5;
+    let endIndex = startIndex + 5;
     return items.slice(startIndex, endIndex);
   };
 
@@ -108,23 +127,38 @@ const PollCollectionStatus = () => {
       {error && <CommonAlert message={error} type="error" />}
       <Container>
         <StatusCountContainer>
-          <StatusCountItem>
+          <StatusCountItem
+            onClick={() => handleStatusFilter(null)}
+            active={statusFilter === null}
+          >
             <StatusCountLabel>Total</StatusCountLabel>
             <CountValue>{totalCount}</CountValue>
           </StatusCountItem>
-          <StatusCountItem>
+          <StatusCountItem
+            onClick={() => handleStatusFilter("COMPLETED")}
+            active={statusFilter === "COMPLETED"}
+          >
             <StatusCountLabel status="COMPLETED">Completed</StatusCountLabel>
             <CountValue>{statusCounts["COMPLETED"] || 0}</CountValue>
           </StatusCountItem>
-          <StatusCountItem>
+          <StatusCountItem
+            onClick={() => handleStatusFilter("IN_PROGRESS")}
+            active={statusFilter === "IN_PROGRESS"}
+          >
             <StatusCountLabel status="IN_PROGRESS">InProgress</StatusCountLabel>
             <CountValue>{statusCounts["IN_PROGRESS"] || 0}</CountValue>
           </StatusCountItem>
-          <StatusCountItem>
+          <StatusCountItem
+            onClick={() => handleStatusFilter("FAILED")}
+            active={statusFilter === "FAILED"}
+          >
             <StatusCountLabel status="FAILED">Failed</StatusCountLabel>
             <CountValue>{statusCounts["FAILED"] || 0}</CountValue>
           </StatusCountItem>
-          <StatusCountItem>
+          <StatusCountItem
+            onClick={() => handleStatusFilter("WAIT")}
+            active={statusFilter === "WAIT"}
+          >
             <StatusCountLabel status="WAIT">Wait</StatusCountLabel>
             <CountValue>{statusCounts["WAIT"] || 0}</CountValue>
           </StatusCountItem>
@@ -135,10 +169,32 @@ const PollCollectionStatus = () => {
             <CommonSpin />
           </LoaderContainer>
         ) : (
-          <CommonCollapse accordion defaultActiveKey={activePanel}>
+          <CommonCollapse
+            accordion
+            defaultActiveKey={activePanel}
+            activeKey={activePanel}
+            onChange={(key) => setActivePanel(key)}
+          >
             {Object.entries(animeGroups).map(([key, animeList]) => {
               const [year, season] = key.split("-");
-              const paginatedItems = getPaginatedItems(key, animeList);
+
+              const filteredAnimeList = statusFilter
+                ? animeList.filter(({ status }) => status === statusFilter)
+                : animeList;
+
+              if (filteredAnimeList.length === 0) {
+                return null;
+              }
+
+              let paginatedItems;
+              if (statusFilter) {
+                paginatedItems = getPaginatedFilteredItems(
+                  key,
+                  filteredAnimeList
+                );
+              } else {
+                paginatedItems = getPaginatedItems(key, filteredAnimeList);
+              }
 
               return (
                 <Panel
@@ -180,7 +236,7 @@ const PollCollectionStatus = () => {
                   <CommonPagination
                     current={currentPage[key]}
                     pageSize={5}
-                    total={animeList.length}
+                    total={filteredAnimeList.length}
                     onChange={(page) => handlePageChange(page, key)}
                     showSizeChanger={false}
                     hideOnSinglePage
@@ -194,6 +250,8 @@ const PollCollectionStatus = () => {
     </PageTemplate>
   );
 };
+
+// Styled Components
 
 const Container = styled.div`
   padding: 20px;
@@ -220,6 +278,10 @@ const StatusCountItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? "#3a3f4b" : "transparent")};
+  border-radius: 6px;
+  padding: 5px;
 `;
 
 const StatusCountLabel = styled.span`
