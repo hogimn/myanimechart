@@ -97,14 +97,12 @@ const PageTemplate = ({ children }) => {
   const location = useLocation();
 
   const getCurrentPage = () => {
-    switch (location.pathname) {
-      case "/seasonal-anime":
-        return "Seasonal Anime";
-      case "/poll-collection-status":
-        return "Poll Collection Status";
-      default:
-        return "Home";
-    }
+    const path =
+      location.pathname === "/" ? "home" : location.pathname.slice(1);
+    return path
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   return (
@@ -118,6 +116,9 @@ const PageTemplate = ({ children }) => {
                 Anime
                 <SubMenu>
                   <li onClick={() => navigate("/")}>Seasonal Anime</li>
+                  <li onClick={() => navigate("/season-archive")}>
+                    Season Archive
+                  </li>
                 </SubMenu>
               </MenuItem>
               <MenuItem>

@@ -53,7 +53,7 @@ const LoadingWrapper = styled.div`
   height: 100px;
 `;
 
-const SeasonalTabs = () => {
+const SeasonalTabs = ({ season, year }) => {
   const [sortBy, setSortBy] = useState("score");
   const [filterBy, setFilterBy] = useState({ type: "tv", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
@@ -151,6 +151,18 @@ const SeasonalTabs = () => {
       setPage(1);
     }
   };
+
+  useEffect(() => {
+    if (season != null && year != null) {
+      setSeasonData([
+        {
+          season: getPreviousSeasonFromSeason(season),
+          year: getPreviousSeasonYearFromYearAndSeason(year, season),
+        },
+        { season: season, year: year },
+      ]);
+    }
+  }, [season, year]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
