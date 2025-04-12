@@ -135,7 +135,7 @@ public class PollCollectService {
 
         return (searchKeyword != null && !searchKeyword.isEmpty())
                 ? searchKeyword
-                : animeEntity.getTitle() + " Poll Episode Discussion";
+                : animeEntity.getTitle();
     }
 
     private void collectForumTopics(AnimeEntity animeEntity) {
@@ -145,7 +145,7 @@ public class PollCollectService {
 
         boolean isFail = false;
         try {
-            String keyword = getSearchKeyword(animeEntity);
+            String keyword = getSearchKeyword(animeEntity) + " Poll Episode Discussion";
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
             SleepUtil.sleep(30 * 1000);
 
@@ -170,7 +170,7 @@ public class PollCollectService {
                     continue;
                 }
 
-                if (!checkTitleSame(topicTitle, animeEntity.getTitle())) {
+                if (!checkTitleSame(topicTitle, getSearchKeyword(animeEntity))) {
                     log.info("Topic name is far different from anime name. topic: {},  anime: {}",
                             forumTopic.getTitle(), animeEntity.getTitle());
                     continue;
