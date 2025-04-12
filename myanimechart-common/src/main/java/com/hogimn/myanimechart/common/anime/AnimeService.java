@@ -125,4 +125,8 @@ public class AnimeService {
     public List<AnimeEntity> findFailedCollectionAnimes() {
         return animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
     }
+
+    public List<AnimeEntity> findAnimesWithEmptyPoll() {
+        return animeRepository.findAnimesWithEmptyPoll();
+    }
 }

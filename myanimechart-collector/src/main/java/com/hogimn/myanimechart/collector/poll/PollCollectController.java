@@ -66,4 +66,10 @@ public class PollCollectController {
     public void resumeFailedCollection() {
         pollCollectService.resumeFailedCollection();
     }
+
+    @ApiLoggable
+    @PostMapping("/collectEmptyPoll")
+    public void collectEmptyPoll() {
+        pollCollectService.collectEmptyPoll();
+    }
 }

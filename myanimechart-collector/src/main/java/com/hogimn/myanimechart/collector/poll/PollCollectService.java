@@ -348,4 +348,12 @@ public class PollCollectService {
                 pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
+
+    public void collectEmptyPoll() {
+        List<AnimeEntity> animeEntities = animeService
+                .findAnimesWithEmptyPoll();
+        animeEntities.forEach(animeEntity ->
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+        animeEntities.forEach(this::collectForumTopics);
+    }
 }

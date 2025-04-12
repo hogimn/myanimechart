@@ -132,7 +132,36 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
              WHERE
                b.status = :status
              ORDER BY
-               a.score DESC
+               a.year DESC,
+               CASE a.season
+                 WHEN 'fall' THEN 1
+                 WHEN 'summer' THEN 2
+                 WHEN 'spring' THEN 3
+                 WHEN 'winter' THEN 4
+                 ELSE 5
+               END,
+               a.score DESC,
+               a.rank
             """)
     List<AnimeEntity> findAnimesByCollectionStatus(CollectionStatus status);
+
+    @Query("""
+             SELECT a
+             FROM AnimeEntity a
+               LEFT JOIN Poll b ON a.id = b.animeId
+             WHERE
+               b.animeId IS NULL
+             ORDER BY
+               a.year DESC,
+               CASE a.season
+                 WHEN 'fall' THEN 1
+                 WHEN 'summer' THEN 2
+                 WHEN 'spring' THEN 3
+                 WHEN 'winter' THEN 4
+                 ELSE 5
+               END,
+               a.score DESC,
+               a.rank
+            """)
+    List<AnimeEntity> findAnimesWithEmptyPoll();
 }
