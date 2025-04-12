@@ -42,7 +42,7 @@ jobs:
       run: yarn install
     - name: Build website
       working-directory: ./myanimechart-website
-      run: yarn build
+      run: cross-env REACT_APP_GATEWAY_URL=${{ secrets.API_GATEWAY }} react-scripts build
     - name: Deploy Website
       uses: peaceiris/actions-gh-pages@v3
       with:
