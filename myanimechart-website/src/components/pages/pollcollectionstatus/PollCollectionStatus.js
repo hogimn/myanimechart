@@ -1,6 +1,6 @@
 import PageTemplate from "../../common/template/PageTemplate";
 import styled from "styled-components";
-import { act, useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDate } from "../../../util/dateUtil";
 import CommonSpin from "../../common/basic/CommonSpin";
 import CollectorApi from "../../api/anime/CollectorApi";
