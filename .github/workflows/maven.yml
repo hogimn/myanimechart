@@ -16,9 +16,7 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
@@ -31,3 +29,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: .\mvnw clean install
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Install dependencies and deploy website
+      working-directory: ./myanimechart-website
+      run: |
+        yarn install
+        yarn deploy
+
