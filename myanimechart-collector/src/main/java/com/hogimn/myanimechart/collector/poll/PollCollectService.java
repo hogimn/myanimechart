@@ -294,8 +294,11 @@ public class PollCollectService {
         }
 
 
-        topicTitle = topicTitle.toLowerCase().replaceAll("[\\[\\]\". :;\\-!?]", "");
-        animeTitle = animeTitle.toLowerCase().replaceAll("[\\[\\]\". :;\\-!?]", "");
+        topicTitle = topicTitle.toLowerCase()
+                .replaceAll("[\\[\\]\". :;\\-!?]", "")
+                .replaceAll("(TV)", "");
+        animeTitle = animeTitle.toLowerCase().replaceAll("[\\[\\]\". :;\\-!?]", "")
+                .replaceAll("(TV)", "");
 
         int indexOfEpisode = topicTitle.lastIndexOf("episode");
         if (indexOfEpisode == -1) {
