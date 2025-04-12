@@ -23,9 +23,6 @@ INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
 VALUES (40496, 'Maou Gakuin no Futekigousha: Shijou Saikyou no Maou no Shiso, Tensei shite Shison-tachi no Gakkou e');
 
 INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
-VALUES (40776, 'Haikyuu!!: To the Top 2nd Season');
-
-INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
 VALUES (42941, 'Uma Musume: Pretty Derby (TV) Season 2');
 
 INSERT INTO anime_keyword_mapping (anime_id, search_keyword)
