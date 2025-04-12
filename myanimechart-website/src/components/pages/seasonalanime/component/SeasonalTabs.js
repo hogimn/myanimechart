@@ -18,6 +18,12 @@ import CommonSelect from "../../../common/basic/CommonSelect";
 import { toAirStatusLabel, toTypeLabel } from "../../../../util/strUtil";
 import CommonSpin from "../../../common/basic/CommonSpin";
 
+const StyledSeasonalTabs = styled.div`
+  p {
+    margin-left: 10px;
+  }
+`;
+
 const SelectWrapper = styled.div`
   margin-bottom: 16px;
   text-align: left;
@@ -156,7 +162,7 @@ const SeasonalTabs = () => {
   }, [filterBy]);
 
   return (
-    <>
+    <StyledSeasonalTabs>
       <AnimeSearchBox onSearch={handleSearch} />
       <SelectWrapper>
         <CommonSelect
@@ -212,7 +218,7 @@ const SeasonalTabs = () => {
           onChange={handleTabChange}
         />
       )}
-    </>
+    </StyledSeasonalTabs>
   );
 };
 
