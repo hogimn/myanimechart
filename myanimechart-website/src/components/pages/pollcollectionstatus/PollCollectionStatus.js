@@ -18,6 +18,7 @@ const { Panel } = CommonCollapse;
 
 const PollCollectionStatus = () => {
   const [animeGroups, setAnimeGroups] = useState({});
+  const [statusCounts, setStatusCounts] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState({});
@@ -28,6 +29,7 @@ const PollCollectionStatus = () => {
       setLoading(true);
       try {
         const data = await CollectorApi.findAllPollCollectionStatusWithAnime();
+        // 그룹별 데이터 생성 (year-season)
         const groupedData = data.reduce(
           (acc, { animeDto, status, startedAt, finishedAt }) => {
             const key = `${animeDto.year}-${animeDto.season}`;
@@ -38,18 +40,26 @@ const PollCollectionStatus = () => {
           {}
         );
         setAnimeGroups(groupedData);
+        // 페이지 초기화 (각 그룹당 첫 페이지)
         const initialPageState = Object.keys(groupedData).reduce((acc, key) => {
           acc[key] = 1;
           return acc;
         }, {});
         setCurrentPage(initialPageState);
 
+        // 각 status별 건수 계산
+        const counts = data.reduce((acc, { status }) => {
+          acc[status] = (acc[status] || 0) + 1;
+          return acc;
+        }, {});
+        setStatusCounts(counts);
+
+        // IN_PROGRESS 상태인 항목 기준으로 초기 패널/페이지 설정
         const inProgressAnime = data.find(
           ({ status }) => status === "IN_PROGRESS"
         );
         if (inProgressAnime) {
           const groupKey = `${inProgressAnime.animeDto.year}-${inProgressAnime.animeDto.season}`;
-
           if (groupedData[groupKey]) {
             setActivePanel([groupKey]);
             const page = Math.ceil(
@@ -88,19 +98,44 @@ const PollCollectionStatus = () => {
     return items.slice(startIndex, endIndex);
   };
 
+  const totalCount = Object.values(statusCounts).reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
   return (
     <PageTemplate>
       {error && <CommonAlert message={error} type="error" />}
       <Container>
+        <StatusCountContainer>
+          <StatusCountItem>
+            <StatusCountLabel>Total</StatusCountLabel>
+            <CountValue>{totalCount}</CountValue>
+          </StatusCountItem>
+          <StatusCountItem>
+            <StatusCountLabel status="COMPLETED">Completed</StatusCountLabel>
+            <CountValue>{statusCounts["COMPLETED"] || 0}</CountValue>
+          </StatusCountItem>
+          <StatusCountItem>
+            <StatusCountLabel status="IN_PROGRESS">InProgress</StatusCountLabel>
+            <CountValue>{statusCounts["IN_PROGRESS"] || 0}</CountValue>
+          </StatusCountItem>
+          <StatusCountItem>
+            <StatusCountLabel status="FAILED">Failed</StatusCountLabel>
+            <CountValue>{statusCounts["FAILED"] || 0}</CountValue>
+          </StatusCountItem>
+          <StatusCountItem>
+            <StatusCountLabel status="WAIT">Wait</StatusCountLabel>
+            <CountValue>{statusCounts["WAIT"] || 0}</CountValue>
+          </StatusCountItem>
+        </StatusCountContainer>
+
         {loading ? (
           <LoaderContainer>
             <CommonSpin />
           </LoaderContainer>
         ) : (
-          <CommonCollapse
-            accordion
-            defaultActiveKey={activePanel} // 활성화된 Panel 설정
-          >
+          <CommonCollapse accordion defaultActiveKey={activePanel}>
             {Object.entries(animeGroups).map(([key, animeList]) => {
               const [year, season] = key.split("-");
               const paginatedItems = getPaginatedItems(key, animeList);
@@ -113,7 +148,7 @@ const PollCollectionStatus = () => {
                   <List>
                     {paginatedItems.map(
                       ({ animeDto, status, startedAt, finishedAt }) => (
-                        <ListItem key={animeDto.id} status={status}>
+                        <ListItem key={animeDto.id}>
                           <ImageWrapper>
                             <AnimeImage
                               src={animeDto.image}
@@ -168,6 +203,45 @@ const Container = styled.div`
   }
 `;
 
+const StatusCountContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #282c34;
+  padding: 10px;
+  border-radius: 8px;
+`;
+
+const StatusCountItem = styled.div`
+  text-align: center;
+  color: #fff;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StatusCountLabel = styled.span`
+  color: ${({ status }) =>
+    status === "COMPLETED"
+      ? "rgb(86,228,157)"
+      : status === "WAIT"
+      ? "rgb(92,92,92)"
+      : status === "FAILED"
+      ? "rgb(230,100,111)"
+      : status === "IN_PROGRESS"
+      ? "rgb(121,148,224)"
+      : "#fff"};
+  font-weight: bold;
+`;
+
+const CountValue = styled.div`
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 4px;
+`;
+
 const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -207,12 +281,12 @@ const StatusText = styled.div`
   margin: 5px 0;
   color: ${({ status }) =>
     status === "COMPLETED"
-      ? "rgb(86, 228, 157)"
+      ? "rgb(86,228,157)"
       : status === "WAIT"
-      ? "rgb(92, 92, 92)"
+      ? "rgb(92,92,92)"
       : status === "FAILED"
-      ? "rgb(230, 100, 111)"
-      : "rgb(121, 148, 224)"};
+      ? "rgb(230,100,111)"
+      : "rgb(121,148,224)"};
   font-weight: bold;
 `;
 
