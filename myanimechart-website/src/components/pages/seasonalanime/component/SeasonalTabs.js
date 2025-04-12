@@ -168,7 +168,7 @@ const SeasonalTabs = ({ season, year }) => {
           season: getPreviousSeasonFromSeason(season),
           year: getPreviousSeasonYearFromYearAndSeason(year, season),
         },
-        { season: season, year: year },
+        { season: season, year: parseInt(year) },
       ]);
     }
   }, [season, year]);
