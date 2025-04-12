@@ -54,16 +54,40 @@ const LoadingWrapper = styled.div`
   height: 100px;
 `;
 
+const LOCAL_STORAGE_KEY = "seasonalFilters";
+
 const SeasonalTabs = ({ season, year }) => {
   const navigate = useNavigate();
 
-  const [sortBy, setSortBy] = useState("score");
-  const [filterBy, setFilterBy] = useState({ type: "tv", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
   const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [sortBy, setSortBy] = useState(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved).sortBy || "score";
+      } catch {
+        return "score";
+      }
+    }
+    return "score";
+  });
+
+  const [filterBy, setFilterBy] = useState(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved).filterBy || { type: "tv", airStatus: "all" };
+      } catch {
+        return { type: "tv", airStatus: "all" };
+      }
+    }
+    return { type: "tv", airStatus: "all" };
+  });
 
   let pageSize = 12;
 
@@ -160,6 +184,15 @@ const SeasonalTabs = ({ season, year }) => {
       setPage(1);
     }
   };
+
+  useEffect(() => {
+    const data = {
+      sortBy,
+      filterBy,
+    };
+    console.log(data);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+  }, [sortBy, filterBy]);
 
   useEffect(() => {
     if (season != null && year != null) {
