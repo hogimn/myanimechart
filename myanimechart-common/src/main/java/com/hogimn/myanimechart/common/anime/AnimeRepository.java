@@ -148,7 +148,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     @Query("""
              SELECT a
              FROM AnimeEntity a
-               LEFT JOIN Poll b ON a.id = b.animeId
+               LEFT JOIN PollEntity b ON a.id = b.animeId
              WHERE
                b.animeId IS NULL
              ORDER BY
