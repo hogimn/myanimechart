@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CommonTabs from "../../../common/basic/CommonTabs";
 import SeasonalAnimeList from "./SeasonalAnimeList";
 import styled from "styled-components";
@@ -54,6 +55,8 @@ const LoadingWrapper = styled.div`
 `;
 
 const SeasonalTabs = ({ season, year }) => {
+  const navigate = useNavigate();
+
   const [sortBy, setSortBy] = useState("score");
   const [filterBy, setFilterBy] = useState({ type: "tv", airStatus: "all" });
   const [activeTab, setActiveTab] = useState("2");
@@ -85,7 +88,6 @@ const SeasonalTabs = ({ season, year }) => {
 
   const updateSeasons = (direction) => {
     if (direction === "prev") {
-      console.log(seasonData);
       setSeasonData((prev) => [
         {
           season: getPreviousSeasonFromSeason(prev[0].season),
@@ -137,6 +139,11 @@ const SeasonalTabs = ({ season, year }) => {
       label: "...",
       content: null,
     },
+    {
+      key: "archive",
+      label: "Archive",
+      content: null,
+    },
   ];
 
   const handleTabChange = (key) => {
@@ -146,6 +153,8 @@ const SeasonalTabs = ({ season, year }) => {
     } else if (key === "next") {
       updateSeasons("next");
       setPage(1);
+    } else if (key === "archive") {
+      navigate("/season-archive");
     } else {
       setActiveTab(key);
       setPage(1);
