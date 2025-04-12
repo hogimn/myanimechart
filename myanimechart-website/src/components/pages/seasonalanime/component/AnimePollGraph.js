@@ -9,7 +9,7 @@ const ScrollableContent = styled.div`
   max-height: 50vh;
   overflow-y: auto;
   padding-right: 0.5rem;
-  font-size: 15px;
+  font-size: 13px;
 `;
 
 const StyledTotalVotes = styled.div`
