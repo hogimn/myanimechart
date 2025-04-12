@@ -42,7 +42,9 @@ jobs:
       run: yarn install --network-timeout 600000
     - name: Build website
       working-directory: ./myanimechart-website
-      run: cross-env REACT_APP_GATEWAY_URL=${{ secrets.API_GATEWAY }} react-scripts build
+      run: |
+      $env:myanimechart_gateway_url="${{ secrets.API_GATEWAY }}"
+      yarn build
     - name: Deploy Website
       uses: peaceiris/actions-gh-pages@v3
       with:
