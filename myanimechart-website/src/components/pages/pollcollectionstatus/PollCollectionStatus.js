@@ -99,16 +99,24 @@ const PollCollectionStatus = () => {
   const handleStatusFilter = (status) => {
     setStatusFilter((prev) => (prev === status ? null : status));
     if (status) {
-      setActivePanel(null);
+      const newPageState = Object.keys(animeGroups).reduce((acc, key) => {
+        acc[key] = 1;
+        return acc;
+      }, {});
+      setCurrentPage(newPageState);
+
+      const firstMatchedGroupKey = Object.entries(animeGroups).find(
+        ([_, animeList]) => animeList.some((anime) => anime.status === status)
+      )?.[0];
+
+      if (firstMatchedGroupKey) {
+        setActivePanel([firstMatchedGroupKey]);
+      } else {
+        setActivePanel(null);
+      }
     } else {
       activateInProgressPanel(rawData, animeGroups);
     }
-  };
-
-  const getPaginatedFilteredItems = (groupKey, items) => {
-    const startIndex = 0;
-    let endIndex = startIndex + 5;
-    return items.slice(startIndex, endIndex);
   };
 
   const getPaginatedItems = (groupKey, items) => {
@@ -186,15 +194,7 @@ const PollCollectionStatus = () => {
                 return null;
               }
 
-              let paginatedItems;
-              if (statusFilter) {
-                paginatedItems = getPaginatedFilteredItems(
-                  key,
-                  filteredAnimeList
-                );
-              } else {
-                paginatedItems = getPaginatedItems(key, filteredAnimeList);
-              }
+              const paginatedItems = getPaginatedItems(key, filteredAnimeList);
 
               return (
                 <Panel
