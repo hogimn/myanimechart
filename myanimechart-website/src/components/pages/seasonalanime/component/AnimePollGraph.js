@@ -4,7 +4,6 @@ import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import ModalButton from "../../../common/button/ModalButton";
-import { isMobile } from "react-device-detect";
 
 const StyledTotalVotes = styled.div`
   font-size: 0.9rem;
@@ -58,7 +57,7 @@ const AnimePollGraph = ({ polls }) => {
       mode: "x",
     },
     pan: {
-      enabled: !isMobile,
+      enabled: true,
       mode: "x",
     },
   };
