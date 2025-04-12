@@ -4,6 +4,7 @@ import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
 import styled from "styled-components";
 import ModalButton from "../../../common/button/ModalButton";
+import { isMobile } from "react-device-detect";
 
 const ScrollableContent = styled.div`
   max-height: 50vh;
@@ -73,7 +74,7 @@ const zoomOptions = {
     mode: "x",
   },
   pan: {
-    enabled: true,
+    enabled: !isMobile,
     mode: "x",
   },
 };
