@@ -33,6 +33,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
+    - name: Set up Git identity for GitHub Pages
+      run: |
+        git config user.name "hogimn"
+        git config user.email "hogimn@gmail.com"
     - name: Install dependencies and deploy website
       working-directory: ./myanimechart-website
       run: |
