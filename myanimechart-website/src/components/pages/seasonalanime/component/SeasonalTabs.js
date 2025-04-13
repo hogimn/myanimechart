@@ -146,10 +146,10 @@ const SeasonalTabs = ({ season, year }) => {
 
   const handleTabChange = (key) => {
     if (key === "prev") {
-      const season = getPreviousSeasonFromSeason(seasonData[0].season);
+      const season = getPreviousSeasonFromSeason(seasonData[1].season);
       const year = getPreviousSeasonYearFromYearAndSeason(
-        seasonData[0].year,
-        seasonData[0].season
+        seasonData[1].year,
+        seasonData[1].season
       );
       navigate(`/seasonal-anime?year=${year}&season=${season}`);
       setPage(1);
@@ -183,7 +183,7 @@ const SeasonalTabs = ({ season, year }) => {
       setSeasonData([
         {
           season: getPreviousSeasonFromSeason(season),
-          year: getPreviousSeasonYearFromYearAndSeason(year, season),
+          year: parseInt(getPreviousSeasonYearFromYearAndSeason(year, season)),
         },
         { season: season, year: parseInt(year) },
       ]);
