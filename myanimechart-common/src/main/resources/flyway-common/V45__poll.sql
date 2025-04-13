@@ -2,8 +2,8 @@ INSERT IGNORE INTO anime_keyword_mapping (anime_id, search_keyword)
 VALUES
 (38101, 'Gotoubun no Hanayome'),
 (39592, 'Mobile Suit Gundam: The Origin - Advent of the Red Comet'),
-(38680, 'Fruits Basket (2019)')
-(36633, 'Date A Live Ⅲ');
+(38680, 'Fruits Basket (2019)'),
+(36633, 'Date A Live Ⅲ')
 ;
 
 INSERT IGNORE anime_episode_topic_mapping (anime_id, episode, topic_id)
