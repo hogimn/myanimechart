@@ -110,32 +110,6 @@ const SeasonalTabs = ({ season, year }) => {
     { season: getCurrentSeason(), year: getCurrentSeasonYear() },
   ]);
 
-  const updateSeasons = (direction) => {
-    if (direction === "prev") {
-      setSeasonData((prev) => [
-        {
-          season: getPreviousSeasonFromSeason(prev[0].season),
-          year: getPreviousSeasonYearFromYearAndSeason(
-            prev[0].year,
-            prev[0].season
-          ),
-        },
-        prev[0],
-      ]);
-    } else {
-      setSeasonData((prev) => [
-        prev[1],
-        {
-          season: getNextSeasonFromSeason(prev[1].season),
-          year: getNextSeasonYearFromYearAndSeason(
-            prev[1].year,
-            prev[1].season
-          ),
-        },
-      ]);
-    }
-  };
-
   const tabs = [
     {
       key: "prev",
@@ -172,10 +146,20 @@ const SeasonalTabs = ({ season, year }) => {
 
   const handleTabChange = (key) => {
     if (key === "prev") {
-      updateSeasons("prev");
+      const season = getPreviousSeasonFromSeason(seasonData[0].season);
+      const year = getPreviousSeasonYearFromYearAndSeason(
+        seasonData[0].year,
+        seasonData[0].season
+      );
+      navigate(`/seasonal-anime?year=${year}&season=${season}`);
       setPage(1);
     } else if (key === "next") {
-      updateSeasons("next");
+      const season = getNextSeasonFromSeason(seasonData[1].season);
+      const year = getNextSeasonYearFromYearAndSeason(
+        seasonData[1].year,
+        seasonData[1].season
+      );
+      navigate(`/seasonal-anime?year=${year}&season=${season}`);
       setPage(1);
     } else if (key === "archive") {
       navigate("/season-archive");
