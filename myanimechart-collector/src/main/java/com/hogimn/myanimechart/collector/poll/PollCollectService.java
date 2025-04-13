@@ -185,14 +185,14 @@ public class PollCollectService {
                 savePoll(topicId, episode, animeEntity.getId());
                 SleepUtil.sleepForMAL();
             }
+
+            collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
         } catch (Exception e) {
             pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
             isFail = true;
         }
-
-        collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
 
         if (!isFail) {
             pollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
