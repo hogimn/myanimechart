@@ -124,7 +124,7 @@ public class PollCollectService {
                 break;
             }
 
-            SleepUtil.sleep(30 * 1000);
+            SleepUtil.sleepForMAL();
         }
         return forumTopics;
     }
@@ -147,7 +147,7 @@ public class PollCollectService {
         try {
             String keyword = getSearchKeyword(animeEntity) + " Poll Episode Discussion";
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
-            SleepUtil.sleep(30 * 1000);
+            SleepUtil.sleepForMAL();
 
             for (ForumTopic forumTopic : forumTopics) {
                 long topicId = forumTopic.getID();
@@ -183,7 +183,7 @@ public class PollCollectService {
                 }
 
                 savePoll(topicId, episode, animeEntity.getId());
-                SleepUtil.sleep(30 * 1000);
+                SleepUtil.sleepForMAL();
             }
         } catch (Exception e) {
             pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());

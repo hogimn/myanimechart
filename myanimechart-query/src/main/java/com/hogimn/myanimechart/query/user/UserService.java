@@ -52,7 +52,7 @@ public class UserService {
                 break;
             }
 
-            SleepUtil.sleep(30 * 1000);
+            SleepUtil.sleepForMAL();
         }
 
         return animeListStatuses
@@ -86,7 +86,7 @@ public class UserService {
                 break;
             }
 
-            SleepUtil.sleep(30 * 1000);
+            SleepUtil.sleepForMAL();
         }
 
         Optional<AnimeListStatusDto> animeListStatusDto = animeListStatuses

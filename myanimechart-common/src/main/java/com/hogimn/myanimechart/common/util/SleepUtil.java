@@ -8,4 +8,12 @@ public class SleepUtil {
             throw new RuntimeException(e);
         }
     }
+
+    public static void sleepForMAL() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
