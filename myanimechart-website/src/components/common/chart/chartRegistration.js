@@ -80,8 +80,13 @@ export const registerCharts = () => {
   );
 
   Tooltip.positioners.poll = (elements, position) => {
+    const chartWidth = elements[0]?.element?.$context?.chart?.width || 0;
+
+    const offsetX = 100;
+    const isLeftSide = position.x < chartWidth / 2;
+
     return {
-      x: position.x,
+      x: isLeftSide ? position.x + offsetX : position.x - offsetX,
       y: 0,
     };
   };

@@ -273,6 +273,7 @@ const AnimePollGraph = ({ polls }) => {
         beginAtZero: false,
         ticks: {
           color: "rgba(192, 192, 192, 0.57)",
+          callback: (value) => value.toFixed(2),
         },
       },
     },
