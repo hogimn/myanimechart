@@ -241,7 +241,15 @@ public class PollCollectService {
         voteZeroOptions.add(4);
         voteZeroOptions.add(5);
 
-        ForumTopicDetail forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
+        ForumTopicDetail forumTopicDetail;
+        try {
+            forumTopicDetail = myAnimeListProvider.getMyAnimeList().getForumTopicDetail(topicId);
+        } catch (Exception e) {
+            log.error("getForumTopicDetail Failed: Anime Id: {}, Episode: {}, Topic Id:{}, Error Message: {}",
+                    animeId, episode, topicId, e.getMessage(), e);
+            return;
+        }
+
         Poll poll = forumTopicDetail.getPoll();
         String topicTitle = forumTopicDetail.getTitle();
         PollOption[] options = poll.getOptions();
