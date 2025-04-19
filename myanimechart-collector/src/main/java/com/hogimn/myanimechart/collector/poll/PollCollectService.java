@@ -65,6 +65,11 @@ public class PollCollectService {
         collectForumTopics(animeEntity);
     }
 
+    @SchedulerLock(name = "collectPollByTopicId")
+    public void collectPollByAnimeIdAndTopicId(long animeId, long topicId, int episode) {
+        savePoll(topicId, episode, topicId);
+    }
+
     @SchedulerLock(name = "collectPollByYearAndSeason")
     public void collectPollByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);

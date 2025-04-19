@@ -43,8 +43,17 @@ public class PollCollectController {
 
     @ApiLoggable
     @PostMapping("/collectPollByAnimeId")
-    public void collectSeasonalPoll(@RequestParam("animeId") long animeId) {
+    public void collectPollByAnimeId(@RequestParam("animeId") long animeId) {
         pollCollectService.collectPollByAnimeId(animeId);
+    }
+
+    @ApiLoggable
+    @PostMapping("/collectPollByEpisode")
+    public void collectPollByEpisode(
+            @RequestParam("animeId") long animeId,
+            @RequestParam("topicId") long topicId,
+            @RequestParam("episode") int episode) {
+        pollCollectService.collectPollByAnimeIdAndTopicId(animeId, topicId, episode);
     }
 
     @ApiLoggable
