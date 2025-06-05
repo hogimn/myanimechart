@@ -81,4 +81,10 @@ public class PollCollectController {
     public void collectEmptyPoll() {
         pollCollectService.collectEmptyPoll();
     }
+
+    @ApiLoggable
+    @PostMapping("/collectAllPolls")
+    public void collectAllPolls() {
+        pollCollectService.collectAllPolls();
+    }
 }

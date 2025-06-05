@@ -129,4 +129,8 @@ public class AnimeService {
     public List<AnimeEntity> findAnimesWithEmptyPoll() {
         return animeRepository.findAnimesWithEmptyPoll();
     }
+
+    public List<AnimeEntity> findAll() {
+        return animeRepository.findAll();
+    }
 }

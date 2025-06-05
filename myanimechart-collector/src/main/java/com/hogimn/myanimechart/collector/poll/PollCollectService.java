@@ -143,7 +143,8 @@ public class PollCollectService {
                 : animeEntity.getTitle();
     }
 
-    private void collectForumTopics(AnimeEntity animeEntity) {
+    private void
+    collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
         pollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
@@ -368,6 +369,13 @@ public class PollCollectService {
     public void collectEmptyPoll() {
         List<AnimeEntity> animeEntities = animeService
                 .findAnimesWithEmptyPoll();
+        animeEntities.forEach(animeEntity ->
+                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+        animeEntities.forEach(this::collectForumTopics);
+    }
+
+    public void collectAllPolls() {
+        List<AnimeEntity> animeEntities = animeService.findAll();
         animeEntities.forEach(animeEntity ->
                 pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);

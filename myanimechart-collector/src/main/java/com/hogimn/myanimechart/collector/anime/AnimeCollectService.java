@@ -184,4 +184,47 @@ public class AnimeCollectService {
             default -> null;
         };
     }
+
+    public void collectAllAnimes() {
+        int currentSeasonYear = DateUtil.getCurrentSeasonYear();
+        String currentSeason = DateUtil.getCurrentSeason();
+        for (int year = currentSeasonYear; year >= 1917; year--) {
+            if (year == currentSeasonYear) {
+                if (Objects.equals(currentSeason, "winter")) {
+                    collectAnime(year, "winter");
+                    SleepUtil.sleepForMAL();
+                } else if (Objects.equals(currentSeason, "fall")) {
+                    collectAnime(year, "winter");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "spring");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "summer");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "fall");
+                    SleepUtil.sleepForMAL();
+                } else if (Objects.equals(currentSeason, "summer")) {
+                    collectAnime(year, "winter");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "spring");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "summer");
+                    SleepUtil.sleepForMAL();
+                } else if (Objects.equals(currentSeason, "spring")) {
+                    collectAnime(year, "winter");
+                    SleepUtil.sleepForMAL();
+                    collectAnime(year, "spring");
+                    SleepUtil.sleepForMAL();
+                }
+            } else {
+                collectAnime(year, "winter");
+                SleepUtil.sleepForMAL();
+                collectAnime(year, "fall");
+                SleepUtil.sleepForMAL();
+                collectAnime(year, "summer");
+                SleepUtil.sleepForMAL();
+                collectAnime(year, "spring");
+                SleepUtil.sleepForMAL();
+            }
+        }
+    }
 }

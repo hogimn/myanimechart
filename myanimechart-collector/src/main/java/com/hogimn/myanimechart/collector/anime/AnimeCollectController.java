@@ -36,4 +36,10 @@ public class AnimeCollectController {
     public void collectAnimeByAnimeId(@RequestParam("animeId") long animeId) {
         animeCollectService.collectAnimeByAnimeId(animeId);
     }
+
+    @ApiLoggable
+    @PostMapping("/collectAllAnimes")
+    public void collectAllAnimes() {
+        animeCollectService.collectAllAnimes();
+    }
 }
