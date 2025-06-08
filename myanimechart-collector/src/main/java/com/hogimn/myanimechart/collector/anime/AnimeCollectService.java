@@ -2,6 +2,7 @@ package com.hogimn.myanimechart.collector.anime;
 
 import com.hogimn.myanimechart.common.anime.AnimeDto;
 import com.hogimn.myanimechart.common.anime.AnimeEntity;
+import com.hogimn.myanimechart.common.anime.AnimeSeason;
 import com.hogimn.myanimechart.common.anime.AnimeService;
 import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
@@ -11,7 +12,6 @@ import com.hogimn.myanimechart.common.util.DateUtil;
 import com.hogimn.myanimechart.common.util.SleepUtil;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -146,7 +146,7 @@ public class AnimeCollectService {
         while (true) {
             List<Anime> tempAnimeList = myAnimeListProvider
                     .getMyAnimeList()
-                    .getAnimeSeason(year, getSeason(season))
+                    .getAnimeSeason(year, Season.asEnum(season))
                     .withLimit(limit)
                     .withOffset(offset)
                     .search();
@@ -175,56 +175,47 @@ public class AnimeCollectService {
         }
     }
 
-    private Season getSeason(String season) {
-        return switch (season) {
-            case "spring" -> Season.Spring;
-            case "summer" -> Season.Summer;
-            case "fall" -> Season.Fall;
-            case "winter" -> Season.Winter;
-            default -> null;
-        };
-    }
-
     public void collectAllAnimes() {
         int currentSeasonYear = DateUtil.getCurrentSeasonYear();
         String currentSeason = DateUtil.getCurrentSeason();
         for (int year = currentSeasonYear; year >= 1917; year--) {
             if (year == currentSeasonYear) {
-                if (Objects.equals(currentSeason, "winter")) {
-                    collectAnime(year, "winter");
-                    SleepUtil.sleepForMAL();
-                } else if (Objects.equals(currentSeason, "fall")) {
-                    collectAnime(year, "winter");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "spring");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "summer");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "fall");
-                    SleepUtil.sleepForMAL();
-                } else if (Objects.equals(currentSeason, "summer")) {
-                    collectAnime(year, "winter");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "spring");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "summer");
-                    SleepUtil.sleepForMAL();
-                } else if (Objects.equals(currentSeason, "spring")) {
-                    collectAnime(year, "winter");
-                    SleepUtil.sleepForMAL();
-                    collectAnime(year, "spring");
-                    SleepUtil.sleepForMAL();
+                if (Objects.equals(currentSeason, AnimeSeason.WINTER.toString())) {
+                    collectAnime(year, AnimeSeason.WINTER.toString());
+                } else if (Objects.equals(currentSeason, AnimeSeason.SPRING.toString())) {
+                    collectAnime(year, AnimeSeason.WINTER.toString());
+                    collectAnime(year, AnimeSeason.SPRING.toString());
+                } else if (Objects.equals(currentSeason, AnimeSeason.SUMMER.toString())) {
+                    collectAnime(year, AnimeSeason.WINTER.toString());
+                    collectAnime(year, AnimeSeason.SPRING.toString());
+                    collectAnime(year, AnimeSeason.SUMMER.toString());
+                } else if (Objects.equals(currentSeason, AnimeSeason.FALL.toString())) {
+                    collectAnime(year, AnimeSeason.WINTER.toString());
+                    collectAnime(year, AnimeSeason.SPRING.toString());
+                    collectAnime(year, AnimeSeason.SUMMER.toString());
+                    collectAnime(year, AnimeSeason.FALL.toString());
                 }
             } else {
-                collectAnime(year, "winter");
-                SleepUtil.sleepForMAL();
-                collectAnime(year, "fall");
-                SleepUtil.sleepForMAL();
-                collectAnime(year, "summer");
-                SleepUtil.sleepForMAL();
-                collectAnime(year, "spring");
-                SleepUtil.sleepForMAL();
+                collectAnime(year, AnimeSeason.WINTER.toString());
+                collectAnime(year, AnimeSeason.SPRING.toString());
+                collectAnime(year, AnimeSeason.SUMMER.toString());
+                collectAnime(year, AnimeSeason.FALL.toString());
             }
+        }
+    }
+
+    public void collectAnimeBetweenYears(int fromYear, int toYear) {
+        if (fromYear > toYear) {
+            throw new IllegalArgumentException(
+                    String.format("Invalid year range: fromYear (%d) cannot be greater than toYear (%d).",
+                            fromYear, toYear));
+        }
+
+        for (int i = fromYear; i <= toYear; i++) {
+            collectAnime(i, AnimeSeason.WINTER.toString());
+            collectAnime(i, AnimeSeason.SPRING.toString());
+            collectAnime(i, AnimeSeason.SUMMER.toString());
+            collectAnime(i, AnimeSeason.FALL.toString());
         }
     }
 }

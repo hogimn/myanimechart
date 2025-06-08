@@ -32,6 +32,14 @@ public class AnimeCollectController {
     }
 
     @ApiLoggable
+    @PostMapping("/collectAnimeBetweenYears")
+    public void collectAnimeBetweenYears(
+            @RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear
+    ) {
+        animeCollectService.collectAnimeBetweenYears(fromYear, toYear);
+    }
+
+    @ApiLoggable
     @PostMapping("/collectAnimeByAnimeId")
     public void collectAnimeByAnimeId(@RequestParam("animeId") long animeId) {
         animeCollectService.collectAnimeByAnimeId(animeId);

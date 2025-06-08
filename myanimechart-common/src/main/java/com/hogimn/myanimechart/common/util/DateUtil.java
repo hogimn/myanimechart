@@ -1,5 +1,7 @@
 package com.hogimn.myanimechart.common.util;
 
+import com.hogimn.myanimechart.common.anime.AnimeSeason;
+
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
@@ -9,10 +11,10 @@ public class DateUtil {
     }
 
     private static final Season[] seasons = {
-            new Season("winter", new int[]{1, 2, 3}),
-            new Season("spring", new int[]{4, 5, 6}),
-            new Season("summer", new int[]{7, 8, 9}),
-            new Season("fall", new int[]{10, 11, 12})
+            new Season(AnimeSeason.WINTER.toString(), new int[]{1, 2, 3}),
+            new Season(AnimeSeason.SPRING.toString(), new int[]{4, 5, 6}),
+            new Season(AnimeSeason.SUMMER.toString(), new int[]{7, 8, 9}),
+            new Season(AnimeSeason.FALL.toString(), new int[]{10, 11, 12})
     };
 
     public static String getCurrentSeason() {
@@ -97,13 +99,13 @@ public class DateUtil {
 
     private static String getSeasonByMonth(int month) {
         if (month <= 3) {
-            return "winter";
+            return AnimeSeason.WINTER.toString();
         } else if (month <= 6) {
-            return "spring";
+            return AnimeSeason.SPRING.toString();
         } else if (month <= 9) {
-            return "summer";
+            return AnimeSeason.SUMMER.toString();
         } else {
-            return "fall";
+            return AnimeSeason.FALL.toString();
         }
     }
 
