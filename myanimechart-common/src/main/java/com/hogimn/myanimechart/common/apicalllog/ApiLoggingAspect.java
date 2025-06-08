@@ -26,9 +26,14 @@ public class ApiLoggingAspect {
         this.restTemplate = restTemplate;
     }
 
-    @Around("@annotation(apiLoggable)")
-    public Object logApiCall(ProceedingJoinPoint joinPoint, ApiLoggable apiLoggable) throws Throwable {
+    @Around("@within(com.hogimn.myanimechart.common.apicalllog.ApiLoggable)" +
+            " || @annotation(com.hogimn.myanimechart.common.apicalllog.ApiLoggable)")
+    public Object logApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return joinPoint.proceed();
+        }
+
         HttpServletRequest request = attributes.getRequest();
 
         String endpoint = request.getRequestURI();

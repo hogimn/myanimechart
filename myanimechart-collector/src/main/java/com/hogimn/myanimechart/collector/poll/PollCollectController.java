@@ -3,18 +3,13 @@ package com.hogimn.myanimechart.collector.poll;
 import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
 import com.hogimn.myanimechart.common.poll.PollCollectionStatusDto;
 import com.hogimn.myanimechart.common.poll.PollCollectionStatusService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ApiLoggable
 @RestController
 @RequestMapping("/pollCollect")
-@Slf4j
 public class PollCollectController {
     private final PollCollectService pollCollectService;
     private final PollCollectionStatusService pollCollectionStatusService;
@@ -27,64 +22,54 @@ public class PollCollectController {
         this.pollCollectionStatusService = pollCollectionStatusService;
     }
 
-    @ApiLoggable
-    @PostMapping("/collectSeasonalPoll")
+    @PostMapping("/collect/seasonal")
     public void collectSeasonalPoll() {
         pollCollectService.collectSeasonalPoll("PollCollectJob");
     }
 
-    @ApiLoggable
-    @PostMapping("/collectPollByYearAndSeason")
-    public void collectPollByYearAndSeason(
-            @RequestParam("year") int year, @RequestParam("season") String season
-    ) {
+    @PostMapping("/collect/byYearAndSeason")
+    public void collectByYearAndSeason(@RequestParam int year, @RequestParam String season) {
         pollCollectService.collectPollByYearAndSeason(year, season);
     }
 
-    @ApiLoggable
-    @PostMapping("/collectPollByAnimeId")
-    public void collectPollByAnimeId(@RequestParam("animeId") long animeId) {
+    @PostMapping("/collect/byAnimeId")
+    public void collectByAnimeId(@RequestParam long animeId) {
         pollCollectService.collectPollByAnimeId(animeId);
     }
 
-    @ApiLoggable
-    @PostMapping("/collectPollByEpisode")
-    public void collectPollByEpisode(
-            @RequestParam("animeId") long animeId,
-            @RequestParam("topicId") long topicId,
-            @RequestParam("episode") int episode) {
+    @PostMapping("/collect/byEpisode")
+    public void collectByEpisode(
+            @RequestParam long animeId,
+            @RequestParam long topicId,
+            @RequestParam int episode) {
         pollCollectService.collectPollByAnimeIdAndTopicId(animeId, topicId, episode);
     }
 
-    @ApiLoggable
-    @GetMapping("/findAllPollCollectionStatusWithAnime")
-    public List<PollCollectionStatusDto> findAllPollCollectionStatusWithAnime() {
-        return pollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
+    @PostMapping("/collect/all")
+    public void collectAllPolls() {
+        pollCollectService.collectAllPolls();
     }
 
-    @ApiLoggable
-    @PostMapping("/resumeCollectPollByYearAndSeason")
-    public void resumeCollectPollByYearAndSeason(
-            @RequestParam("year") int year, @RequestParam("season") String season
-    ) {
-        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
-    }
-
-    @ApiLoggable
-    @PostMapping("/resumeFailedCollection")
-    public void resumeFailedCollection() {
-        pollCollectService.resumeFailedCollection();
-    }
-
-    @ApiLoggable
-    @PostMapping("/collectEmptyPoll")
+    @PostMapping("/collect/empty")
     public void collectEmptyPoll() {
         pollCollectService.collectEmptyPoll();
     }
 
-    @ApiLoggable
-    @PostMapping("/collectAllPolls")
-    public void collectAllPolls() {
-        pollCollectService.collectAllPolls();
+    @PostMapping("/resume/byYearAndSeason")
+    public void resumeByYearAndSeason(
+            @RequestParam int year,
+            @RequestParam String season
+    ) {
+        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
+    }
+
+    @PostMapping("/resume/failed")
+    public void resumeFailedCollection() {
+        pollCollectService.resumeFailedCollection();
+    }
+
+    @GetMapping("/status")
+    public List<PollCollectionStatusDto> status() {
+        return pollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
     }
 }

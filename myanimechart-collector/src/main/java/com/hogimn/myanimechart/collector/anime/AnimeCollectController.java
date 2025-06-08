@@ -1,14 +1,13 @@
 package com.hogimn.myanimechart.collector.anime;
 
 import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/animeCollect")
+@ApiLoggable
 @Slf4j
 public class AnimeCollectController {
     private final AnimeCollectService animeCollectService;
@@ -17,37 +16,34 @@ public class AnimeCollectController {
         this.animeCollectService = animeCollectService;
     }
 
-    @ApiLoggable
-    @PostMapping("/collectSeasonalAnime")
-    public void collectSeasonalAnime() {
+    @PostMapping("/seasonal")
+    public void seasonal() {
         animeCollectService.collectSeasonalAnime("AnimeCollectJob");
     }
 
-    @ApiLoggable
-    @PostMapping("/collectAnimeByYearAndSeason")
-    public void collectAnimeByYearAndSeason(
-            @RequestParam("year") int year, @RequestParam("season") String season
+    @PostMapping("/by-year-season")
+    public void byYearSeason(
+            @RequestParam int year,
+            @RequestParam String season
     ) {
         animeCollectService.collectAnimeByYearAndSeason(year, season);
     }
 
-    @ApiLoggable
-    @PostMapping("/collectAnimeBetweenYears")
-    public void collectAnimeBetweenYears(
-            @RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear
+    @PostMapping("/between-years")
+    public void betweenYears(
+            @RequestParam int fromYear,
+            @RequestParam int toYear
     ) {
         animeCollectService.collectAnimeBetweenYears(fromYear, toYear);
     }
 
-    @ApiLoggable
-    @PostMapping("/collectAnimeByAnimeId")
-    public void collectAnimeByAnimeId(@RequestParam("animeId") long animeId) {
+    @PostMapping("/by-id")
+    public void byId(@RequestParam long animeId) {
         animeCollectService.collectAnimeByAnimeId(animeId);
     }
 
-    @ApiLoggable
-    @PostMapping("/collectAllAnimes")
-    public void collectAllAnimes() {
+    @PostMapping("/all")
+    public void all() {
         animeCollectService.collectAllAnimes();
     }
 }

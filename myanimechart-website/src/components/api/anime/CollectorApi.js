@@ -5,7 +5,7 @@ const CollectorApi = {
     const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
       const response = await axios.get(
-        `${gatewayUrl}/collector/pollCollect/findAllPollCollectionStatusWithAnime`
+        `${gatewayUrl}/collector/pollCollect/status`
       );
       return response.data;
     } catch (error) {
