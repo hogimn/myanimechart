@@ -143,8 +143,7 @@ public class PollCollectService {
                 : animeEntity.getTitle();
     }
 
-    private void
-    collectForumTopics(AnimeEntity animeEntity) {
+    private void collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
         pollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
@@ -159,7 +158,7 @@ public class PollCollectService {
                 long topicId = forumTopic.getID();
                 String topicTitle = forumTopic.getTitle();
 
-                if (!isFirstWordMatching(topicTitle, animeEntity.getTitle())) {
+                if (!isFirstWordMatching(topicTitle, getSearchKeyword(animeEntity))) {
                     log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
                             topicTitle, animeEntity.getTitle());
                     continue;
