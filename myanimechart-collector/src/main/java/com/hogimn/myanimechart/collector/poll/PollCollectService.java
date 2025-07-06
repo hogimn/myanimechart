@@ -67,7 +67,7 @@ public class PollCollectService {
 
     @SchedulerLock(name = "collectPollByTopicId")
     public void collectPollByAnimeIdAndTopicId(long animeId, long topicId, int episode) {
-        savePoll(topicId, episode, topicId);
+        savePoll(topicId, episode, animeId);
     }
 
     @SchedulerLock(name = "collectPollByYearAndSeason")
