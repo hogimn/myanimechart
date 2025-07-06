@@ -154,41 +154,11 @@ public class PollCollectService {
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
             SleepUtil.sleepForMAL();
 
-            for (ForumTopic forumTopic : forumTopics) {
-                long topicId = forumTopic.getID();
-                String topicTitle = forumTopic.getTitle();
-
-                if (!isFirstWordMatching(topicTitle, getSearchKeyword(animeEntity))) {
-                    log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
-                            topicTitle, animeEntity.getTitle());
-                    continue;
-                }
-
-                if (!topicTitle.endsWith("Discussion")) {
-                    log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
-                    continue;
-                }
-
-                if (checkMangaTopic(topicTitle)) {
-                    log.info("Topic name is manga discussion. topic: {},  anime: {}",
-                            forumTopic.getTitle(), animeEntity.getTitle());
-                    continue;
-                }
-
-                if (!checkTitleSame(topicTitle, getSearchKeyword(animeEntity))) {
-                    log.info("Topic name is far different from anime name. topic: {},  anime: {}",
-                            forumTopic.getTitle(), animeEntity.getTitle());
-                    continue;
-                }
-
-                int episode = getEpisodeFromTopicTitle(topicTitle);
-                if (episode == -1) {
-                    log.error("Failed to get episode from topic title: {}", topicTitle);
-                    continue;
-                }
-
-                savePoll(topicId, episode, animeEntity.getId());
+            if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics)) {
+                keyword = animeEntity.getEnglishTitle();
+                forumTopics = fetchForumTopics(keyword);
                 SleepUtil.sleepForMAL();
+                findMatchingTopicAndSavePollResult(animeEntity, forumTopics);
             }
 
             collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
@@ -204,6 +174,50 @@ public class PollCollectService {
         }
 
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
+    }
+
+    private boolean findMatchingTopicAndSavePollResult(AnimeEntity animeEntity, List<ForumTopic> forumTopics) {
+        boolean found = false;
+
+        for (ForumTopic forumTopic : forumTopics) {
+            long topicId = forumTopic.getID();
+            String topicTitle = forumTopic.getTitle();
+
+            if (!isFirstWordMatching(topicTitle, getSearchKeyword(animeEntity))) {
+                log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
+                        topicTitle, animeEntity.getTitle());
+                continue;
+            }
+
+            if (!topicTitle.endsWith("Discussion")) {
+                log.info("Topic name does not end with Discussion. {}", forumTopic.getTitle());
+                continue;
+            }
+
+            if (checkMangaTopic(topicTitle)) {
+                log.info("Topic name is manga discussion. topic: {},  anime: {}",
+                        forumTopic.getTitle(), animeEntity.getTitle());
+                continue;
+            }
+
+            if (!checkTitleSame(topicTitle, getSearchKeyword(animeEntity))) {
+                log.info("Topic name is far different from anime name. topic: {},  anime: {}",
+                        forumTopic.getTitle(), animeEntity.getTitle());
+                continue;
+            }
+
+            int episode = getEpisodeFromTopicTitle(topicTitle);
+            if (episode == -1) {
+                log.error("Failed to get episode from topic title: {}", topicTitle);
+                continue;
+            }
+
+            savePoll(topicId, episode, animeEntity.getId());
+            found = true;
+            SleepUtil.sleepForMAL();
+        }
+
+        return found;
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {
