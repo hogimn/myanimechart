@@ -110,6 +110,8 @@ public class PollCollectService {
         int offset = 0;
         int limit = 100;
 
+        log.info("keyword is {}", keyword);
+
         while (true) {
             List<ForumTopic> tempForumTopics = myAnimeListProvider
                     .getMyAnimeList()
@@ -156,9 +158,11 @@ public class PollCollectService {
 
             if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword)) {
                 keyword = animeEntity.getEnglishTitle();
-                forumTopics = fetchForumTopics(keyword);
-                SleepUtil.sleepForMAL();
-                findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword);
+                if (!keyword.isEmpty()) {
+                    forumTopics = fetchForumTopics(keyword);
+                    SleepUtil.sleepForMAL();
+                    findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword);
+                }
             }
 
             collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
