@@ -154,11 +154,11 @@ public class PollCollectService {
             List<ForumTopic> forumTopics = fetchForumTopics(keyword);
             SleepUtil.sleepForMAL();
 
-            if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics)) {
+            if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword)) {
                 keyword = animeEntity.getEnglishTitle();
                 forumTopics = fetchForumTopics(keyword);
                 SleepUtil.sleepForMAL();
-                findMatchingTopicAndSavePollResult(animeEntity, forumTopics);
+                findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword);
             }
 
             collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
@@ -176,14 +176,15 @@ public class PollCollectService {
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
     }
 
-    private boolean findMatchingTopicAndSavePollResult(AnimeEntity animeEntity, List<ForumTopic> forumTopics) {
+    private boolean findMatchingTopicAndSavePollResult(
+            AnimeEntity animeEntity, List<ForumTopic> forumTopics, String keyword) {
         boolean found = false;
 
         for (ForumTopic forumTopic : forumTopics) {
             long topicId = forumTopic.getID();
             String topicTitle = forumTopic.getTitle();
 
-            if (!isFirstWordMatching(topicTitle, getSearchKeyword(animeEntity))) {
+            if (!isFirstWordMatching(topicTitle, keyword)) {
                 log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
                         topicTitle, animeEntity.getTitle());
                 continue;
@@ -200,7 +201,7 @@ public class PollCollectService {
                 continue;
             }
 
-            if (!checkTitleSame(topicTitle, getSearchKeyword(animeEntity))) {
+            if (!checkTitleSame(topicTitle, keyword)) {
                 log.info("Topic name is far different from anime name. topic: {},  anime: {}",
                         forumTopic.getTitle(), animeEntity.getTitle());
                 continue;
