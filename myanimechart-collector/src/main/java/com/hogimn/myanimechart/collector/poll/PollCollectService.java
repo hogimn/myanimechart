@@ -163,7 +163,7 @@ public class PollCollectService {
 
             if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics, animeTitle)) {
                 animeTitle = animeEntity.getEnglishTitle();
-                if (!searchKeyword.isEmpty()) {
+                if (!animeTitle.isEmpty()) {
                     searchKeyword = animeTitle + " Poll Episode Discussion";
                     forumTopics = fetchForumTopics(searchKeyword);
                     SleepUtil.sleepForMAL();
