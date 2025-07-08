@@ -152,16 +152,18 @@ public class PollCollectService {
 
         boolean isFail = false;
         try {
-            String keyword = getSearchKeyword(animeEntity) + " Poll Episode Discussion";
-            List<ForumTopic> forumTopics = fetchForumTopics(keyword);
+            String animeTitle = getSearchKeyword(animeEntity);
+            String searchKeyword = animeTitle + " Poll Episode Discussion";
+            List<ForumTopic> forumTopics = fetchForumTopics(searchKeyword);
             SleepUtil.sleepForMAL();
 
-            if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword)) {
-                keyword = animeEntity.getEnglishTitle();
-                if (!keyword.isEmpty()) {
-                    forumTopics = fetchForumTopics(keyword);
+            if (!findMatchingTopicAndSavePollResult(animeEntity, forumTopics, animeTitle)) {
+                animeTitle = animeEntity.getEnglishTitle();
+                if (!searchKeyword.isEmpty()) {
+                    searchKeyword = animeTitle + " Poll Episode Discussion";
+                    forumTopics = fetchForumTopics(searchKeyword);
                     SleepUtil.sleepForMAL();
-                    findMatchingTopicAndSavePollResult(animeEntity, forumTopics, keyword);
+                    findMatchingTopicAndSavePollResult(animeEntity, forumTopics, animeTitle);
                 }
             }
 
@@ -181,16 +183,16 @@ public class PollCollectService {
     }
 
     private boolean findMatchingTopicAndSavePollResult(
-            AnimeEntity animeEntity, List<ForumTopic> forumTopics, String keyword) {
+            AnimeEntity animeEntity, List<ForumTopic> forumTopics, String animeTitle) {
         boolean found = false;
 
         for (ForumTopic forumTopic : forumTopics) {
             long topicId = forumTopic.getID();
             String topicTitle = forumTopic.getTitle();
 
-            if (!isFirstWordMatching(topicTitle, keyword)) {
+            if (!isFirstWordMatching(topicTitle, animeTitle)) {
                 log.info("Topic title does not start with anime title first word, or vice versa. topic: {},  anime: {}",
-                        topicTitle, animeEntity.getTitle());
+                        topicTitle, animeTitle);
                 continue;
             }
 
@@ -205,9 +207,9 @@ public class PollCollectService {
                 continue;
             }
 
-            if (!checkTitleSame(topicTitle, keyword)) {
+            if (!checkTitleSame(topicTitle, animeTitle)) {
                 log.info("Topic name is far different from anime name. topic: {},  anime: {}",
-                        forumTopic.getTitle(), animeEntity.getTitle());
+                        forumTopic.getTitle(), animeTitle);
                 continue;
             }
 
