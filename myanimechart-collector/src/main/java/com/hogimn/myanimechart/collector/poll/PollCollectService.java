@@ -112,6 +112,10 @@ public class PollCollectService {
 
         log.info("keyword is {}", keyword);
 
+        if (keyword.isEmpty()) {
+            return null;
+        }
+
         while (true) {
             List<ForumTopic> tempForumTopics = myAnimeListProvider
                     .getMyAnimeList()
@@ -185,6 +189,10 @@ public class PollCollectService {
     private boolean findMatchingTopicAndSavePollResult(
             AnimeEntity animeEntity, List<ForumTopic> forumTopics, String animeTitle) {
         boolean found = false;
+
+        if (forumTopics == null) {
+            return false;
+        }
 
         for (ForumTopic forumTopic : forumTopics) {
             long topicId = forumTopic.getID();
