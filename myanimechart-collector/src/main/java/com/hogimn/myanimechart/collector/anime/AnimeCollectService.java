@@ -149,6 +149,7 @@ public class AnimeCollectService {
                     .getAnimeSeason(year, Season.asEnum(season))
                     .withLimit(limit)
                     .withOffset(offset)
+                    .includeNSFW()
                     .search();
 
             animeList.addAll(tempAnimeList);
