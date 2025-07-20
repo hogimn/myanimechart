@@ -3,14 +3,14 @@ import axios from "axios";
 const SecurityApi = {
   startOAuth2Flow: async () => {
     const gateway_url = process.env.REACT_APP_GATEWAY_URL;
-    const authorizationUrl = `${gateway_url}/security/oauth2/authorize/myanimelist`;
+    const authorizationUrl = `${gateway_url}/query/oauth2/authorize/myanimelist`;
     window.location.href = authorizationUrl;
   },
   isAuthenticated: async () => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/security/oauth2/isAuthenticated`,
+        `${gatewayUrl}/query/oauth2/isAuthenticated`,
         {
           withCredentials: true,
         }
@@ -25,7 +25,7 @@ const SecurityApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(
-        `${gatewayUrl}/security/oauth2/logout`,
+        `${gatewayUrl}/query/oauth2/logout`,
         null,
         {
           withCredentials: true,

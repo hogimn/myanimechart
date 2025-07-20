@@ -23,15 +23,11 @@ spring:
           uri: lb://query
           predicates:
             - Path=/query/**
-        - id: security
-          uri: lb://security
-          predicates:
-            - Path=/security/**
         - id: execute
           uri: lb://execute
           predicates:
             - Path=/execute/**
-        - id: collector
+        - id: batch
           uri: lb://collector
           predicates:
             - Path=/collector/**
@@ -46,8 +42,6 @@ springdoc:
       - name: query
         url: /query/v3/api-docs
       - name: security
-        url: /security/v3/api-docs
-      - name: execute
         url: /execute/v3/api-docs
       - name: collector
-        url: /collector/v3/api-docs
+        url: /batch/v3/api-docs
