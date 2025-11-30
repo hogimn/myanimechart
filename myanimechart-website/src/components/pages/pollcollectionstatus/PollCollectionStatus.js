@@ -51,7 +51,7 @@ const PollCollectionStatus = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await CollectorApi.findAllPollCollectionStatusWithAnime();
+        const data = await CollectorApi.getStatuese();
         setRawData(data);
 
         const groupedData = data.reduce(

@@ -260,7 +260,7 @@ const SeasonalAnimeList = ({
       return;
     }
 
-    const userAnimes = await UserApi.findAllUserAnimeStatuses();
+    const userAnimes = await UserApi.findAnimeStatuses();
 
     if (userAnimes == null || Object.entries(userAnimes).length === 0) {
       setUserAnimeDict({});
@@ -287,10 +287,7 @@ const SeasonalAnimeList = ({
     const fetchData = async () => {
       setAnimesLoading(true);
       try {
-        const animes = await AnimeApi.findAnimesWithPollsByYearAndSeason(
-          year,
-          season
-        );
+        const animes = await AnimeApi.getByYearAndSeason(year, season);
         if (isMounted) {
           setAnimes(animes);
         }
@@ -636,9 +633,7 @@ const SeasonalAnimeList = ({
                 <ModalButton
                   onClick={async () => {
                     setUserAnimeUpdating(true);
-                    await UserApi.updateUserAnimeStatus(
-                      selectedUserAnimeStatus
-                    );
+                    await UserApi.updateAnimeStatus(selectedUserAnimeStatus);
                     await refreshUserAnimeStatusDict();
                     setUserAnimeUpdating(false);
                     setShowUserAnimeStatusEdit(false);
@@ -654,9 +649,7 @@ const SeasonalAnimeList = ({
                   <ModalButton
                     onClick={async () => {
                       setUserAnimeDeleting(true);
-                      await UserApi.deleteUserAnimeStatus(
-                        selectedUserAnimeStatus
-                      );
+                      await UserApi.deleteAnimeStatus(selectedUserAnimeStatus);
                       await refreshUserAnimeStatusDict();
                       setUserAnimeDeleting(false);
                       setShowUserAnimeStatusEdit(false);

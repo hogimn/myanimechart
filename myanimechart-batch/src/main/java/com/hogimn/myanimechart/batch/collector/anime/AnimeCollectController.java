@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/animeCollect")
+@RequestMapping("/collect-anime")
 @ApiLoggable
 @Slf4j
 public class AnimeCollectController {
@@ -15,34 +15,34 @@ public class AnimeCollectController {
         this.animeCollectService = animeCollectService;
     }
 
-    @PostMapping("/seasonal")
-    public void seasonal() {
-        animeCollectService.collectSeasonalAnime("AnimeCollectJob");
-    }
-
-    @PostMapping("/by-year-season")
-    public void byYearSeason(
-            @RequestParam int year,
-            @RequestParam String season
-    ) {
-        animeCollectService.collectAnimeByYearAndSeason(year, season);
-    }
-
-    @PostMapping("/between-years")
-    public void betweenYears(
-            @RequestParam int fromYear,
-            @RequestParam int toYear
-    ) {
-        animeCollectService.collectAnimeBetweenYears(fromYear, toYear);
-    }
-
-    @PostMapping("/by-id")
-    public void byId(@RequestParam long animeId) {
-        animeCollectService.collectAnimeByAnimeId(animeId);
+    @PostMapping
+    public void collectByAnimeId(@RequestParam long animeId) {
+        animeCollectService.collectByAnimeId(animeId);
     }
 
     @PostMapping("/all")
     public void all() {
-        animeCollectService.collectAllAnimes();
+        animeCollectService.collectAll();
+    }
+
+    @PostMapping("/seasonal")
+    public void collectSeasonal() {
+        animeCollectService.collectSeasonal("AnimeCollectJob");
+    }
+
+    @PostMapping("/by-year-and-season")
+    public void collectByYearAndSeason(
+            @RequestParam int year,
+            @RequestParam String season
+    ) {
+        animeCollectService.collectByYearAndSeason(year, season);
+    }
+
+    @PostMapping("/between-years")
+    public void collectBetweenYears(
+            @RequestParam int fromYear,
+            @RequestParam int toYear
+    ) {
+        animeCollectService.collectBetweenYears(fromYear, toYear);
     }
 }

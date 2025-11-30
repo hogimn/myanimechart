@@ -99,7 +99,7 @@ const SeasonalTabs = ({ season, year }) => {
     }
 
     setLoading(true);
-    const data = await AnimeApi.findAnimesWithPollsByKeyword(keyword);
+    const data = await AnimeApi.getByKeyword(keyword);
     setSearchResults(data);
     setPage(1);
     setLoading(false);

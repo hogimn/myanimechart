@@ -25,13 +25,13 @@ public class PollController {
     }
 
     @ApiLoggable
-    @PostMapping("/savePoll")
-    public void savePoll(@RequestBody PollDto pollDto) {
+    @PostMapping("/save")
+    public void save(@RequestBody PollDto pollDto) {
         pollService.save(pollDto);
     }
 
     @ApiLoggable
-    @PostMapping("/savePollCollectionStatus")
+    @PostMapping("/save-collection-status")
     public void savePollCollectionStatus(@RequestBody PollCollectionStatusDto pollCollectionStatusDto) {
         malPollCollectionStatusService.save(pollCollectionStatusDto);
     }

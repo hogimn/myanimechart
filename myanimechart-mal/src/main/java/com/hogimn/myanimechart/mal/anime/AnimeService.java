@@ -81,12 +81,12 @@ public class AnimeService {
         return animeRepository.findByForceCollect("Y");
     }
 
-    public List<AnimeDto> findAnimeDtosWithPollDtosByYearAndSeason(int year, String season) {
+    public List<AnimeDto> getByYearAndSeason(int year, String season) {
         List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
         return convertToAnimeDtos(results);
     }
 
-    public List<AnimeDto> findAnimeDtosWithPollDtosByKeyword(String keyword) {
+    public List<AnimeDto> getByKeyword(String keyword) {
         List<Object[]> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
         return convertToAnimeDtos(results);
     }

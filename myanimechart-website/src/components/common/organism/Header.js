@@ -96,7 +96,7 @@ const Header = () => {
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         } else {
-          const user = await UserApi.findUser();
+          const user = await UserApi.getCurrentUser();
           setUser(user);
           sessionStorage.setItem("user", JSON.stringify(user));
         }

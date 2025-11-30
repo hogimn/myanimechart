@@ -22,32 +22,32 @@ public class UserController {
     }
 
     @ApiLoggable
-    @GetMapping("/findUser")
-    public UserDto findUser() {
-        return userService.findUserDtoByToken();
+    @GetMapping
+    public UserDto getCurrentUser() {
+        return userService.getCurrentUser();
     }
 
     @ApiLoggable
-    @GetMapping("/findAllUserAnimeStatuses")
-    public List<AnimeListStatusDto> findAllUserAnimeStatuses() {
-        return userService.findAllUserAnimeStatuses();
+    @GetMapping("/anime-statuses")
+    public List<AnimeListStatusDto> getAnimeStatuses() {
+        return userService.getAnimeStatuses();
     }
 
     @ApiLoggable
-    @GetMapping("/findUserAnimeStatusById")
-    public AnimeListStatusDto findUserAnimeStatusById(@RequestParam("id") int id) {
-        return userService.findAnimeListStatusDtoById(id);
+    @GetMapping("/anime-status")
+    public AnimeListStatusDto getAnimeStatusById(@RequestParam("id") int id) {
+        return userService.getAnimeStatusById(id);
     }
 
     @ApiLoggable
-    @PostMapping("/updateUserAnimeStatus")
-    public void updateUserAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
-        userService.updateUserAnimeStatus(animeListStatusDto);
+    @PostMapping("/anime-status/update")
+    public void updateAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
+        userService.updateAnimeStatus(animeListStatusDto);
     }
 
     @ApiLoggable
-    @PostMapping("/deleteUserAnimeStatus")
-    public void deleteUserAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
-        userService.deleteUserAnimeStatus(animeListStatusDto);
+    @PostMapping("/anime-status/delete")
+    public void deleteAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
+        userService.deleteAnimeStatus(animeListStatusDto);
     }
 }

@@ -37,13 +37,13 @@ public class AnimeCollectService {
         this.serviceRegistryService = serviceRegistryService;
     }
 
-    public void collectAnimeByYearAndSeason(int year, String season) {
+    public void collectByYearAndSeason(int year, String season) {
         collectAnime(year, season);
     }
 
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectSeasonalAnime")
-    public void collectSeasonalAnime(String batchJobName) {
+    public void collectSeasonal(String batchJobName) {
         log.info("Start of collecting seasonal anime");
 
         collectAnimeCurrentSeason();
@@ -69,7 +69,7 @@ public class AnimeCollectService {
                 AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason(),
                 AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
         for (AnimeEntity animeEntity : animeEntities) {
-            collectAnimeByAnimeId(animeEntity.getId());
+            collectByAnimeId(animeEntity.getId());
             SleepUtil.sleepForMAL();
         }
     }
@@ -77,12 +77,12 @@ public class AnimeCollectService {
     private void collectAnimeForceCollectTrue() {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         for (var animeEntity : animeEntities) {
-            collectAnimeByAnimeId(animeEntity.getId());
+            collectByAnimeId(animeEntity.getId());
             SleepUtil.sleepForMAL();
         }
     }
 
-    public void collectAnimeByAnimeId(long animeId) {
+    public void collectByAnimeId(long animeId) {
         log.info("Start of collecting anime {}", animeId);
 
         try {
@@ -176,7 +176,7 @@ public class AnimeCollectService {
         }
     }
 
-    public void collectAllAnimes() {
+    public void collectAll() {
         int currentSeasonYear = AnimeDateUtil.getCurrentSeasonYear();
         String currentSeason = AnimeDateUtil.getCurrentSeason();
         for (int year = currentSeasonYear; year >= 1917; year--) {
@@ -205,7 +205,7 @@ public class AnimeCollectService {
         }
     }
 
-    public void collectAnimeBetweenYears(int fromYear, int toYear) {
+    public void collectBetweenYears(int fromYear, int toYear) {
         if (fromYear > toYear) {
             throw new IllegalArgumentException(
                     String.format("Invalid year range: fromYear (%d) cannot be greater than toYear (%d).",

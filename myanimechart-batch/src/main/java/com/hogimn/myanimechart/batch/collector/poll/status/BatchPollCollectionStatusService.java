@@ -121,15 +121,15 @@ public class BatchPollCollectionStatusService {
         pollCollectionStatusRepository.save(pollCollectionStatusEntity);
     }
 
-    public void sendSave(PollCollectionStatusEntity pollCollectionStatusEntity) {
+    private void sendSave(PollCollectionStatusEntity pollCollectionStatusEntity) {
         PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
                 .from(pollCollectionStatusEntity);
 
         serviceRegistryService.send(
-                RegisteredService.APP, "/poll/savePollCollectionStatus", pollCollectionStatusDto);
+                RegisteredService.APP, "/poll/save-collection-status", pollCollectionStatusDto);
     }
 
-    public List<PollCollectionStatusDto> findAllPollCollectionStatusDtosWithAnimeDto() {
+    public List<PollCollectionStatusDto> getStatuses() {
         return pollCollectionStatusRepository
                 .findAllWithAnimeOrderByYearAndSeasonAndScore()
                 .stream()

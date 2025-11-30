@@ -9,7 +9,7 @@ import java.util.List;
 
 @ApiLoggable
 @RestController
-@RequestMapping("/pollCollect")
+@RequestMapping("/collect-poll")
 public class PollCollectController {
     private final PollCollectService pollCollectService;
     private final BatchPollCollectionStatusService batchPollCollectionStatusService;
@@ -22,54 +22,54 @@ public class PollCollectController {
         this.batchPollCollectionStatusService = batchPollCollectionStatusService;
     }
 
-    @PostMapping("/collect/seasonal")
-    public void collectSeasonalPoll() {
-        pollCollectService.collectSeasonalPoll("PollCollectJob");
+    @PostMapping("seasonal")
+    public void collectSeasonal() {
+        pollCollectService.collectSeasonal("PollCollectJob");
     }
 
-    @PostMapping("/collect/byYearAndSeason")
+    @PostMapping("by-year-and-season")
     public void collectByYearAndSeason(@RequestParam int year, @RequestParam String season) {
         pollCollectService.collectPollByYearAndSeason(year, season);
     }
 
-    @PostMapping("/collect/byAnimeId")
+    @PostMapping
     public void collectByAnimeId(@RequestParam long animeId) {
-        pollCollectService.collectPollByAnimeId(animeId);
+        pollCollectService.collectByAnimeId(animeId);
     }
 
-    @PostMapping("/collect/byEpisode")
+    @PostMapping("/by-episode")
     public void collectByEpisode(
             @RequestParam long animeId,
             @RequestParam long topicId,
             @RequestParam int episode) {
-        pollCollectService.collectPollByAnimeIdAndTopicId(animeId, topicId, episode);
+        pollCollectService.collectByEpisode(animeId, topicId, episode);
     }
 
-    @PostMapping("/collect/all")
-    public void collectAllPolls() {
-        pollCollectService.collectAllPolls();
+    @PostMapping("/all")
+    public void collectAll() {
+        pollCollectService.collectAll();
     }
 
-    @PostMapping("/collect/empty")
-    public void collectEmptyPoll() {
-        pollCollectService.collectEmptyPoll();
+    @PostMapping("/empty")
+    public void collectEmpty() {
+        pollCollectService.collectEmpty();
     }
 
-    @PostMapping("/resume/byYearAndSeason")
+    @PostMapping("/resume/by-year-and-season")
     public void resumeByYearAndSeason(
             @RequestParam int year,
             @RequestParam String season
     ) {
-        pollCollectService.resumeCollectPollByYearAndSeason(year, season);
+        pollCollectService.resumeByYearAndSeason(year, season);
     }
 
     @PostMapping("/resume/failed")
     public void resumeFailedCollection() {
-        pollCollectService.resumeFailedCollection();
+        pollCollectService.resumeFailed();
     }
 
-    @GetMapping("/status")
-    public List<PollCollectionStatusDto> status() {
-        return batchPollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
+    @GetMapping("/statuses")
+    public List<PollCollectionStatusDto> getStatuses() {
+        return batchPollCollectionStatusService.getStatuses();
     }
 }

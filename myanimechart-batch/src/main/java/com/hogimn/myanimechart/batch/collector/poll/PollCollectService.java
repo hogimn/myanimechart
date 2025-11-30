@@ -59,14 +59,14 @@ public class PollCollectService {
     }
 
     @SchedulerLock(name = "collectPollByAnimeId")
-    public void collectPollByAnimeId(long animeId) {
+    public void collectByAnimeId(long animeId) {
         AnimeEntity animeEntity = animeService.findAnimeEntityById(animeId);
         batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId());
         collectForumTopics(animeEntity);
     }
 
     @SchedulerLock(name = "collectPollByTopicId")
-    public void collectPollByAnimeIdAndTopicId(long animeId, long topicId, int episode) {
+    public void collectByEpisode(long animeId, long topicId, int episode) {
         savePoll(topicId, episode, animeId);
     }
 
@@ -80,7 +80,7 @@ public class PollCollectService {
 
     @SaveBatchHistory("#batchJobName")
     @SchedulerLock(name = "collectSeasonalPoll")
-    public void collectSeasonalPoll(String batchJobName) {
+    public void collectSeasonal(String batchJobName) {
         log.info("Start of collecting seasonal poll");
 
         collectPollAllSeasonCurrentlyAiring();
@@ -310,7 +310,7 @@ public class PollCollectService {
                 pollDto.setEpisode(episode);
                 pollDto.setVotes(votes);
 
-                serviceRegistryService.send(RegisteredService.APP, "/poll/savePoll", pollDto);
+                serviceRegistryService.send(RegisteredService.APP, "/poll/save", pollDto);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -326,7 +326,7 @@ public class PollCollectService {
             pollDto.setEpisode(episode);
             pollDto.setVotes(0);
 
-            serviceRegistryService.send(RegisteredService.APP, "/poll/savePoll", pollDto);
+            serviceRegistryService.send(RegisteredService.APP, "/poll/save", pollDto);
         });
     }
 
@@ -378,7 +378,7 @@ public class PollCollectService {
         }
     }
 
-    public void resumeCollectPollByYearAndSeason(int year, String season) {
+    public void resumeByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = animeService
                 .findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
@@ -386,7 +386,7 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
-    public void resumeFailedCollection() {
+    public void resumeFailed() {
         List<AnimeEntity> animeEntities = animeService
                 .findFailedCollectionAnimes();
         animeEntities.forEach(animeEntity ->
@@ -394,7 +394,7 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
-    public void collectEmptyPoll() {
+    public void collectEmpty() {
         List<AnimeEntity> animeEntities = animeService
                 .findAnimesWithEmptyPoll();
         animeEntities.forEach(animeEntity ->
@@ -402,7 +402,7 @@ public class PollCollectService {
         animeEntities.forEach(this::collectForumTopics);
     }
 
-    public void collectAllPolls() {
+    public void collectAll() {
         List<AnimeEntity> animeEntities = animeService.findAll();
         animeEntities.forEach(animeEntity ->
                 batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));

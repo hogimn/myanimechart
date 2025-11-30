@@ -31,7 +31,7 @@ public class AnimeCollectJob {
                 .findBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> animeCollectService.collectSeasonalAnime(batchDto.getName()),
+                () -> animeCollectService.collectSeasonal(batchDto.getName()),
                 new CronTrigger(batchDto.getCron()));
     }
 }

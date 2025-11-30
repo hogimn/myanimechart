@@ -21,11 +21,11 @@ public class UserService {
         this.myAnimeListProvider = myAnimeListProvider;
     }
 
-    public UserDto findUserDtoByToken() {
+    public UserDto getCurrentUser() {
         return UserDto.from(myAnimeListProvider.getMyAnimeListWithToken().getAuthenticatedUser());
     }
 
-    public List<AnimeListStatusDto> findAllUserAnimeStatuses() {
+    public List<AnimeListStatusDto> getAnimeStatuses() {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -59,7 +59,7 @@ public class UserService {
                 .toList();
     }
 
-    public AnimeListStatusDto findAnimeListStatusDtoById(int id) {
+    public AnimeListStatusDto getAnimeStatusById(int id) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
 
@@ -96,7 +96,7 @@ public class UserService {
         return animeListStatusDto.orElse(null);
     }
 
-    public void updateUserAnimeStatus(AnimeListStatusDto animeListStatusDto) {
+    public void updateAnimeStatus(AnimeListStatusDto animeListStatusDto) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(animeListStatusDto.getAnimeId());
         if (animeListStatusDto.getStatus() != null) {
@@ -110,7 +110,7 @@ public class UserService {
         animeListUpdate.update();
     }
 
-    public void deleteUserAnimeStatus(AnimeListStatusDto animeListStatusDto) {
+    public void deleteAnimeStatus(AnimeListStatusDto animeListStatusDto) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         myAnimeList.deleteAnimeListing(animeListStatusDto.getAnimeId());
     }

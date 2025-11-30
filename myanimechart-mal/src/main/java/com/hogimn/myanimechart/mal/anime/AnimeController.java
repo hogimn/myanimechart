@@ -23,20 +23,20 @@ public class AnimeController {
     }
 
     @ApiLoggable
-    @GetMapping("/findAnimesWithPollsByKeyword")
-    public List<AnimeDto> findAnimesWithPollsByKeyword(@RequestParam("keyword") String keyword) {
-        return animeService.findAnimeDtosWithPollDtosByKeyword(keyword);
+    @GetMapping
+    public List<AnimeDto> getByKeyword(@RequestParam("keyword") String keyword) {
+        return animeService.getByKeyword(keyword);
     }
 
     @ApiLoggable
-    @GetMapping("/findAnimesWithPollsByYearAndSeason/{year}/{season}")
-    public List<AnimeDto> findAnimesWithPollsByYearAndSeason(@PathVariable int year, @PathVariable String season) {
-        return animeService.findAnimeDtosWithPollDtosByYearAndSeason(year, season);
+    @GetMapping("/by-year-and-season/{year}/{season}")
+    public List<AnimeDto> getByYearAndSeason(@PathVariable int year, @PathVariable String season) {
+        return animeService.getByYearAndSeason(year, season);
     }
 
     @ApiLoggable
-    @PostMapping("/saveAnime")
-    public void saveAnime(@RequestBody AnimeDto animeDto) {
+    @PostMapping("/save")
+    public void save(@RequestBody AnimeDto animeDto) {
         animeService.save(animeDto);
     }
 }
