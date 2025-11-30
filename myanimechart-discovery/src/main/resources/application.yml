@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: discovery
+  config:
+    import: file:../myanimechart-core/src/main/resources/application.yml
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: ${myanimechart_serviceregistry_url}

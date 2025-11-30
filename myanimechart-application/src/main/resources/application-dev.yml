@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: application
+  config:
+    import: file:../myanimechart-core/src/main/resources/application-dev.yml,file:../myanimechart-service/src/main/resources/application-dev.yml
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

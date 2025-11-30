@@ -4,7 +4,7 @@ const UserApi = {
   getCurrentUser: async () => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
-      const response = await axios.get(`${gatewayUrl}/app/user`, {
+      const response = await axios.get(`${gatewayUrl}/application/user`, {
         withCredentials: true,
       });
       return response.data;
@@ -17,7 +17,7 @@ const UserApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/app/user/anime-statuses`,
+        `${gatewayUrl}/application/user/anime-statuses`,
         {
           withCredentials: true,
         }
@@ -31,12 +31,15 @@ const UserApi = {
   findAnimeStatus: async (id) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
-      const response = await axios.get(`${gatewayUrl}/app/user/anime-status`, {
-        params: {
-          id: id,
-        },
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${gatewayUrl}/application/user/anime-status`,
+        {
+          params: {
+            id: id,
+          },
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error finding user anime status:", error);
@@ -55,7 +58,7 @@ const UserApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(
-        `${gatewayUrl}/app/user/anime-status/update`,
+        `${gatewayUrl}/application/user/anime-status/update`,
         animeListStatus,
         {
           withCredentials: true,
@@ -72,7 +75,7 @@ const UserApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.post(
-        `${gatewayUrl}/app/user/anime-status/delete`,
+        `${gatewayUrl}/application/user/anime-status/delete`,
         animeListStatus,
         {
           withCredentials: true,

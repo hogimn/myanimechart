@@ -1,6 +1,6 @@
 @echo off
 
-start "serviceregistry" cmd /c ".\start serviceregistry 8761"
+start "discovery" cmd /c ".\start discovery 8761"
 start "gateway" cmd /c ".\start gateway 8100"
-start "app" cmd /c ".\start app 8900"
+start "application" cmd /c ".\start application 8900"
 

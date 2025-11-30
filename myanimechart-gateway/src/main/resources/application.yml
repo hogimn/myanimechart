@@ -19,10 +19,10 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: app
-          uri: lb://app
+        - id: application
+          uri: lb://application
           predicates:
-            - Path=/app/**
+            - Path=/application/**
 
 springdoc:
   api-docs:

@@ -1,0 +1,138 @@
+package com.hogimn.myanimechart.service.anime;
+
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
+import com.hogimn.myanimechart.core.domain.anime.AnimeRepository;
+import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
+import com.hogimn.myanimechart.core.common.util.DateUtil;
+import com.hogimn.myanimechart.service.poll.PollDto;
+import com.hogimn.myanimechart.core.domain.poll.PollEntity;
+import com.hogimn.myanimechart.service.poll.PollService;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+@Slf4j
+public class AnimeService {
+    private final AnimeRepository animeRepository;
+    private final PollService pollService;
+
+    public AnimeService(
+            AnimeRepository animeRepository,
+            PollService pollService
+    ) {
+        this.animeRepository = animeRepository;
+        this.pollService = pollService;
+    }
+
+    @Transactional
+    public void save(AnimeDto animeDto) {
+        if (animeDto == null) {
+            return;
+        }
+
+        Optional<AnimeEntity> optional = animeRepository.findById(animeDto.getId());
+        if (optional.isPresent()) {
+            AnimeEntity animeEntity = optional.get();
+            animeEntity.setFrom(animeDto.toEntity());
+            animeEntity.setUpdatedAt(DateUtil.now());
+            animeRepository.save(animeEntity);
+            return;
+        }
+
+        AnimeEntity animeEntity = animeDto.toEntity();
+        animeEntity.setCreatedAt(DateUtil.now());
+        animeRepository.save(animeEntity);
+    }
+
+    public AnimeEntity findAnimeEntityById(long id) {
+        Optional<AnimeEntity> optional = animeRepository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new IllegalArgumentException("Anime not found (" + id + ")");
+    }
+
+    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(int year, String season) {
+        return animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
+    }
+
+    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(int year, String season) {
+        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season, CollectionStatus.FAILED);
+    }
+
+    public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
+                                                                       int nextYear, String nextSeason) {
+        return animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(
+                year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
+    }
+
+    public List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring() {
+        return animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
+    }
+
+    public List<AnimeEntity> findAnimeEntitiesForceCollectTrue() {
+        return animeRepository.findByForceCollect("Y");
+    }
+
+    public List<AnimeDto> getByYearAndSeason(int year, String season) {
+        List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
+        return convertToAnimeDtos(results);
+    }
+
+    public List<AnimeDto> getByKeyword(String keyword) {
+        List<Object[]> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
+        return convertToAnimeDtos(results);
+    }
+
+    private List<AnimeDto> convertToAnimeDtos(List<Object[]> results) {
+        Map<Long, AnimeDto> animeDtoMap = new HashMap<>();
+
+        for (var result : results) {
+            AnimeEntity animeEntity = (AnimeEntity) result[0];
+            PollEntity pollEntity = (PollEntity) result[1];
+
+            long animeId = animeEntity.getId();
+            AnimeDto animeDto = animeDtoMap.computeIfAbsent(animeId,
+                    id -> AnimeDto.from(animeEntity));
+
+            if (animeDto.getPolls() == null) {
+                animeDto.setPolls(new ArrayList<>());
+            }
+
+            if (pollEntity != null) {
+                PollDto pollDto = PollDto.from(pollEntity);
+                animeDto.getPolls().add(pollDto);
+            }
+        }
+
+        for (var entry : animeDtoMap.entrySet()) {
+            AnimeDto animeDto = entry.getValue();
+            List<PollDto> pollDtos = animeDto.getPolls();
+            if (pollDtos != null && !pollDtos.isEmpty()) {
+                List<PollDto> uniquePollDtos = pollService.removeDuplicateForum(pollDtos);
+                animeDto.setPolls(uniquePollDtos);
+            }
+        }
+
+        return new ArrayList<>(animeDtoMap.values());
+    }
+
+    public List<AnimeEntity> findFailedCollectionAnimes() {
+        return animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
+    }
+
+    public List<AnimeEntity> findAnimesWithEmptyPoll() {
+        return animeRepository.findAnimesWithEmptyPoll();
+    }
+
+    public List<AnimeEntity> findAll() {
+        return animeRepository.findAll();
+    }
+}

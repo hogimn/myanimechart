@@ -4,7 +4,7 @@ const AnimeApi = {
   getByKeyword: async (keyword) => {
     const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
-      const response = await axios.get(`${gatewayUrl}/app/anime`, {
+      const response = await axios.get(`${gatewayUrl}/application/anime`, {
         params: { keyword },
       });
       return response.data;
@@ -17,7 +17,7 @@ const AnimeApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/app/anime/by-year-and-season/${year}/${season}`
+        `${gatewayUrl}/application/anime/by-year-and-season/${year}/${season}`
       );
       return response.data;
     } catch (error) {
