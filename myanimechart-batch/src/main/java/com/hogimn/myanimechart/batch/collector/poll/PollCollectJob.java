@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
+import com.hogimn.myanimechart.batch.collector.poll.status.BatchPollCollectionStatusService;
 import com.hogimn.myanimechart.batch.core.BatchDto;
 import com.hogimn.myanimechart.batch.core.BatchService;
-import com.hogimn.myanimechart.batch.collector.poll.status.PollCollectionStatusService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -15,23 +15,23 @@ public class PollCollectJob {
     private final BatchService batchService;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final PollCollectService pollCollectService;
-    private final PollCollectionStatusService pollCollectionStatusService;
+    private final BatchPollCollectionStatusService batchPollCollectionStatusService;
 
     public PollCollectJob(
             BatchService batchService,
             ThreadPoolTaskScheduler threadPoolTaskScheduler,
             PollCollectService pollCollectService,
-            PollCollectionStatusService pollCollectionStatusService) {
+            BatchPollCollectionStatusService batchPollCollectionStatusService) {
         this.batchService = batchService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.pollCollectService = pollCollectService;
-        this.pollCollectionStatusService = pollCollectionStatusService;
+        this.batchPollCollectionStatusService = batchPollCollectionStatusService;
     }
 
     @PostConstruct
     public void schedulePollCollectionTask() {
-        pollCollectionStatusService.setFailForStartedButNotFinished();
-        pollCollectionStatusService.setFailForWait();
+        batchPollCollectionStatusService.setFailForStartedButNotFinished();
+        batchPollCollectionStatusService.setFailForWait();
 
         BatchDto batchDto = batchService
                 .findBatchDtoByName(this.getClass().getSimpleName());

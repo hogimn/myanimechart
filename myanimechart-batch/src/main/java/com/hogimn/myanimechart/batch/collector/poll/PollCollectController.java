@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
 import com.hogimn.myanimechart.batch.collector.poll.status.PollCollectionStatusDto;
-import com.hogimn.myanimechart.batch.collector.poll.status.PollCollectionStatusService;
+import com.hogimn.myanimechart.batch.collector.poll.status.BatchPollCollectionStatusService;
 import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +12,14 @@ import java.util.List;
 @RequestMapping("/pollCollect")
 public class PollCollectController {
     private final PollCollectService pollCollectService;
-    private final PollCollectionStatusService pollCollectionStatusService;
+    private final BatchPollCollectionStatusService batchPollCollectionStatusService;
 
     public PollCollectController(
             PollCollectService pollCollectService,
-            PollCollectionStatusService pollCollectionStatusService
+            BatchPollCollectionStatusService batchPollCollectionStatusService
     ) {
         this.pollCollectService = pollCollectService;
-        this.pollCollectionStatusService = pollCollectionStatusService;
+        this.batchPollCollectionStatusService = batchPollCollectionStatusService;
     }
 
     @PostMapping("/collect/seasonal")
@@ -70,6 +70,6 @@ public class PollCollectController {
 
     @GetMapping("/status")
     public List<PollCollectionStatusDto> status() {
-        return pollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
+        return batchPollCollectionStatusService.findAllPollCollectionStatusDtosWithAnimeDto();
     }
 }

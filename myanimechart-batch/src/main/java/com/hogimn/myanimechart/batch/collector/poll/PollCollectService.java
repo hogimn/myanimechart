@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
-import com.hogimn.myanimechart.batch.collector.poll.status.PollCollectionStatusService;
+import com.hogimn.myanimechart.batch.collector.poll.status.BatchPollCollectionStatusService;
 import com.hogimn.myanimechart.batch.history.SaveBatchHistory;
 import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
@@ -38,7 +38,7 @@ public class PollCollectService {
     private final ServiceRegistryService serviceRegistryService;
     private final AnimeKeywordMappingService animeKeywordMappingService;
     private final AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService;
-    private final PollCollectionStatusService pollCollectionStatusService;
+    private final BatchPollCollectionStatusService batchPollCollectionStatusService;
 
     public PollCollectService(
             AnimeService animeService,
@@ -47,7 +47,7 @@ public class PollCollectService {
             ServiceRegistryService serviceRegistryService,
             AnimeKeywordMappingService animeKeywordMappingService,
             AnimeEpisodeTopicMappingService animeEpisodeTopicMappingService,
-            PollCollectionStatusService pollCollectionStatusService
+            BatchPollCollectionStatusService batchPollCollectionStatusService
     ) {
         this.animeService = animeService;
         this.myAnimeListProvider = myAnimeListProvider;
@@ -55,13 +55,13 @@ public class PollCollectService {
         this.serviceRegistryService = serviceRegistryService;
         this.animeKeywordMappingService = animeKeywordMappingService;
         this.animeEpisodeTopicMappingService = animeEpisodeTopicMappingService;
-        this.pollCollectionStatusService = pollCollectionStatusService;
+        this.batchPollCollectionStatusService = batchPollCollectionStatusService;
     }
 
     @SchedulerLock(name = "collectPollByAnimeId")
     public void collectPollByAnimeId(long animeId) {
         AnimeEntity animeEntity = animeService.findAnimeEntityById(animeId);
-        pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId());
+        batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId());
         collectForumTopics(animeEntity);
     }
 
@@ -74,7 +74,7 @@ public class PollCollectService {
     public void collectPollByYearAndSeason(int year, String season) {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -92,7 +92,7 @@ public class PollCollectService {
     private void collectPollForceCollectTrue() {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -101,7 +101,7 @@ public class PollCollectService {
         List<AnimeEntity> animeEntitiesForceCollectTrue = animeService.findAnimeEntitiesForceCollectTrue();
         animeEntities.addAll(animeEntitiesForceCollectTrue);
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -152,7 +152,7 @@ public class PollCollectService {
     private void collectForumTopics(AnimeEntity animeEntity) {
         log.info("Start of collecting poll for anime: {}", animeEntity.getId());
 
-        pollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
+        batchPollCollectionStatusService.sendSavePollCollectionStatusForStart(animeEntity.getId());
 
         boolean isFail = false;
         try {
@@ -173,14 +173,14 @@ public class PollCollectService {
 
             collectPollByAnimeEpisodeTopicMapping(animeEntity);
         } catch (Exception e) {
-            pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
+            batchPollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
                     animeEntity.getId(), animeEntity.getTitle(), e.getMessage(), e);
             isFail = true;
         }
 
         if (!isFail) {
-            pollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
+            batchPollCollectionStatusService.sendSavePollCollectionStatusForEnd(animeEntity.getId());
         }
 
         log.info("End of collecting poll for anime: {}", animeEntity.getId());
@@ -382,7 +382,7 @@ public class PollCollectService {
         List<AnimeEntity> animeEntities = animeService
                 .findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season);
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -390,7 +390,7 @@ public class PollCollectService {
         List<AnimeEntity> animeEntities = animeService
                 .findFailedCollectionAnimes();
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
@@ -398,14 +398,14 @@ public class PollCollectService {
         List<AnimeEntity> animeEntities = animeService
                 .findAnimesWithEmptyPoll();
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 
     public void collectAllPolls() {
         List<AnimeEntity> animeEntities = animeService.findAll();
         animeEntities.forEach(animeEntity ->
-                pollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
+                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
         animeEntities.forEach(this::collectForumTopics);
     }
 }
