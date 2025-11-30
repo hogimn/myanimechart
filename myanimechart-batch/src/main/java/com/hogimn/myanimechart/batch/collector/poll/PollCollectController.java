@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
 import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
-import com.hogimn.myanimechart.common.poll.PollCollectionStatusDto;
-import com.hogimn.myanimechart.common.poll.PollCollectionStatusService;
+import com.hogimn.myanimechart.mal.poll.PollCollectionStatusDto;
+import com.hogimn.myanimechart.mal.poll.PollCollectionStatusService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

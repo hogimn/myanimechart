@@ -1,19 +1,19 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
-import com.hogimn.myanimechart.common.anime.AnimeEntity;
-import com.hogimn.myanimechart.common.anime.AnimeService;
-import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
-import com.hogimn.myanimechart.common.poll.PollCollectionStatusService;
+import com.hogimn.myanimechart.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingEntity;
-import com.hogimn.myanimechart.common.poll.AnimeEpisodeTopicMappingService;
-import com.hogimn.myanimechart.common.poll.AnimeKeywordMappingService;
-import com.hogimn.myanimechart.common.poll.PollDto;
-import com.hogimn.myanimechart.common.poll.PollOptionEntity;
-import com.hogimn.myanimechart.common.poll.PollOptionService;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.common.util.SleepUtil;
+import com.hogimn.myanimechart.mal.anime.AnimeEntity;
+import com.hogimn.myanimechart.mal.anime.AnimeService;
+import com.hogimn.myanimechart.mal.poll.AnimeEpisodeTopicMappingEntity;
+import com.hogimn.myanimechart.mal.poll.AnimeEpisodeTopicMappingService;
+import com.hogimn.myanimechart.mal.poll.AnimeKeywordMappingService;
+import com.hogimn.myanimechart.mal.poll.PollCollectionStatusService;
+import com.hogimn.myanimechart.mal.poll.PollDto;
+import com.hogimn.myanimechart.mal.poll.PollOptionEntity;
+import com.hogimn.myanimechart.mal.poll.PollOptionService;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
@@ -310,7 +310,7 @@ public class PollCollectService {
                 pollDto.setEpisode(episode);
                 pollDto.setVotes(votes);
 
-                serviceRegistryService.send(RegisteredService.EXECUTE, "/poll/savePoll", pollDto);
+                serviceRegistryService.send(RegisteredService.APP, "/poll/savePoll", pollDto);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -326,7 +326,7 @@ public class PollCollectService {
             pollDto.setEpisode(episode);
             pollDto.setVotes(0);
 
-            serviceRegistryService.send(RegisteredService.EXECUTE, "/poll/savePoll", pollDto);
+            serviceRegistryService.send(RegisteredService.APP, "/poll/savePoll", pollDto);
         });
     }
 

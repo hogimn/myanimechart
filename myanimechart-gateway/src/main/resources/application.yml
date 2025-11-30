@@ -19,18 +19,10 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: query
-          uri: lb://query
+        - id: app
+          uri: lb://app
           predicates:
-            - Path=/query/**
-        - id: execute
-          uri: lb://execute
-          predicates:
-            - Path=/execute/**
-        - id: batch
-          uri: lb://collector
-          predicates:
-            - Path=/collector/**
+            - Path=/app/**
 
 springdoc:
   api-docs:
@@ -39,9 +31,5 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
     urls:
-      - name: query
-        url: /query/v3/api-docs
-      - name: security
-        url: /execute/v3/api-docs
-      - name: collector
-        url: /batch/v3/api-docs
+      - name: app
+        url: /app/v3/api-docs

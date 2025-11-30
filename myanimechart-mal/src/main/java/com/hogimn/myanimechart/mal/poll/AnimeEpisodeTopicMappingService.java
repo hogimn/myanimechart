@@ -1,0 +1,18 @@
+package com.hogimn.myanimechart.mal.poll;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AnimeEpisodeTopicMappingService {
+    private final AnimeEpisodeTopicMappingRepository episodeTopicMappingRepository;
+
+    public AnimeEpisodeTopicMappingService(AnimeEpisodeTopicMappingRepository episodeTopicMappingRepository) {
+        this.episodeTopicMappingRepository = episodeTopicMappingRepository;
+    }
+
+    public List<AnimeEpisodeTopicMappingEntity> findAnimeEpisodeTopicMappingEntityByAnimeIdEpisode(long animeId) {
+        return episodeTopicMappingRepository.findByAnimeId(animeId);
+    }
+}

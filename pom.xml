@@ -15,12 +15,12 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>myanimechart-app</module>
         <module>myanimechart-batch</module>
-        <module>myanimechart-query</module>
+        <module>myanimechart-mal</module>
         <module>myanimechart-common</module>
         <module>myanimechart-serviceregistry</module>
         <module>myanimechart-gateway</module>
-        <module>myanimechart-execute</module>
         <module>mal4j</module>
     </modules>
 

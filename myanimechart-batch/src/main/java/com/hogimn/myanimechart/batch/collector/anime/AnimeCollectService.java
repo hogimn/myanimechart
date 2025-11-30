@@ -1,15 +1,15 @@
 package com.hogimn.myanimechart.batch.collector.anime;
 
-import com.hogimn.myanimechart.common.anime.AnimeDto;
-import com.hogimn.myanimechart.common.anime.AnimeEntity;
-import com.hogimn.myanimechart.common.anime.AnimeSeason;
-import com.hogimn.myanimechart.common.anime.AnimeService;
-import com.hogimn.myanimechart.common.batch.SaveBatchHistory;
+import com.hogimn.myanimechart.batch.SaveBatchHistory;
 import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
-import com.hogimn.myanimechart.common.util.DateUtil;
+import com.hogimn.myanimechart.mal.util.AnimeDateUtil;
 import com.hogimn.myanimechart.common.util.SleepUtil;
+import com.hogimn.myanimechart.mal.anime.AnimeDto;
+import com.hogimn.myanimechart.mal.anime.AnimeEntity;
+import com.hogimn.myanimechart.mal.anime.AnimeSeason;
+import com.hogimn.myanimechart.mal.anime.AnimeService;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class AnimeCollectService {
         log.info("Start of collecting seasonal anime");
 
         collectAnimeCurrentSeason();
-        if (DateUtil.changingSeasonMonth()) {
+        if (AnimeDateUtil.changingSeasonMonth()) {
             collectAnimeNextSeason();
         }
         collectAnimeOldSeasonCurrentlyAiring();
@@ -57,17 +57,17 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeCurrentSeason() {
-        collectAnime(DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason());
+        collectAnime(AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason());
     }
 
     private void collectAnimeNextSeason() {
-        collectAnime(DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+        collectAnime(AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
     }
 
     private void collectAnimeOldSeasonCurrentlyAiring() {
         List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesOldSeasonCurrentlyAiring(
-                DateUtil.getCurrentSeasonYear(), DateUtil.getCurrentSeason(),
-                DateUtil.getNextSeasonYear(), DateUtil.getNextSeason());
+                AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason(),
+                AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
         for (AnimeEntity animeEntity : animeEntities) {
             collectAnimeByAnimeId(animeEntity.getId());
             SleepUtil.sleepForMAL();
@@ -88,7 +88,7 @@ public class AnimeCollectService {
         try {
             Anime anime = getAnime(animeId);
             AnimeDto animeDto = AnimeDto.from(anime);
-            serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+            serviceRegistryService.send(RegisteredService.APP, "/anime/saveAnime", animeDto);
         } catch (Exception e) {
             log.error("Failed to collect anime '{}': {}", animeId, e.getMessage(), e);
         }
@@ -126,7 +126,7 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    serviceRegistryService.send(RegisteredService.EXECUTE, "/anime/saveAnime", animeDto);
+                    serviceRegistryService.send(RegisteredService.APP, "/anime/saveAnime", animeDto);
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }
@@ -177,8 +177,8 @@ public class AnimeCollectService {
     }
 
     public void collectAllAnimes() {
-        int currentSeasonYear = DateUtil.getCurrentSeasonYear();
-        String currentSeason = DateUtil.getCurrentSeason();
+        int currentSeasonYear = AnimeDateUtil.getCurrentSeasonYear();
+        String currentSeason = AnimeDateUtil.getCurrentSeason();
         for (int year = currentSeasonYear; year >= 1917; year--) {
             if (year == currentSeasonYear) {
                 if (Objects.equals(currentSeason, AnimeSeason.WINTER.toString())) {

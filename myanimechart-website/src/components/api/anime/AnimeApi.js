@@ -5,7 +5,7 @@ const AnimeApi = {
     const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
       const response = await axios.get(
-        `${gatewayUrl}/query/anime/findAnimesWithPollsByKeyword`,
+        `${gatewayUrl}/app/anime/findAnimesWithPollsByKeyword`,
         {
           params: { keyword },
         }
@@ -20,7 +20,7 @@ const AnimeApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/query/anime/findAnimesWithPollsByYearAndSeason/${year}/${season}`
+        `${gatewayUrl}/app/anime/findAnimesWithPollsByYearAndSeason/${year}/${season}`
       );
       return response.data;
     } catch (error) {
