@@ -5,10 +5,10 @@ import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionS
 import org.springframework.stereotype.Service;
 
 @Service
-public class MalPollCollectionStatusService {
+public class PollCollectionStatusService {
     private final PollCollectionStatusRepository pollCollectionStatusRepository;
 
-    public MalPollCollectionStatusService(
+    public PollCollectionStatusService(
             PollCollectionStatusRepository pollCollectionStatusRepository
     ) {
         this.pollCollectionStatusRepository = pollCollectionStatusRepository;

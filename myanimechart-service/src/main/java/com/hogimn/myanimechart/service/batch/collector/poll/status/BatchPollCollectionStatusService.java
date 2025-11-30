@@ -9,10 +9,12 @@ import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class BatchPollCollectionStatusService {
     private final PollCollectionStatusRepository pollCollectionStatusRepository;
     private final ServiceRegistryService serviceRegistryService;

@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.service.poll;
 
 import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
-import com.hogimn.myanimechart.service.poll.status.MalPollCollectionStatusService;
+import com.hogimn.myanimechart.service.poll.status.PollCollectionStatusService;
 import com.hogimn.myanimechart.service.poll.status.PollCollectionStatusDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class PollController {
     private final PollService pollService;
-    private final MalPollCollectionStatusService malPollCollectionStatusService;
+    private final PollCollectionStatusService pollCollectionStatusService;
 
     public PollController(
             PollService pollService,
-            MalPollCollectionStatusService malPollCollectionStatusService
+            PollCollectionStatusService pollCollectionStatusService
     ) {
         this.pollService = pollService;
-        this.malPollCollectionStatusService = malPollCollectionStatusService;
+        this.pollCollectionStatusService = pollCollectionStatusService;
     }
 
     @ApiLoggable
@@ -33,6 +33,6 @@ public class PollController {
     @ApiLoggable
     @PostMapping("/save-collection-status")
     public void savePollCollectionStatus(@RequestBody PollCollectionStatusDto pollCollectionStatusDto) {
-        malPollCollectionStatusService.save(pollCollectionStatusDto);
+        pollCollectionStatusService.save(pollCollectionStatusDto);
     }
 }
