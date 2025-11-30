@@ -15,3 +15,51 @@ myanimechart
 ├── myanimechart-website        # React frontend (Yarn)
 └── Mal4J                       # MyAnimeList Java API (submodule)
 ```
+
+```text
+
+                           ┌───────────────────────────────┐
+                           │      User / Web Browser       │
+                           └───────────────┬───────────────┘
+                                           │
+                                     (HTTP / REST)
+                                           │
+                           ┌───────────────▼───────────────┐
+                           │     myanimechart-website      │
+                           │        (React Frontend)       │
+                           └───────────────┬───────────────┘
+                                           │
+                                     API Requests
+                                           │
+                           ┌───────────────▼───────────────┐
+                           │      myanimechart-gateway     │
+                           │   (Spring Cloud API Gateway)  │
+                           └───────────────┬───────────────┘
+                                           │
+                              +------------+-------------------+
+                              |                                |
+                      Service Discovery                Routed API Calls
+                              |                                |
+               ┌──────────────▼───────────────┐                |
+               │    myanimechart-discovery    │                |
+               │       (Eureka Server)        │                |
+               └──────────────────────────────┘                |
+                                                               │
+                                ┌──────────────────────────────▼────────────────────────────────┐
+                                │                  myanimechart-application                     │
+                                │             (Main Spring Boot / Orchestration)                │
+                                │                                                               │
+                                │   ┌────────────────────────────┐                              │
+                                │   │    myanimechart-service    │                              │
+                                │   │   (Business Logic / APIs)  │                              │
+                                │   └───────────────┬────────────┘                              │
+                                │                   │──────────────────────────────+            │
+                                │             uses  │                        uses  │            │
+                                │                   ▼                              ▼            │
+                                │   ┌────────────────────────────┐  ┌─────────────────────────┐ │
+                                │   │      myanimechart-core     │  │        Mal4J            │ │
+                                │   │ (Shared Domain / Utilities)│  │(MyAnimeList API Wrapper)│ │
+                                │   └────────────────────────────┘  └─────────────────────────┘ │
+                                │                                                               │
+                                └───────────────────────────────────────────────────────────────┘
+```
