@@ -8,18 +8,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.hogimn.myanimechart.mal",
-        "com.hogimn.myanimechart.batch",
+        "com.hogimn.myanimechart.service",
         "com.hogimn.myanimechart.core",
 })
 @EnableJpaRepositories(basePackages = {
-        "com.hogimn.myanimechart.mal",
-        "com.hogimn.myanimechart.batch",
+        "com.hogimn.myanimechart.service",
         "com.hogimn.myanimechart.core",
 })
 @EntityScan(basePackages = {
-        "com.hogimn.myanimechart.mal",
-        "com.hogimn.myanimechart.batch",
+        "com.hogimn.myanimechart.service",
         "com.hogimn.myanimechart.core",
 })
 @EnableScheduling
