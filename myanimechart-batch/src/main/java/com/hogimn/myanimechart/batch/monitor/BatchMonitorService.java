@@ -1,11 +1,11 @@
 package com.hogimn.myanimechart.batch.monitor;
 
-import com.hogimn.myanimechart.batch.BatchDto;
-import com.hogimn.myanimechart.batch.BatchHistoryService;
-import com.hogimn.myanimechart.batch.BatchService;
-import com.hogimn.myanimechart.batch.SaveBatchHistory;
-import com.hogimn.myanimechart.common.alarm.AlarmService;
-import com.hogimn.myanimechart.common.util.CronUtil;
+import com.hogimn.myanimechart.batch.core.BatchDto;
+import com.hogimn.myanimechart.batch.history.BatchHistoryService;
+import com.hogimn.myanimechart.batch.core.BatchService;
+import com.hogimn.myanimechart.batch.history.SaveBatchHistory;
+import com.hogimn.myanimechart.core.common.alarm.AlarmService;
+import com.hogimn.myanimechart.core.common.util.CronUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -28,23 +28,37 @@ public class BatchMonitorService {
     }
 
     @SaveBatchHistory("#batchJobName")
-    @SchedulerLock(name = "checkBatchNotExecuted")
-    public void checkBatchNotExecuted(String batchJobName) {
+    @SchedulerLock(name = "checkNotExecutedBatches")
+    public void checkNotExecutedBatches(String batchJobName) {
         List<BatchDto> batchDtos = batchService.findAllBatchDtos();
+
         for (BatchDto batchDto : batchDtos) {
-            String cron = batchDto.getCron();
-            long period = CronUtil.getPeriodAsSeconds(cron);
-            if (!batchHistoryService.checkBatchExecutedWithinPeriod(batchDto.getName(), period)) {
-                String errorMessage = String.format("batch not executed within period: %s %s.", batchDto.getName(), period);
-                log.error(errorMessage);
-                alarmServices.forEach(alarmService -> {
-                    if (alarmService.isSupported()) {
-                        alarmService.send(errorMessage);
-                    }
-                });
-            } else {
-                log.info("batch executed within period: {} {}.", batchDto.getName(), period);
-            }
+            validateBatchExecution(batchDto);
         }
+    }
+
+    private void validateBatchExecution(BatchDto batchDto) {
+        String cron = batchDto.getCron();
+        long period = CronUtil.getPeriodAsSeconds(cron);
+
+        if (!batchHistoryService.checkBatchExecutedWithinPeriod(batchDto.getName(), period)) {
+            String errorMessage = String.format(
+                    "batch not executed within period: %s %s.",
+                    batchDto.getName(), period
+            );
+            log.error(errorMessage);
+            sendAlarm(errorMessage);
+        } else {
+            log.info(
+                    "batch executed within period: {} {}.",
+                    batchDto.getName(), period
+            );
+        }
+    }
+
+    private void sendAlarm(String message) {
+        alarmServices.stream()
+                .filter(AlarmService::isSupported)
+                .forEach(service -> service.send(message));
     }
 }

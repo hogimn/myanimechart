@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.batch.collector.anime;
 
-import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
+import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

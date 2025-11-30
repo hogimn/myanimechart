@@ -10,17 +10,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {
         "com.hogimn.myanimechart.mal",
         "com.hogimn.myanimechart.batch",
-        "com.hogimn.myanimechart.common",
+        "com.hogimn.myanimechart.core",
 })
 @EnableJpaRepositories(basePackages = {
         "com.hogimn.myanimechart.mal",
         "com.hogimn.myanimechart.batch",
-        "com.hogimn.myanimechart.common",
+        "com.hogimn.myanimechart.core",
 })
 @EntityScan(basePackages = {
         "com.hogimn.myanimechart.mal",
         "com.hogimn.myanimechart.batch",
-        "com.hogimn.myanimechart.common",
+        "com.hogimn.myanimechart.core",
 })
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "PT24H")

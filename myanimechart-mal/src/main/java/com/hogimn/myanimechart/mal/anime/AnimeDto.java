@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.mal.anime;
 
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.mal.poll.PollDto;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.property.Genre;
@@ -106,5 +107,36 @@ public class AnimeDto {
         animeDto.setRating(anime.getRating() != null ? anime.getRating().field() : anime.getRawRating());
         animeDto.setNsfw(anime.getNSFW() != null ? anime.getNSFW().field() : anime.getRawNSFW());
         return animeDto;
+    }
+
+    public AnimeEntity toEntity() {
+        AnimeEntity anime = new AnimeEntity();
+        anime.setId(getId());
+        anime.setTitle(getTitle());
+        anime.setSeason(getSeason());
+        anime.setImage(getImage());
+        anime.setLargeImage(getLargeImage());
+        anime.setLink(getLink());
+        anime.setScore(getScore());
+        anime.setMembers(getMembers());
+        anime.setYear(getYear());
+        anime.setSource(getSource());
+        anime.setGenre(String.join(", ", getGenre()));
+        anime.setStudios(String.join(", ", getStudios()));
+        anime.setRank(getRank());
+        anime.setPopularity(getPopularity());
+        anime.setScoringCount(getScoringCount());
+        anime.setEpisodes(getEpisodes());
+        anime.setAirStatus(getAirStatus());
+        anime.setTitle(getTitle());
+        anime.setType(getType());
+        anime.setStartDate(getStartDate());
+        anime.setEndDate(getEndDate());
+        anime.setEnglishTitle(getEnglishTitle());
+        anime.setJapaneseTitle(getJapaneseTitle());
+        anime.setSynopsis(getSynopsis());
+        anime.setRating(getRating());
+        anime.setNsfw(getNsfw());
+        return anime;
     }
 }

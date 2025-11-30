@@ -1,6 +1,8 @@
 package com.hogimn.myanimechart.mal.poll;
 
-import com.hogimn.myanimechart.common.apicalllog.ApiLoggable;
+import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
+import com.hogimn.myanimechart.mal.poll.status.PollCollectionStatusDto;
+import com.hogimn.myanimechart.mal.poll.status.PollCollectionStatusService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

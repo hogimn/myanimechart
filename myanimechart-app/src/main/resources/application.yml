@@ -2,7 +2,7 @@ spring:
   application:
     name: app
   config:
-    import: file:../myanimechart-common/src/main/resources/application.yml,file:../myanimechart-mal/src/main/resources/application.yml
+    import: file:../myanimechart-core/src/main/resources/application.yml,file:../myanimechart-mal/src/main/resources/application.yml
 
 springdoc:
   api-docs:

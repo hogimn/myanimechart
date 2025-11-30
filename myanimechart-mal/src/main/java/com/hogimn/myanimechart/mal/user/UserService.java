@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.mal.user;
 
-import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.util.SleepUtil;
+import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
+import com.hogimn.myanimechart.core.common.util.SleepUtil;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.anime.AnimeListStatus;
 import dev.katsute.mal4j.query.AnimeListUpdate;

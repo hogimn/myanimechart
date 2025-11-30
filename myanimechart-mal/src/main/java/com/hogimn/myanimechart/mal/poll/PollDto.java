@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.mal.poll;
 
+import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

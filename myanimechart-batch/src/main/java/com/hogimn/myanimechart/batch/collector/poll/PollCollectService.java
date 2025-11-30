@@ -1,19 +1,19 @@
 package com.hogimn.myanimechart.batch.collector.poll;
 
-import com.hogimn.myanimechart.batch.SaveBatchHistory;
-import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
-import com.hogimn.myanimechart.common.util.SleepUtil;
-import com.hogimn.myanimechart.mal.anime.AnimeEntity;
+import com.hogimn.myanimechart.batch.collector.poll.status.PollCollectionStatusService;
+import com.hogimn.myanimechart.batch.history.SaveBatchHistory;
+import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
+import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.core.common.util.SleepUtil;
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.mal.anime.AnimeService;
-import com.hogimn.myanimechart.mal.poll.AnimeEpisodeTopicMappingEntity;
-import com.hogimn.myanimechart.mal.poll.AnimeEpisodeTopicMappingService;
-import com.hogimn.myanimechart.mal.poll.AnimeKeywordMappingService;
-import com.hogimn.myanimechart.mal.poll.PollCollectionStatusService;
+import com.hogimn.myanimechart.core.domain.poll.mapping.AnimeEpisodeTopicMappingEntity;
+import com.hogimn.myanimechart.mal.poll.mapping.AnimeEpisodeTopicMappingService;
+import com.hogimn.myanimechart.mal.poll.mapping.AnimeKeywordMappingService;
 import com.hogimn.myanimechart.mal.poll.PollDto;
-import com.hogimn.myanimechart.mal.poll.PollOptionEntity;
-import com.hogimn.myanimechart.mal.poll.PollOptionService;
+import com.hogimn.myanimechart.core.domain.poll.option.PollOptionEntity;
+import com.hogimn.myanimechart.mal.poll.option.PollOptionService;
 import dev.katsute.mal4j.forum.ForumTopic;
 import dev.katsute.mal4j.forum.ForumTopicDetail;
 import dev.katsute.mal4j.forum.property.Poll;
@@ -171,7 +171,7 @@ public class PollCollectService {
                 }
             }
 
-            collectPollByManualAnimeEpisodeTopicMapping(animeEntity);
+            collectPollByAnimeEpisodeTopicMapping(animeEntity);
         } catch (Exception e) {
             pollCollectionStatusService.sendSavePollCollectionStatusForFail(animeEntity.getId());
             log.error("Failed to get forumTopic  '{} {}': {}",
@@ -255,7 +255,7 @@ public class PollCollectService {
     }
 
 
-    private void collectPollByManualAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
+    private void collectPollByAnimeEpisodeTopicMapping(AnimeEntity animeEntity) {
         List<AnimeEpisodeTopicMappingEntity> animeEpisodeTopicMappingEntities = animeEpisodeTopicMappingService
                 .findAnimeEpisodeTopicMappingEntityByAnimeIdEpisode(animeEntity.getId());
 

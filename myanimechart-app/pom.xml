@@ -32,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>com.hogimn</groupId>
-            <artifactId>myanimechart-common</artifactId>
+            <artifactId>myanimechart-core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

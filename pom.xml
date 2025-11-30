@@ -18,7 +18,7 @@
         <module>myanimechart-app</module>
         <module>myanimechart-batch</module>
         <module>myanimechart-mal</module>
-        <module>myanimechart-common</module>
+        <module>myanimechart-core</module>
         <module>myanimechart-serviceregistry</module>
         <module>myanimechart-gateway</module>
         <module>mal4j</module>

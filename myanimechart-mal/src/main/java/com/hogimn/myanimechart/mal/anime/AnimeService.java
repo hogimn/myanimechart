@@ -1,9 +1,11 @@
 package com.hogimn.myanimechart.mal.anime;
 
-import com.hogimn.myanimechart.common.util.DateUtil;
-import com.hogimn.myanimechart.mal.poll.CollectionStatus;
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
+import com.hogimn.myanimechart.core.domain.anime.AnimeRepository;
+import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
+import com.hogimn.myanimechart.core.common.util.DateUtil;
 import com.hogimn.myanimechart.mal.poll.PollDto;
-import com.hogimn.myanimechart.mal.poll.PollEntity;
+import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.mal.poll.PollService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +40,13 @@ public class AnimeService {
         Optional<AnimeEntity> optional = animeRepository.findById(animeDto.getId());
         if (optional.isPresent()) {
             AnimeEntity animeEntity = optional.get();
-            animeEntity.setFrom(animeDto);
+            animeEntity.setFrom(animeDto.toEntity());
             animeEntity.setUpdatedAt(DateUtil.now());
             animeRepository.save(animeEntity);
             return;
         }
 
-        AnimeEntity animeEntity = AnimeEntity.from(animeDto);
+        AnimeEntity animeEntity = animeDto.toEntity();
         animeEntity.setCreatedAt(DateUtil.now());
         animeRepository.save(animeEntity);
     }

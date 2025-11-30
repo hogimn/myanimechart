@@ -1,7 +1,7 @@
 package com.hogimn.myanimechart.batch.monitor;
 
-import com.hogimn.myanimechart.batch.BatchDto;
-import com.hogimn.myanimechart.batch.BatchService;
+import com.hogimn.myanimechart.batch.core.BatchDto;
+import com.hogimn.myanimechart.batch.core.BatchService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -30,11 +30,11 @@ public class BatchMonitorJob {
         BatchDto batchDto = batchService.findBatchDtoByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> checkBatchNotExecuted(batchDto.getName()),
+                () -> checkNotExecutedBatches(batchDto.getName()),
                 new CronTrigger(batchDto.getCron()));
     }
 
-    public void checkBatchNotExecuted(String batchJobName) {
-        batchMonitorService.checkBatchNotExecuted(batchJobName);
+    public void checkNotExecutedBatches(String batchJobName) {
+        batchMonitorService.checkNotExecutedBatches(batchJobName);
     }
 }

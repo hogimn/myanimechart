@@ -2,7 +2,7 @@ spring:
   application:
     name: serviceregistry
   config:
-    import: file:../myanimechart-common/src/main/resources/application.yml
+    import: file:../myanimechart-core/src/main/resources/application.yml
 
 eureka:
   client:

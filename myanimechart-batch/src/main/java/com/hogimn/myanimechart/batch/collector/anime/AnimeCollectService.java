@@ -1,14 +1,14 @@
 package com.hogimn.myanimechart.batch.collector.anime;
 
-import com.hogimn.myanimechart.batch.SaveBatchHistory;
-import com.hogimn.myanimechart.common.myanimelist.MyAnimeListProvider;
-import com.hogimn.myanimechart.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.common.serviceregistry.ServiceRegistryService;
-import com.hogimn.myanimechart.mal.util.AnimeDateUtil;
-import com.hogimn.myanimechart.common.util.SleepUtil;
+import com.hogimn.myanimechart.batch.history.SaveBatchHistory;
+import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
+import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.core.common.util.AnimeDateUtil;
+import com.hogimn.myanimechart.core.common.util.SleepUtil;
 import com.hogimn.myanimechart.mal.anime.AnimeDto;
-import com.hogimn.myanimechart.mal.anime.AnimeEntity;
-import com.hogimn.myanimechart.mal.anime.AnimeSeason;
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
+import com.hogimn.myanimechart.core.domain.anime.AnimeSeason;
 import com.hogimn.myanimechart.mal.anime.AnimeService;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
