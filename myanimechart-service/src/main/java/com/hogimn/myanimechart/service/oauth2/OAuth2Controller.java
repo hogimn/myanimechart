@@ -47,7 +47,7 @@ public class OAuth2Controller {
         this.restTemplate = restTemplate;
     }
 
-    @GetMapping("/isAuthenticated")
+    @GetMapping("/status")
     public ResponseEntity<Boolean> isAuthenticated(HttpServletRequest request) {
         return ResponseEntity.ok(getCookieValue(request, ACCESS_TOKEN_COOKIE).isPresent());
     }

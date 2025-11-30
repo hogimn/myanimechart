@@ -10,7 +10,7 @@ const SecurityApi = {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/application/oauth2/isAuthenticated`,
+        `${gatewayUrl}/application/oauth2/status`,
         {
           withCredentials: true,
         }
