@@ -11,7 +11,7 @@ public class ApiCallLogService {
         this.apiCallLogRepository = apiCallLogRepository;
     }
 
-    public void saveLog(String endpoint, String method, String ip, String country) {
+    public void save(String endpoint, String method, String ip, String country) {
         ApiCallLog log = new ApiCallLog();
         log.setEndpoint(endpoint);
         log.setMethod(method);

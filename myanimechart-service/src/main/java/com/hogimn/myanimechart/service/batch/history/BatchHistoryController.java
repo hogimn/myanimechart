@@ -14,7 +14,7 @@ public class BatchHistoryController {
     private final BatchHistoryService batchHistoryService;
 
     @PostMapping
-    public ResponseEntity<Void> saveBatchHistory(@RequestBody String batchJobName) {
+    public ResponseEntity<Void> save(@RequestBody String batchJobName) {
         batchHistoryService.save(batchJobName);
         return ResponseEntity.noContent().build();
     }

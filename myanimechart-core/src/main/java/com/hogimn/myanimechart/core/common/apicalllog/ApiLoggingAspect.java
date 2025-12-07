@@ -41,7 +41,7 @@ public class ApiLoggingAspect {
         String ip = getClientIpAddr(request);
         String country = getCountryByIp(ip);
 
-        apiCallLogService.saveLog(endpoint, method, ip, country);
+        apiCallLogService.save(endpoint, method, ip, country);
 
         return joinPoint.proceed();
     }
