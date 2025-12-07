@@ -13,7 +13,7 @@ import {
   getNextSeasonFromSeason,
   getNextSeasonYearFromYearAndSeason,
 } from "../../../../util/dateUtil";
-import AnimeApi from "../../../api/anime/AnimeApi";
+import AnimeApi from "../../../api/AnimeApi";
 import AnimeSearchBox from "./AnimeSearchBox";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import { toAirStatusLabel, toTypeLabel } from "../../../../util/strUtil";

@@ -15,13 +15,13 @@ import AnimePollGraph from "./AnimePollGraph";
 import LazyGraphWrapper from "../../../common/wrapper/LazyGraphWrapper";
 import CommonModal from "../../../common/basic/CommonModal";
 import { useUser } from "../../../common/context/UserContext";
-import SecurityApi from "../../../api/anime/SecurityApi";
+import OAuth2Api from "../../../api/OAuth2Api";
 import CommonInput from "../../../common/basic/CommonInput";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import ModalButton from "../../../common/button/ModalButton";
-import UserApi from "../../../api/anime/UserApi";
+import UserApi from "../../../api/UserApi";
 import CommonButton from "../../../common/basic/CommonButton";
-import AnimeApi from "../../../api/anime/AnimeApi";
+import AnimeApi from "../../../api/AnimeApi";
 
 const statusOptions = [
   { value: "watching", label: "Watching" },
@@ -227,7 +227,7 @@ const SeasonalAnimeList = ({
 
   const openEditModal = async (anime) => {
     if (user == null) {
-      SecurityApi.startOAuth2Flow();
+      OAuth2Api.startOAuth2Flow();
       return;
     }
 

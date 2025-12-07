@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { formatDate } from "../../../util/dateUtil";
 import CommonSpin from "../../common/basic/CommonSpin";
-import CollectorApi from "../../api/anime/CollectorApi";
+import PollCollectApi from "../../api/PollCollectApi";
 import CommonAlert from "../../common/basic/CommonAlert";
 import {
   capitalizeFirstLetter,
@@ -51,7 +51,7 @@ const PollCollectionStatus = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await CollectorApi.getStatuese();
+        const data = await PollCollectApi.getStatuese();
         setRawData(data);
 
         const groupedData = data.reduce(

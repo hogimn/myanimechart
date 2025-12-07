@@ -1,10 +1,9 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 
 const AnimeApi = {
   getByKeyword: async (keyword) => {
-    const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
     try {
-      const response = await axios.get(`${gatewayUrl}/application/anime`, {
+      const response = await apiClient.get(`/anime`, {
         params: { keyword },
       });
       return response.data;
@@ -15,9 +14,8 @@ const AnimeApi = {
   },
   getByYearAndSeason: async (year, season) => {
     try {
-      const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
-      const response = await axios.get(
-        `${gatewayUrl}/application/anime/by-year-and-season/${year}/${season}`
+      const response = await apiClient.get(
+        `/anime/by-year-and-season/${year}/${season}`
       );
       return response.data;
     } catch (error) {

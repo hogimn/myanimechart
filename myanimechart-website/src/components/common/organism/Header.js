@@ -4,11 +4,11 @@ import { getImagePath } from "../../../util/pathUtil";
 import { Link } from "react-router-dom";
 import CommonButton from "../basic/CommonButton";
 import { useEffect, useState } from "react";
-import SecurityApi from "../../api/anime/SecurityApi";
+import OAuth2Api from "../../api/OAuth2Api";
 import CommonAlert from "../basic/CommonAlert";
 import CommonModal from "../basic/CommonModal";
 import { useUser } from "../context/UserContext";
-import UserApi from "../../api/anime/UserApi";
+import UserApi from "../../api/UserApi";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -88,7 +88,7 @@ const Header = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       setLoading(true);
-      const authenticated = await SecurityApi.isAuthenticated();
+      const authenticated = await OAuth2Api.isAuthenticated();
       setIsAuthenticated(authenticated);
 
       if (authenticated) {
@@ -112,7 +112,7 @@ const Header = () => {
   }, [setUser]);
 
   const startOAuth2Flow = async () => {
-    SecurityApi.startOAuth2Flow();
+    OAuth2Api.startOAuth2Flow();
   };
 
   const handleLogin = (event) => {
@@ -120,7 +120,7 @@ const Header = () => {
   };
 
   const handleLogout = async (event) => {
-    const isSuccess = await SecurityApi.logout();
+    const isSuccess = await OAuth2Api.logout();
     if (isSuccess) {
       window.location.href = "/";
     } else {
