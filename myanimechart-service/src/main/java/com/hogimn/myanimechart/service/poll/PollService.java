@@ -1,95 +1,98 @@
 package com.hogimn.myanimechart.service.poll;
 
+import com.hogimn.myanimechart.core.common.result.SaveResult;
 import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.core.domain.poll.PollRepository;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PollService {
     private final PollRepository pollRepository;
 
-    public PollService(PollRepository pollRepository) {
-        this.pollRepository = pollRepository;
+    @Transactional
+    public SaveResult save(PollCreateRequest request) {
+        Optional<PollEntity> optional = pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(
+                request.getAnimeId(), request.getPollOptionId(), request.getTopicId());
+
+        LocalDateTime now = DateUtil.now();
+        SaveResult result;
+
+        if (optional.isPresent()) {
+            PollEntity found = optional.get();
+
+            found.setAnimeId(request.getAnimeId());
+            found.setPollOptionId(request.getPollOptionId());
+            found.setTopicId(request.getTopicId());
+            found.setTitle(request.getTitle());
+            found.setVotes(request.getVotes());
+            found.setEpisode(request.getEpisode());
+            found.setUpdatedAt(now);
+
+            pollRepository.save(found);
+            result = SaveResult.UPDATED;
+
+        } else {
+            PollEntity newPoll = new PollEntity();
+
+            newPoll.setAnimeId(request.getAnimeId());
+            newPoll.setPollOptionId(request.getPollOptionId());
+            newPoll.setTopicId(request.getTopicId());
+            newPoll.setTitle(request.getTitle());
+            newPoll.setVotes(request.getVotes());
+            newPoll.setEpisode(request.getEpisode());
+            newPoll.setCreatedAt(now);
+            newPoll.setUpdatedAt(now);
+
+            pollRepository.save(newPoll);
+            result = SaveResult.CREATED;
+        }
+
+        return result;
     }
 
-    public List<PollDto> removeDuplicateForum(List<PollDto> pollDtos) {
-        Map<String, Map<Long, Integer>> episodeOptionVotesMap = new HashMap<>();
-
-        for (PollDto poll : pollDtos) {
-            String key = poll.getEpisode() + "-" + poll.getPollOptionId();
-            episodeOptionVotesMap.putIfAbsent(key, new HashMap<>());
-            episodeOptionVotesMap.get(key).merge(poll.getTopicId(), poll.getVotes(), Integer::sum);
+    public List<PollResponse> filterByMaxTopicVotes(List<PollResponse> pollResponses) {
+        if (pollResponses == null || pollResponses.isEmpty()) {
+            return List.of();
         }
 
-        Map<String, Long> maxTopicMap = new HashMap<>();
-        for (Map.Entry<String, Map<Long, Integer>> entry : episodeOptionVotesMap.entrySet()) {
-            maxTopicMap.put(entry.getKey(),
-                    entry.getValue().entrySet().stream()
-                            .max(Comparator.comparingInt(Map.Entry::getValue))
-                            .get().getKey()
-            );
-        }
+        Map<String, Long> maxTopicMap = pollResponses.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                poll -> poll.getEpisode() + "-" + poll.getPollOptionId(),
+                                Collectors.groupingBy(
+                                        PollResponse::getTopicId,
+                                        Collectors.summingInt(PollResponse::getVotes)
+                                )
+                        )
+                ).entrySet().stream()
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> entry.getValue().entrySet().stream()
+                                        .max(Comparator.comparingInt(Map.Entry::getValue))
+                                        .map(Map.Entry::getKey)
+                                        .orElseThrow(() -> new IllegalStateException("Max topic not found"))
+                        )
+                );
 
-        return pollDtos.stream()
+        return pollResponses.stream()
                 .filter(poll -> {
                     String key = poll.getEpisode() + "-" + poll.getPollOptionId();
                     return maxTopicMap.get(key).equals(poll.getTopicId());
                 })
                 .toList();
-    }
-
-
-    public Optional<PollEntity> findByAnimeIdAndPollOptionIdAndTopicId(
-            long animeId, int pollOptionId, long topicId
-    ) {
-        return pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(animeId, pollOptionId, topicId);
-    }
-
-    public void save(PollEntity pollEntity) {
-        pollRepository.save(pollEntity);
-    }
-
-    public void delete(PollEntity found) {
-        pollRepository.delete(found);
-    }
-
-    @Transactional
-    public void save(PollDto pollDto) {
-        Optional<PollEntity> optional = findByAnimeIdAndPollOptionIdAndTopicId(
-                pollDto.getAnimeId(), pollDto.getPollOptionId(), pollDto.getTopicId());
-        LocalDateTime now = DateUtil.now();
-        if (optional.isPresent()) {
-            PollEntity found = optional.get();
-            found.setAnimeId(pollDto.getAnimeId());
-            found.setPollOptionId(pollDto.getPollOptionId());
-            found.setTopicId(pollDto.getTopicId());
-            found.setTitle(pollDto.getTitle());
-            found.setVotes(pollDto.getVotes());
-            found.setUpdatedAt(now);
-            found.setEpisode(pollDto.getEpisode());
-            save(found);
-            return;
-        }
-
-        PollEntity newPoll = new PollEntity();
-        newPoll.setAnimeId(pollDto.getAnimeId());
-        newPoll.setPollOptionId(pollDto.getPollOptionId());
-        newPoll.setTopicId(pollDto.getTopicId());
-        newPoll.setTitle(pollDto.getTitle());
-        newPoll.setVotes(pollDto.getVotes());
-        newPoll.setCreatedAt(now);
-        newPoll.setEpisode(pollDto.getEpisode());
-        save(newPoll);
     }
 }

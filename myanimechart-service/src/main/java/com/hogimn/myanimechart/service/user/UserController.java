@@ -1,12 +1,15 @@
 package com.hogimn.myanimechart.service.user;
 
 import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,40 +17,39 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @ApiLoggable
     @GetMapping
-    public UserDto getCurrentUser() {
-        return userService.getCurrentUser();
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        return ResponseEntity.ok(userService.getCurrentUser());
     }
 
     @ApiLoggable
     @GetMapping("/anime-statuses")
-    public List<AnimeListStatusDto> getAnimeStatuses() {
-        return userService.getAnimeStatuses();
+    public ResponseEntity<List<AnimeListStatusResponse>> getAnimeStatuses() {
+        return ResponseEntity.ok(userService.getAnimeStatuses());
     }
 
     @ApiLoggable
-    @GetMapping("/anime-status")
-    public AnimeListStatusDto getAnimeStatusById(@RequestParam("id") int id) {
-        return userService.getAnimeStatusById(id);
+    @GetMapping("/anime-statuses/{id}")
+    public ResponseEntity<AnimeListStatusResponse> getAnimeStatusById(@PathVariable int id) {
+        return ResponseEntity.ok(userService.getAnimeStatusById(id));
     }
 
     @ApiLoggable
     @PostMapping("/anime-status/update")
-    public void updateAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
-        userService.updateAnimeStatus(animeListStatusDto);
+    public ResponseEntity<Void> updateAnimeStatus(@RequestBody @Valid AnimeListStatusRequest request) {
+        userService.updateAnimeStatus(request);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiLoggable
     @PostMapping("/anime-status/delete")
-    public void deleteAnimeStatus(@RequestBody AnimeListStatusDto animeListStatusDto) {
-        userService.deleteAnimeStatus(animeListStatusDto);
+    public ResponseEntity<Void> deleteAnimeStatus(@RequestBody @Valid AnimeListStatusRequest request) {
+        userService.deleteAnimeStatus(request);
+        return ResponseEntity.noContent().build();
     }
 }

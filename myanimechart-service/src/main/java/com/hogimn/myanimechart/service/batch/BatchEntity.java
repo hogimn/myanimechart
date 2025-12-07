@@ -14,10 +14,10 @@ public class BatchEntity {
 
     private String cron;
 
-    public static BatchEntity from(BatchDto batchDto) {
+    public static BatchEntity from(BatchResponse batchResponse) {
         BatchEntity batchEntity = new BatchEntity();
-        batchEntity.setName(batchDto.getName());
-        batchEntity.setCron(batchDto.getCron());
+        batchEntity.setName(batchResponse.getName());
+        batchEntity.setCron(batchResponse.getCron());
         return batchEntity;
     }
 }

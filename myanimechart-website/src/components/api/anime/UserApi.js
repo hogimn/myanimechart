@@ -13,7 +13,7 @@ const UserApi = {
       return false;
     }
   },
-  findAnimeStatuses: async () => {
+  getAnimeStatuses: async () => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
@@ -28,15 +28,12 @@ const UserApi = {
       return {};
     }
   },
-  findAnimeStatus: async (id) => {
+  getAnimeStatusById: async (id) => {
     try {
       const gatewayUrl = process.env.REACT_APP_GATEWAY_URL;
       const response = await axios.get(
-        `${gatewayUrl}/application/user/anime-status`,
+        `${gatewayUrl}/application/user/anime-status/${id}`,
         {
-          params: {
-            id: id,
-          },
           withCredentials: true,
         }
       );

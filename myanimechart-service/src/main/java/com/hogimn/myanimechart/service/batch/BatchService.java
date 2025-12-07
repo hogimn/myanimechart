@@ -1,5 +1,6 @@
 package com.hogimn.myanimechart.service.batch;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +10,22 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BatchService {
     private final BatchRepository batchRepository;
 
-    public BatchService(BatchRepository batchRepository) {
-        this.batchRepository = batchRepository;
-    }
-
-    public BatchDto findBatchDtoByName(String name) {
+    public BatchResponse findBatchByName(String name) {
         Optional<BatchEntity> optional = batchRepository.findById(name);
         if (optional.isPresent()) {
-            return BatchDto.from(optional.get());
+            return BatchResponse.from(optional.get());
         }
         throw new IllegalArgumentException("Batch not found (" + name + ")");
     }
 
-    public List<BatchDto> findAllBatchDtos() {
-        return batchRepository.findAll().stream().map(BatchDto::from).collect(Collectors.toList());
+    public List<BatchResponse> getAll() {
+        return batchRepository.findAll()
+                .stream()
+                .map(BatchResponse::from)
+                .collect(Collectors.toList());
     }
 }

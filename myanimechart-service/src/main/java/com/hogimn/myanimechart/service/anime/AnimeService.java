@@ -1,13 +1,16 @@
 package com.hogimn.myanimechart.service.anime;
 
+import com.hogimn.myanimechart.core.common.result.SaveResult;
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.domain.anime.AnimeRepository;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
-import com.hogimn.myanimechart.service.poll.PollDto;
+import com.hogimn.myanimechart.service.exception.AnimeNotFoundException;
+import com.hogimn.myanimechart.service.poll.PollResponse;
 import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.service.poll.PollService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,123 +19,146 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AnimeService {
     private final AnimeRepository animeRepository;
     private final PollService pollService;
 
-    public AnimeService(
-            AnimeRepository animeRepository,
-            PollService pollService
-    ) {
-        this.animeRepository = animeRepository;
-        this.pollService = pollService;
-    }
-
     @Transactional
-    public void save(AnimeDto animeDto) {
-        if (animeDto == null) {
-            return;
-        }
-
-        Optional<AnimeEntity> optional = animeRepository.findById(animeDto.getId());
+    public SaveResult save(AnimeCreateRequest request) {
+        Optional<AnimeEntity> optional = animeRepository.findById(request.getId());
         if (optional.isPresent()) {
             AnimeEntity animeEntity = optional.get();
-            animeEntity.setFrom(animeDto.toEntity());
+            animeEntity.setFrom(request.toEntity());
             animeEntity.setUpdatedAt(DateUtil.now());
             animeRepository.save(animeEntity);
-            return;
+            return SaveResult.UPDATED;
         }
 
-        AnimeEntity animeEntity = animeDto.toEntity();
+        AnimeEntity animeEntity = request.toEntity();
         animeEntity.setCreatedAt(DateUtil.now());
         animeRepository.save(animeEntity);
+        return SaveResult.CREATED;
     }
 
-    public AnimeEntity findAnimeEntityById(long id) {
-        Optional<AnimeEntity> optional = animeRepository.findById(id);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new IllegalArgumentException("Anime not found (" + id + ")");
+    public AnimeResponse getAnimeById(long id) {
+        AnimeEntity animeEntity = animeRepository.findById(id)
+                .orElseThrow(() -> new AnimeNotFoundException(id));
+        return AnimeResponse.from(animeEntity);
     }
 
-    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonOrderByScoreDesc(int year, String season) {
-        return animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
+    public List<AnimeResponse> getAnimesByYearAndSeasonOrderByScore(int year, String season) {
+        List<AnimeEntity> result = animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAnimeEntitiesByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(int year, String season) {
-        return animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(year, season, CollectionStatus.FAILED);
+    public List<AnimeResponse> getFailedCollectionAnimesByYearAndSeason(int year, String season) {
+        List<AnimeEntity> result = animeRepository.findByYearAndSeasonAndCollectStatusFailedOrderByScoreDesc(
+                year,
+                season,
+                CollectionStatus.FAILED
+        );
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAnimeEntitiesOldSeasonCurrentlyAiring(int year, String season,
-                                                                       int nextYear, String nextSeason) {
-        return animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(
-                year, season, nextYear, nextSeason, "currently_airing", "finished_airing");
+    public List<AnimeResponse> getOldSeasonCurrentlyAiringAnimes(
+            int year,
+            String season,
+            int nextYear,
+            String nextSeason) {
+        List<AnimeEntity> result = animeRepository.findAnimeEntitiesOldSeasonCurrentlyAiring(
+                year,
+                season,
+                nextYear,
+                nextSeason,
+                "currently_airing",
+                "finished_airing"
+        );
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring() {
-        return animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
+    public List<AnimeResponse> getCurrentAiringAnimes() {
+        List<AnimeEntity> result = animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAnimeEntitiesForceCollectTrue() {
-        return animeRepository.findByForceCollect("Y");
+    public List<AnimeResponse> getForceCollectTrueAnimes() {
+        List<AnimeEntity> result = animeRepository.findByForceCollect("Y");
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeDto> getByYearAndSeason(int year, String season) {
+    public List<AnimeResponse> getByYearAndSeason(int year, String season) {
         List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
-        return convertToAnimeDtos(results);
+        return mapToAnimeResponses(results);
     }
 
-    public List<AnimeDto> getByKeyword(String keyword) {
+    public List<AnimeResponse> getByKeyword(String keyword) {
         List<Object[]> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
-        return convertToAnimeDtos(results);
+        return mapToAnimeResponses(results);
     }
 
-    private List<AnimeDto> convertToAnimeDtos(List<Object[]> results) {
-        Map<Long, AnimeDto> animeDtoMap = new HashMap<>();
+    private List<AnimeResponse> mapToAnimeResponses(List<Object[]> results) {
+        Map<Long, AnimeResponse> animeDtoMap = new HashMap<>();
 
         for (var result : results) {
             AnimeEntity animeEntity = (AnimeEntity) result[0];
             PollEntity pollEntity = (PollEntity) result[1];
 
             long animeId = animeEntity.getId();
-            AnimeDto animeDto = animeDtoMap.computeIfAbsent(animeId,
-                    id -> AnimeDto.from(animeEntity));
+            AnimeResponse animeResponse = animeDtoMap.computeIfAbsent(animeId,
+                    id -> AnimeResponse.from(animeEntity));
 
-            if (animeDto.getPolls() == null) {
-                animeDto.setPolls(new ArrayList<>());
+            if (animeResponse.getPolls() == null) {
+                animeResponse.setPolls(new ArrayList<>());
             }
-
             if (pollEntity != null) {
-                PollDto pollDto = PollDto.from(pollEntity);
-                animeDto.getPolls().add(pollDto);
+                animeResponse.getPolls().add(PollResponse.from(pollEntity));
             }
         }
 
-        for (var entry : animeDtoMap.entrySet()) {
-            AnimeDto animeDto = entry.getValue();
-            List<PollDto> pollDtos = animeDto.getPolls();
-            if (pollDtos != null && !pollDtos.isEmpty()) {
-                List<PollDto> uniquePollDtos = pollService.removeDuplicateForum(pollDtos);
-                animeDto.setPolls(uniquePollDtos);
+        animeDtoMap.values().forEach(animeResponse -> {
+            List<PollResponse> pollResponses = animeResponse.getPolls();
+            if (pollResponses != null && !pollResponses.isEmpty()) {
+                List<PollResponse> uniquePollResponses = pollService.filterByMaxTopicVotes(pollResponses);
+                animeResponse.setPolls(uniquePollResponses);
             }
-        }
+        });
 
         return new ArrayList<>(animeDtoMap.values());
     }
 
-    public List<AnimeEntity> findFailedCollectionAnimes() {
-        return animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
+    public List<AnimeResponse> getFailedCollectionAnimes() {
+        List<AnimeEntity> result = animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAnimesWithEmptyPoll() {
-        return animeRepository.findAnimesWithEmptyPoll();
+    public List<AnimeResponse> getAnimesWithEmptyPoll() {
+        List<AnimeEntity> result = animeRepository.findAnimesWithEmptyPoll();
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public List<AnimeEntity> findAll() {
-        return animeRepository.findAll();
+    public List<AnimeResponse> getAllAnimes() {
+        List<AnimeEntity> result = animeRepository.findAll();
+        return result.stream()
+                .map(AnimeResponse::from)
+                .collect(Collectors.toList());
     }
 }

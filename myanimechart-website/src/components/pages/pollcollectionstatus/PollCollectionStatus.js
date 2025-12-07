@@ -15,7 +15,6 @@ import AnimeImage from "../seasonalanime/component/AnimeImage";
 import TitleLink from "../../common/link/TitleLink";
 
 const { Panel } = CommonCollapse;
-
 const PollCollectionStatus = () => {
   const [animeGroups, setAnimeGroups] = useState({});
   const [statusCounts, setStatusCounts] = useState({});
@@ -29,12 +28,13 @@ const PollCollectionStatus = () => {
   const activateInProgressPanel = (data, groupedData) => {
     const inProgressAnime = data.find(({ status }) => status === "IN_PROGRESS");
     if (inProgressAnime) {
-      const groupKey = `${inProgressAnime.animeDto.year}-${inProgressAnime.animeDto.season}`;
+      const groupKey = `${inProgressAnime.animeResponse.year}-${inProgressAnime.animeResponse.season}`;
       if (groupedData[groupKey]) {
         setActivePanel([groupKey]);
         const page = Math.ceil(
           (groupedData[groupKey].findIndex(
-            ({ animeDto }) => animeDto.id === inProgressAnime.animeDto.id
+            ({ animeResponse }) =>
+              animeResponse.id === inProgressAnime.animeResponse.id
           ) +
             1) /
             5
@@ -55,10 +55,10 @@ const PollCollectionStatus = () => {
         setRawData(data);
 
         const groupedData = data.reduce(
-          (acc, { animeDto, status, startedAt, finishedAt }) => {
-            const key = `${animeDto.year}-${animeDto.season}`;
+          (acc, { animeResponse, status, startedAt, finishedAt }) => {
+            const key = `${animeResponse.year}-${animeResponse.season}`;
             if (!acc[key]) acc[key] = [];
-            acc[key].push({ animeDto, status, startedAt, finishedAt });
+            acc[key].push({ animeResponse, status, startedAt, finishedAt });
             return acc;
           },
           {}
@@ -203,21 +203,21 @@ const PollCollectionStatus = () => {
                 >
                   <List>
                     {paginatedItems.map(
-                      ({ animeDto, status, startedAt, finishedAt }) => (
-                        <ListItem key={animeDto.id}>
+                      ({ animeResponse, status, startedAt, finishedAt }) => (
+                        <ListItem key={animeResponse.id}>
                           <ImageWrapper>
                             <AnimeImage
-                              src={animeDto.image}
-                              alt={animeDto.title}
+                              src={animeResponse.image}
+                              alt={animeResponse.title}
                             />
                           </ImageWrapper>
                           <AnimeInfo>
                             <TitleLink
-                              href={animeDto.link}
+                              href={animeResponse.link}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <AnimeTitle>{animeDto.title}</AnimeTitle>
+                              <AnimeTitle>{animeResponse.title}</AnimeTitle>
                             </TitleLink>
                             <StatusText status={status}>
                               {toCollectionStatusLabel(status)}

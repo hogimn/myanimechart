@@ -6,12 +6,13 @@ import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.core.common.util.AnimeDateUtil;
 import com.hogimn.myanimechart.core.common.util.SleepUtil;
-import com.hogimn.myanimechart.service.anime.AnimeDto;
+import com.hogimn.myanimechart.service.anime.AnimeResponse;
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.domain.anime.AnimeSeason;
 import com.hogimn.myanimechart.service.anime.AnimeService;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.stereotype.Service;
@@ -22,20 +23,11 @@ import java.util.Objects;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AnimeCollectService {
     private final AnimeService animeService;
     private final MyAnimeListProvider myAnimeListProvider;
     private final ServiceRegistryService serviceRegistryService;
-
-    public AnimeCollectService(
-            AnimeService animeService,
-            MyAnimeListProvider myAnimeListProvider,
-            ServiceRegistryService serviceRegistryService
-    ) {
-        this.animeService = animeService;
-        this.myAnimeListProvider = myAnimeListProvider;
-        this.serviceRegistryService = serviceRegistryService;
-    }
 
     public void collectByYearAndSeason(int year, String season) {
         collectAnime(year, season);
@@ -65,19 +57,19 @@ public class AnimeCollectService {
     }
 
     private void collectAnimeOldSeasonCurrentlyAiring() {
-        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesOldSeasonCurrentlyAiring(
+        List<AnimeResponse> animeResponses = animeService.getOldSeasonCurrentlyAiringAnimes(
                 AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason(),
                 AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
-        for (AnimeEntity animeEntity : animeEntities) {
-            collectByAnimeId(animeEntity.getId());
+        for (AnimeResponse animeResponse : animeResponses) {
+            collectByAnimeId(animeResponse.getId());
             SleepUtil.sleepForMAL();
         }
     }
 
     private void collectAnimeForceCollectTrue() {
-        List<AnimeEntity> animeEntities = animeService.findAnimeEntitiesForceCollectTrue();
-        for (var animeEntity : animeEntities) {
-            collectByAnimeId(animeEntity.getId());
+        List<AnimeResponse> animeResponses = animeService.getForceCollectTrueAnimes();
+        for (var animeResponse : animeResponses) {
+            collectByAnimeId(animeResponse.getId());
             SleepUtil.sleepForMAL();
         }
     }
@@ -87,8 +79,8 @@ public class AnimeCollectService {
 
         try {
             Anime anime = getAnime(animeId);
-            AnimeDto animeDto = AnimeDto.from(anime);
-            serviceRegistryService.send(RegisteredService.APPLICATION, "/anime/saveAnime", animeDto);
+            AnimeResponse animeResponse = AnimeResponse.from(anime);
+            serviceRegistryService.send(RegisteredService.APPLICATION, "/anime", animeResponse);
         } catch (Exception e) {
             log.error("Failed to collect anime '{}': {}", animeId, e.getMessage(), e);
         }
@@ -112,21 +104,21 @@ public class AnimeCollectService {
                         continue;
                     }
 
-                    AnimeDto animeDto = AnimeDto.from(anime);
+                    AnimeResponse animeResponse = AnimeResponse.from(anime);
 
-                    if (animeDto.getScore() == 0.0) {
+                    if (animeResponse.getScore() == 0.0) {
                         log.info("Skipping anime '{}': Score {} (expected: > 0)",
-                                animeDto.getTitle(), animeDto.getScore());
+                                animeResponse.getTitle(), animeResponse.getScore());
                         continue;
                     }
 
-                    if (!Objects.equals(animeDto.getType(), "tv")) {
+                    if (!Objects.equals(animeResponse.getType(), "tv")) {
                         log.info("Skipping anime '{}': Type {} (expected: tv)",
-                                animeDto.getTitle(), animeDto.getType());
+                                animeResponse.getTitle(), animeResponse.getType());
                         continue;
                     }
 
-                    serviceRegistryService.send(RegisteredService.APPLICATION, "/anime/saveAnime", animeDto);
+                    serviceRegistryService.send(RegisteredService.APPLICATION, "/anime", animeResponse);
                 } catch (Exception e) {
                     log.error("Error processing anime. Skipping to the next item. Details: {}", e.getMessage(), e);
                 }

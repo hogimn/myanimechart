@@ -4,28 +4,22 @@ import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatu
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusRepository;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
-import com.hogimn.myanimechart.service.anime.AnimeDto;
+import com.hogimn.myanimechart.service.anime.AnimeResponse;
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BatchPollCollectionStatusService {
     private final PollCollectionStatusRepository pollCollectionStatusRepository;
     private final ServiceRegistryService serviceRegistryService;
-
-    public BatchPollCollectionStatusService(
-            PollCollectionStatusRepository pollCollectionStatusRepository,
-            ServiceRegistryService serviceRegistryService
-    ) {
-        this.pollCollectionStatusRepository = pollCollectionStatusRepository;
-        this.serviceRegistryService = serviceRegistryService;
-    }
 
     private PollCollectionStatusEntity findPollCollectionStatusEntityByAnimeId(long animeId) {
         return pollCollectionStatusRepository.findById(animeId).orElse(null);
@@ -124,14 +118,14 @@ public class BatchPollCollectionStatusService {
     }
 
     private void sendSave(PollCollectionStatusEntity pollCollectionStatusEntity) {
-        PollCollectionStatusDto pollCollectionStatusDto = PollCollectionStatusDto
+        PollCollectionStatusResponse pollCollectionStatusResponse = PollCollectionStatusResponse
                 .from(pollCollectionStatusEntity);
 
         serviceRegistryService.send(
-                RegisteredService.APPLICATION, "/poll/save-collection-status", pollCollectionStatusDto);
+                RegisteredService.APPLICATION, "/poll/collection-status", pollCollectionStatusResponse);
     }
 
-    public List<PollCollectionStatusDto> getStatuses() {
+    public List<PollCollectionStatusResponse> getStatuses() {
         return pollCollectionStatusRepository
                 .findAllWithAnimeOrderByYearAndSeasonAndScore()
                 .stream()
@@ -139,10 +133,10 @@ public class BatchPollCollectionStatusService {
                     PollCollectionStatusEntity pollCollectionStatusEntity =
                             (PollCollectionStatusEntity) objectList[0];
                     AnimeEntity animeEntity = (AnimeEntity) objectList[1];
-                    PollCollectionStatusDto pollCollectionStatusDto =
-                            PollCollectionStatusDto.from(pollCollectionStatusEntity);
-                    pollCollectionStatusDto.setAnimeDto(AnimeDto.from(animeEntity));
-                    return pollCollectionStatusDto;
+                    PollCollectionStatusResponse pollCollectionStatusResponse =
+                            PollCollectionStatusResponse.from(pollCollectionStatusEntity);
+                    pollCollectionStatusResponse.setAnimeResponse(AnimeResponse.from(animeEntity));
+                    return pollCollectionStatusResponse;
                 })
                 .toList();
     }

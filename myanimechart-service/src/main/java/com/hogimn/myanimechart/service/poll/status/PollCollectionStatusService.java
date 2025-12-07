@@ -1,41 +1,42 @@
 package com.hogimn.myanimechart.service.poll.status;
 
+import com.hogimn.myanimechart.core.common.result.SaveResult;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PollCollectionStatusService {
     private final PollCollectionStatusRepository pollCollectionStatusRepository;
 
-    public PollCollectionStatusService(
-            PollCollectionStatusRepository pollCollectionStatusRepository
-    ) {
-        this.pollCollectionStatusRepository = pollCollectionStatusRepository;
-    }
+    @Transactional
+    public SaveResult save(PollCollectionStatusRequest request) {
+        Optional<PollCollectionStatusEntity> optionalEntity = pollCollectionStatusRepository
+                .findById(request.getAnimeId());
 
-    public PollCollectionStatusEntity findPollCollectionStatusEntityByAnimeId(long animeId) {
-        return pollCollectionStatusRepository.findById(animeId).orElse(null);
-    }
+        final PollCollectionStatusEntity entity;
+        final SaveResult result;
 
-    public void save(PollCollectionStatusDto pollCollectionStatus) {
-        PollCollectionStatusEntity pollCollectionStatusEntity =
-                findPollCollectionStatusEntityByAnimeId(
-                        pollCollectionStatus.getAnimeId());
-
-        if (pollCollectionStatusEntity == null) {
-            pollCollectionStatusEntity = new PollCollectionStatusEntity();
+        if (optionalEntity.isPresent()) {
+            entity = optionalEntity.get();
+            result = SaveResult.UPDATED;
+        } else {
+            entity = new PollCollectionStatusEntity();
+            result = SaveResult.CREATED;
         }
+        entity.setAnimeId(request.getAnimeId());
+        entity.setStatus(request.getStatus());
+        entity.setUpdatedAt(request.getUpdatedAt());
+        entity.setFinishedAt(request.getFinishedAt());
+        entity.setStartedAt(request.getStartedAt());
 
-        pollCollectionStatusEntity.setAnimeId(pollCollectionStatus.getAnimeId());
-        pollCollectionStatusEntity.setStatus(pollCollectionStatus.getStatus());
-        pollCollectionStatusEntity.setUpdatedAt(pollCollectionStatus.getUpdatedAt());
-        pollCollectionStatusEntity.setFinishedAt(pollCollectionStatus.getFinishedAt());
-        pollCollectionStatusEntity.setStartedAt(pollCollectionStatus.getStartedAt());
-        save(pollCollectionStatusEntity);
-    }
+        pollCollectionStatusRepository.save(entity);
 
-    private void save(PollCollectionStatusEntity pollCollectionStatusEntity) {
-        pollCollectionStatusRepository.save(pollCollectionStatusEntity);
+        return result;
     }
 }

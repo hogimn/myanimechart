@@ -260,7 +260,7 @@ const SeasonalAnimeList = ({
       return;
     }
 
-    const userAnimes = await UserApi.findAnimeStatuses();
+    const userAnimes = await UserApi.getAnimeStatuses();
 
     if (userAnimes == null || Object.entries(userAnimes).length === 0) {
       setUserAnimeDict({});

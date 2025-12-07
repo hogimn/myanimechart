@@ -2,9 +2,11 @@ package com.hogimn.myanimechart.service.user;
 
 import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.core.common.util.SleepUtil;
+import com.hogimn.myanimechart.service.exception.AnimeStatusNotFoundException;
 import dev.katsute.mal4j.MyAnimeList;
 import dev.katsute.mal4j.anime.AnimeListStatus;
 import dev.katsute.mal4j.query.AnimeListUpdate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,104 +16,83 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
     private final MyAnimeListProvider myAnimeListProvider;
 
-    public UserService(MyAnimeListProvider myAnimeListProvider) {
-        this.myAnimeListProvider = myAnimeListProvider;
+    private static final int MAL_LIST_LIMIT = 1000;
+
+    public UserResponse getCurrentUser() {
+        return UserResponse.from(myAnimeListProvider
+                .getMyAnimeListWithToken()
+                .getAuthenticatedUser());
     }
 
-    public UserDto getCurrentUser() {
-        return UserDto.from(myAnimeListProvider.getMyAnimeListWithToken().getAuthenticatedUser());
-    }
-
-    public List<AnimeListStatusDto> getAnimeStatuses() {
-        MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
-
+    private List<AnimeListStatus> fetchAllAnimeStatuses(MyAnimeList myAnimeList, String userName) {
         int offset = 0;
-        int limit = 1000;
+        List<AnimeListStatus> allStatuses = new ArrayList<>();
 
-        List<AnimeListStatus> animeListStatuses = new ArrayList<>();
         while (true) {
-            List<AnimeListStatus> tempAnimeListStatuses = myAnimeList
-                    .getUserAnimeListing(userDto.getName())
-                    .withLimit(limit)
+            List<AnimeListStatus> tempStatuses = myAnimeList
+                    .getUserAnimeListing(userName)
+                    .withLimit(MAL_LIST_LIMIT)
                     .withOffset(offset)
                     .search();
 
-            animeListStatuses.addAll(tempAnimeListStatuses);
+            allStatuses.addAll(tempStatuses);
 
-            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, animeListStatuses.size());
+            log.info("Fetching MAL list: offset={}, totalSize={}", offset, allStatuses.size());
 
-            if (tempAnimeListStatuses.size() >= limit) {
-                offset += limit;
-            } else {
+            if (tempStatuses.size() < MAL_LIST_LIMIT) {
                 break;
             }
 
+            offset += MAL_LIST_LIMIT;
             SleepUtil.sleepForMAL();
         }
+        return allStatuses;
+    }
+
+    public List<AnimeListStatusResponse> getAnimeStatuses() {
+        MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
+        UserResponse userResponse = UserResponse.from(myAnimeList.getAuthenticatedUser());
+        List<AnimeListStatus> animeListStatuses =
+                fetchAllAnimeStatuses(myAnimeList, userResponse.getName());
 
         return animeListStatuses
                 .stream()
-                .map(AnimeListStatusDto::from)
+                .map(AnimeListStatusResponse::from)
                 .toList();
     }
 
-    public AnimeListStatusDto getAnimeStatusById(int id) {
+    public AnimeListStatusResponse getAnimeStatusById(int id) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        UserDto userDto = UserDto.from(myAnimeList.getAuthenticatedUser());
+        UserResponse userResponse = UserResponse.from(myAnimeList.getAuthenticatedUser());
+        List<AnimeListStatus> allStatuses
+                = fetchAllAnimeStatuses(myAnimeList, userResponse.getName());
 
-        int offset = 0;
-        int limit = 1000;
-
-        List<AnimeListStatus> animeListStatuses = new ArrayList<>();
-        while (true) {
-            List<AnimeListStatus> tempAnimeListStatuses = myAnimeList
-                    .getUserAnimeListing(userDto.getName())
-                    .withLimit(limit)
-                    .withOffset(offset)
-                    .search();
-
-            animeListStatuses.addAll(tempAnimeListStatuses);
-
-            log.info("offset: {}, limit: {}, size of list: {}", offset, limit, animeListStatuses.size());
-
-            if (tempAnimeListStatuses.size() >= limit) {
-                offset += limit;
-            } else {
-                break;
-            }
-
-            SleepUtil.sleepForMAL();
-        }
-
-        Optional<AnimeListStatusDto> animeListStatusDto = animeListStatuses
-                .parallelStream()
-                .filter(animeListStatus -> animeListStatus.getAnime().getID() == id)
+        return allStatuses.stream()
+                .filter(status -> status.getAnime().getID() == id)
                 .findFirst()
-                .map(AnimeListStatusDto::from);
-
-        return animeListStatusDto.orElse(null);
+                .map(AnimeListStatusResponse::from)
+                .orElseThrow(() -> new AnimeStatusNotFoundException(id));
     }
 
-    public void updateAnimeStatus(AnimeListStatusDto animeListStatusDto) {
+    public void updateAnimeStatus(AnimeListStatusRequest request) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(animeListStatusDto.getAnimeId());
-        if (animeListStatusDto.getStatus() != null) {
-            animeListUpdate.status(animeListStatusDto.getStatus());
+        AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(request.getAnimeId());
+        if (request.getStatus() != null) {
+            animeListUpdate.status(request.getStatus());
         }
-        if (animeListStatusDto.getScore() != null) {
-            animeListUpdate.score(animeListStatusDto.getScore());
+        if (request.getScore() != null) {
+            animeListUpdate.score(request.getScore());
         }
-        animeListUpdate.episodesWatched(animeListStatusDto.getWatchedEpisodes());
-
+        animeListUpdate.episodesWatched(request.getWatchedEpisodes());
         animeListUpdate.update();
     }
 
-    public void deleteAnimeStatus(AnimeListStatusDto animeListStatusDto) {
+    public void deleteAnimeStatus(AnimeListStatusRequest request) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        myAnimeList.deleteAnimeListing(animeListStatusDto.getAnimeId());
+        myAnimeList.deleteAnimeListing(request.getAnimeId());
     }
 }

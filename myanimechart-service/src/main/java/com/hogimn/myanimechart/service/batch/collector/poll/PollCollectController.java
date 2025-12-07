@@ -1,8 +1,10 @@
 package com.hogimn.myanimechart.service.batch.collector.poll;
 
-import com.hogimn.myanimechart.service.batch.collector.poll.status.PollCollectionStatusDto;
+import com.hogimn.myanimechart.service.batch.collector.poll.status.PollCollectionStatusResponse;
 import com.hogimn.myanimechart.service.batch.collector.poll.status.BatchPollCollectionStatusService;
 import com.hogimn.myanimechart.core.common.apicalllog.ApiLoggable;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,66 +12,67 @@ import java.util.List;
 @ApiLoggable
 @RestController
 @RequestMapping("/collect-poll")
+@RequiredArgsConstructor
 public class PollCollectController {
     private final PollCollectService pollCollectService;
     private final BatchPollCollectionStatusService batchPollCollectionStatusService;
 
-    public PollCollectController(
-            PollCollectService pollCollectService,
-            BatchPollCollectionStatusService batchPollCollectionStatusService
-    ) {
-        this.pollCollectService = pollCollectService;
-        this.batchPollCollectionStatusService = batchPollCollectionStatusService;
-    }
-
     @PostMapping("seasonal")
-    public void collectSeasonal() {
+    public ResponseEntity<Void> collectSeasonal() {
         pollCollectService.collectSeasonal("PollCollectJob");
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("by-year-and-season")
-    public void collectByYearAndSeason(@RequestParam int year, @RequestParam String season) {
+    public ResponseEntity<Void> collectByYearAndSeason(@RequestParam int year, @RequestParam String season) {
         pollCollectService.collectPollByYearAndSeason(year, season);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public void collectByAnimeId(@RequestParam long animeId) {
+    public ResponseEntity<Void> collectByAnimeId(@RequestParam long animeId) {
         pollCollectService.collectByAnimeId(animeId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/by-episode")
-    public void collectByEpisode(
+    public ResponseEntity<Void> collectByEpisode(
             @RequestParam long animeId,
             @RequestParam long topicId,
             @RequestParam int episode) {
         pollCollectService.collectByEpisode(animeId, topicId, episode);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/all")
-    public void collectAll() {
+    public ResponseEntity<Void> collectAll() {
         pollCollectService.collectAll();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/empty")
-    public void collectEmpty() {
+    public ResponseEntity<Void> collectEmpty() {
         pollCollectService.collectEmpty();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/resume/by-year-and-season")
-    public void resumeByYearAndSeason(
+    public ResponseEntity<Void> resumeByYearAndSeason(
             @RequestParam int year,
             @RequestParam String season
     ) {
         pollCollectService.resumeByYearAndSeason(year, season);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/resume/failed")
-    public void resumeFailedCollection() {
+    public ResponseEntity<Void> resumeFailedCollection() {
         pollCollectService.resumeFailed();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/statuses")
-    public List<PollCollectionStatusDto> getStatuses() {
-        return batchPollCollectionStatusService.getStatuses();
+    public ResponseEntity<List<PollCollectionStatusResponse>> getStatuses() {
+        return ResponseEntity.ok(batchPollCollectionStatusService.getStatuses());
     }
 }

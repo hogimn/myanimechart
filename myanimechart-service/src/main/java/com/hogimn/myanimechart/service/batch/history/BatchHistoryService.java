@@ -1,9 +1,10 @@
 package com.hogimn.myanimechart.service.batch.history;
 
-import com.hogimn.myanimechart.service.batch.BatchDto;
+import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.service.batch.BatchService;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +13,15 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BatchHistoryService {
     private final BatchHistoryRepository batchHistoryRepository;
     private final BatchService batchService;
 
-    public BatchHistoryService(BatchHistoryRepository batchHistoryRepository, BatchService batchService) {
-        this.batchHistoryRepository = batchHistoryRepository;
-        this.batchService = batchService;
-    }
-
     @Transactional
     public void save(String name) {
-        BatchDto batchDto = batchService.findBatchDtoByName(name);
-        batchHistoryRepository.save(BatchHistoryEntity.from(batchDto));
+        BatchResponse batchResponse = batchService.findBatchByName(name);
+        batchHistoryRepository.save(BatchHistoryEntity.from(batchResponse));
     }
 
     public boolean checkBatchExecutedWithinPeriod(String name, long seconds) {

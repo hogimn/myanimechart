@@ -1,6 +1,6 @@
 package com.hogimn.myanimechart.service.batch.history;
 
-import com.hogimn.myanimechart.service.batch.BatchDto;
+import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,9 +21,9 @@ public class BatchHistoryEntity {
     @Id
     private LocalDateTime recordedAt;
 
-    public static BatchHistoryEntity from(BatchDto batchDto) {
+    public static BatchHistoryEntity from(BatchResponse batchResponse) {
         BatchHistoryEntity batchHistoryEntity = new BatchHistoryEntity();
-        batchHistoryEntity.setName(batchDto.getName());
+        batchHistoryEntity.setName(batchResponse.getName());
         batchHistoryEntity.setRecordedAt(DateUtil.now());
         return batchHistoryEntity;
     }
