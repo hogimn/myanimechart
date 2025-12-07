@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Collapse } from "antd";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
 

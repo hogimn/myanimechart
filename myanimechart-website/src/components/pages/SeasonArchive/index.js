@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { getCurrentSeason, getCurrentSeasonYear } from "../../../util/dateUtil";
 import PageTemplate from "../../common/template/PageTemplate";
