@@ -1,9 +1,9 @@
 import "./App.css";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
-import SeasonalAnime from "./components/pages/seasonalanime/SeasonalAnime";
+import SeasonalAnime from "./components/pages/SeasonalAnime";
 import { registerCharts } from "./components/common/chart/chartRegistration";
-import PollCollectionStatus from "./components/pages/pollcollectionstatus/PollCollectionStatus";
-import SeasonArchive from "./components/pages/seasonarchive/SeasonArchive";
+import PollCollectionStatus from "./components/pages/PollCollectionStatus";
+import SeasonArchive from "./components/pages/SeasonArchive";
 
 registerCharts();
 

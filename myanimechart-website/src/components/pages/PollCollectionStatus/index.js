@@ -11,7 +11,7 @@ import {
 } from "../../../util/strUtil";
 import CommonPagination from "../../common/basic/CommonPagination";
 import CommonCollapse from "../../common/basic/CommonCollapse";
-import AnimeImage from "../seasonalanime/component/AnimeImage";
+import AnimeImage from "../SeasonalAnime/component/AnimeImage";
 import TitleLink from "../../common/link/TitleLink";
 
 const { Panel } = CommonCollapse;
