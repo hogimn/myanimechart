@@ -1,7 +1,5 @@
-import styled from "styled-components";
 import Logo from "./logo/Logo";
 import { getImagePath } from "../../../util/pathUtil";
-import { Link } from "react-router-dom";
 import CommonButton from "../basic/CommonButton";
 import { useEffect, useState } from "react";
 import OAuth2Api from "../../api/OAuth2Api";
@@ -9,74 +7,14 @@ import CommonAlert from "../basic/CommonAlert";
 import CommonModal from "../basic/CommonModal";
 import { useUser } from "../context/UserContext";
 import UserApi from "../../api/UserApi";
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
-
-  h2 {
-    margin-top: 9px;
-    margin-bottom: -7px;
-  }
-
-  p {
-    font-size: 10px;
-  }
-`;
-
-const StyledHeader = styled.header`
-  display: flex;
-  align-items: center;
-  font-size: 1.15em;
-
-  h1 {
-    margin-left: 10px;
-  }
-
-  ${StyledLink} + ${StyledLink} {
-    margin-left: 5px;
-  }
-
-  .ant-btn {
-    margin-left: auto;
-    margin-right: 10px;
-    background-color: rgba(36, 46, 66, 0.7);
-    border: 1px solid rgba(25, 26, 46, 0.7);
-    padding-left: 7px;
-    padding-right: 7px;
-  }
-
-  .ant-btn:hover {
-    background-color: rgba(96, 119, 160, 0.7) !important;
-  }
-
-  .ant-alert {
-    margin-right: 10px;
-  }
-`;
-
-const Avatar = styled.img`
-  margin-left: auto;
-  margin-right: 10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const ModalContent = styled.div`
-  text-align: center;
-`;
-
-const ModalAvatar = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-`;
-
-const ModalHeader = styled.h2`
-  margin-top: 10px;
-`;
+import {
+  Avatar,
+  ModalAvatar,
+  ModalContent,
+  ModalHeader,
+  StyledHeader,
+  StyledLink,
+} from "./Header.style";
 
 const Header = () => {
   const { user, setUser } = useUser(null);

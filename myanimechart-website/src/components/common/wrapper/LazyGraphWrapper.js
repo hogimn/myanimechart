@@ -1,22 +1,5 @@
 import { useInView } from "react-intersection-observer";
-import styled from "styled-components";
-
-const Wrapper = styled.section`
-  width: 100%;
-  height: 190px;
-
-  canvas {
-    touch-action: pan-y !important;
-  }
-`;
-
-const StyledSpin = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: #aaa;
-`;
+import { StyledSpin, Wrapper } from "./LazyGraphWrapper.style";
 
 const LazyGraphWrapper = ({ children }) => {
   const { ref, inView } = useInView({

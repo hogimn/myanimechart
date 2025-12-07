@@ -2,65 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js";
 import CommonModal from "../../../common/basic/CommonModal";
-import styled from "styled-components";
 import ModalButton from "../../../common/button/ModalButton";
 import { isMobile } from "react-device-detect";
-
-const ScrollableContent = styled.div`
-  max-height: 50vh;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-  font-size: 13px;
-`;
-
-const StyledTotalVotes = styled.div`
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: rgb(149, 195, 255);
-  text-align: left;
-  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : 0)};
-`;
-
-const VoteList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-`;
-
-const VoteItem = styled.li`
-  margin-bottom: 1rem;
-`;
-
-const ProgressBarBackground = styled.div`
-  width: 100%;
-  background-color: rgba(81, 84, 102, 0.24);
-  height: 1rem;
-  margin-top: 0.25rem;
-  border-radius: 0.375rem;
-`;
-
-const ProgressBarFill = styled.div`
-  height: 1rem;
-  background-color: rgba(99, 154, 255, 1);
-  border-radius: 0.375rem;
-  width: ${(props) => props.width}%;
-`;
-
-const EpisodeList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const EpisodeItem = styled.li`
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-  color: #9cc9ff;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+import {
+  EpisodeItem,
+  EpisodeList,
+  ProgressBarBackground,
+  ProgressBarFill,
+  ScrollableContent,
+  StyledTotalVotes,
+  VoteItem,
+  VoteList,
+} from "./AnimePollGraph.style";
 
 const zoomOptions = {
   zoom: {

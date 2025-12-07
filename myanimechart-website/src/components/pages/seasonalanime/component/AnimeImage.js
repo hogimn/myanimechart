@@ -1,16 +1,5 @@
-import styled from "styled-components";
 import useLazyLoad from "../../../hook/useLazyLoad";
-
-const ImageContainer = styled.div`
-  width: 180px;
-  height: 100%;
-`;
-
-const StyledAnimeImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
+import { ImageContainer, StyledAnimeImage } from "./AnimeImage.style";
 
 const AnimeImage = ({ src, alt }) => {
   const [ref, isVisible] = useLazyLoad();

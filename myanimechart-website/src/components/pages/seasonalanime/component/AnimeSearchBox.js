@@ -1,20 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import { SearchOutlined } from "@ant-design/icons";
 import CommonInput from "../../../common/basic/CommonInput";
-
-const SearchBoxWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
-
-  .ant-input-affix-wrapper {
-    width: 315px;
-  }
-`;
+import { SearchBoxWrapper } from "./AnimeSearchBox.style";
 
 const SearchBox = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");

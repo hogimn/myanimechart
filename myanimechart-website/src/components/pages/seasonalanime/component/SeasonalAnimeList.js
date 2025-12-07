@@ -3,10 +3,8 @@ import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import CommonRow from "../../../common/basic/CommonRow";
 import CommonCol from "../../../common/basic/CommonCol";
 import CommonAlert from "../../../common/basic/CommonAlert";
-import CommonSpin from "../../../common/basic/CommonSpin";
 import DescriptionSection from "./DescriptionSection";
 import CommonPagination from "../../../common/basic/CommonPagination";
-import styled from "styled-components";
 import { toScoreLabel } from "../../../../util/strUtil";
 import { FaStar, FaTrophy, FaUserFriends, FaVoteYea } from "react-icons/fa";
 import { MdTrendingUp } from "react-icons/md";
@@ -20,8 +18,24 @@ import CommonInput from "../../../common/basic/CommonInput";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import ModalButton from "../../../common/button/ModalButton";
 import UserApi from "../../../api/UserApi";
-import CommonButton from "../../../common/basic/CommonButton";
 import AnimeApi from "../../../api/AnimeApi";
+import {
+  AnimeImageWrapper,
+  AnimeSubWrapper,
+  AnimeWrapper,
+  EditButton,
+  EpisodeSeenWrapper,
+  ImageWrapper,
+  InputWrapper,
+  ModalContent,
+  OverlayBox,
+  PlusButton,
+  SelectWrapper,
+  StyledCol,
+  StyledModalButtons,
+  StyledSpin,
+  StyledTitle,
+} from "./SeasonalAnimeList.style";
 
 const statusOptions = [
   { value: "watching", label: "Watching" },
@@ -35,147 +49,6 @@ const scoreOptions = Array.from({ length: 10 }, (_, i) => ({
   value: i + 1,
   label: i + 1,
 })).reverse();
-
-const StyledModalButtons = styled.div`
-  .ant-btn + .ant-btn {
-    margin-left: 10px;
-  }
-`;
-
-const EpisodeSeenWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const PlusButton = styled(CommonButton)`
-  margin-left: 8px;
-  padding: 0 10px;
-  font-size: 16px;
-`;
-
-const StyledTitle = styled.h3`
-  color: rgb(149, 195, 255);
-`;
-
-const StyledCol = styled(CommonCol)`
-  width: 150px;
-
-  input {
-    width: 50px;
-    max-width: 50px;
-  }
-`;
-
-const StyledSpin = styled(CommonSpin)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: ${(props) => props?.height || "100vh"};
-`;
-
-const AnimeWrapper = styled(CommonCol)`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  .ant-col {
-    max-width: 100%;
-  }
-
-  .ant-card-body {
-    display: none;
-  }
-
-  @media (max-width: 768px) {
-    .ant-card-cover {
-      width: 160px;
-    }
-  }
-`;
-
-const AnimeSubWrapper = styled.article`
-  background-color: rgba(0, 0, 0, 0.25);
-  border: rgba(131, 125, 125, 0.51) 1px solid;
-  border-radius: 10px;
-  margin: 10px;
-
-  section + section {
-    margin-top: 10px;
-  }
-`;
-
-const AnimeImageWrapper = styled.section`
-  display: flex;
-  margin-bottom: 8px;
-`;
-
-const OverlayBox = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
-  font-size: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  svg {
-    margin-right: 5px;
-  }
-`;
-
-const ImageWrapper = styled.div`
-  display: inline-block;
-  cursor: pointer;
-  border-top-left-radius: 9px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-`;
-
-const EditButton = styled.button`
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background-color: ${(props) =>
-    props?.backgroundColor || "rgba(0, 0, 0, 0.7)"};
-  border: none;
-  border-radius: 50%;
-  color: white;
-  padding: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-
-  &:hover {
-    background-color: ${(props) =>
-      props?.backgroundColorHover || "rgba(0, 0, 0, 1.0)"};
-  }
-`;
-
-const ModalContent = styled.div`
-  padding: 20px;
-`;
-
-const SelectWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  .ant-select {
-    width: 115px;
-  }
-  margin-bottom: 10px;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
 
 const SeasonalAnimeList = ({
   year,

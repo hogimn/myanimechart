@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CommonTabs from "../../../common/basic/CommonTabs";
 import SeasonalAnimeList from "./SeasonalAnimeList";
-import styled from "styled-components";
 import {
   getCurrentSeason,
   getCurrentSeasonYear,
@@ -18,41 +16,12 @@ import AnimeSearchBox from "./AnimeSearchBox";
 import CommonSelect from "../../../common/basic/CommonSelect";
 import { toAirStatusLabel, toTypeLabel } from "../../../../util/strUtil";
 import CommonSpin from "../../../common/basic/CommonSpin";
-
-const StyledSeasonalTabs = styled.div`
-  p {
-    margin-left: 10px;
-  }
-`;
-
-const SelectWrapper = styled.div`
-  margin-bottom: 16px;
-  text-align: left;
-  .ant-select {
-    min-width: fit-content;
-    margin-top: 5px;
-    margin-left: 10px;
-  }
-`;
-
-const CustomTabs = styled(CommonTabs)`
-  .ant-tabs-nav-wrap {
-    margin: 0 10px;
-  }
-  .ant-tabs-tab + .ant-tabs-tab {
-    margin: 0 0 0 0;
-  }
-  .ant-tabs-tab {
-    padding: 12px 24px;
-  }
-`;
-
-const LoadingWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-`;
+import {
+  CustomTabs,
+  LoadingWrapper,
+  SelectWrapper,
+  StyledSeasonalTabs,
+} from "./SeasonalTabs.style";
 
 const LOCAL_STORAGE_KEY = "seasonalFilters";
 
