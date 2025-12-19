@@ -1,2 +1,0 @@
-ALTER TABLE anime
-    ADD COLUMN type VARCHAR(50);

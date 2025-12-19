@@ -1,1 +1,0 @@
-ALTER TABLE myanimechart.anime MODIFY COLUMN end_date DATETIME;
