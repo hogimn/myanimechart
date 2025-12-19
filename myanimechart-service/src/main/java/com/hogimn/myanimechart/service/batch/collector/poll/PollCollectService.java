@@ -68,22 +68,12 @@ public class PollCollectService {
         log.info("Start of collecting seasonal poll");
 
         collectPollAllSeasonCurrentlyAiring();
-        collectPollForceCollectTrue();
 
         log.info("End of collecting seasonal poll");
     }
 
-    private void collectPollForceCollectTrue() {
-        List<AnimeResponse> animeResponses = animeService.getForceCollectTrueAnimes();
-        animeResponses.forEach(animeEntity ->
-                batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(animeEntity.getId()));
-        animeResponses.forEach(this::collectForumTopics);
-    }
-
     private void collectPollAllSeasonCurrentlyAiring() {
         List<AnimeResponse> currentlyAiringAnimes = animeService.getCurrentAiringAnimes();
-        List<AnimeResponse> forceCollectAnimes = animeService.getForceCollectTrueAnimes();
-        currentlyAiringAnimes.addAll(forceCollectAnimes);
         currentlyAiringAnimes.forEach(anime ->
                 batchPollCollectionStatusService.sendSavePollCollectionStatusForWait(anime.getId()));
         currentlyAiringAnimes.forEach(this::collectForumTopics);

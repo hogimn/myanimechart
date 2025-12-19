@@ -41,7 +41,6 @@ public class AnimeEntity {
     private LocalDateTime updatedAt;
     private String rating;
     private String nsfw;
-    private String forceCollect;
 
     public void setFrom(AnimeEntity entity) {
         this.setId(entity.getId());

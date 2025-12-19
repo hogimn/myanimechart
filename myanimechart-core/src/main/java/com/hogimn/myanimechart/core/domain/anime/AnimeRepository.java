@@ -123,8 +123,6 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
             """)
     List<Object[]> findAllWithPollsByTitleContaining(String title);
 
-    List<AnimeEntity> findByForceCollect(String forceCollect);
-
     @Query("""
              SELECT a
              FROM AnimeEntity a

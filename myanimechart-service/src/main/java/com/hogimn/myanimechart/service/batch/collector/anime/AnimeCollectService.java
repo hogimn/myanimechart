@@ -43,7 +43,6 @@ public class AnimeCollectService {
             collectAnimeNextSeason();
         }
         collectAnimeOldSeasonCurrentlyAiring();
-        collectAnimeForceCollectTrue();
 
         log.info("End of collecting seasonal anime");
     }
@@ -61,14 +60,6 @@ public class AnimeCollectService {
                 AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason(),
                 AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
         for (AnimeResponse animeResponse : animeResponses) {
-            collectByAnimeId(animeResponse.getId());
-            SleepUtil.sleepForMAL();
-        }
-    }
-
-    private void collectAnimeForceCollectTrue() {
-        List<AnimeResponse> animeResponses = animeService.getForceCollectTrueAnimes();
-        for (var animeResponse : animeResponses) {
             collectByAnimeId(animeResponse.getId());
             SleepUtil.sleepForMAL();
         }

@@ -39,7 +39,6 @@ public class AnimeCreateRequest {
     private String synopsis;
     private String rating;
     private String nsfw;
-    private String forceCollect;
 
     public AnimeEntity toEntity() {
         AnimeEntity anime = new AnimeEntity();

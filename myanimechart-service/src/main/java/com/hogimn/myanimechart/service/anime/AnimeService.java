@@ -94,13 +94,6 @@ public class AnimeService {
                 .collect(Collectors.toList());
     }
 
-    public List<AnimeResponse> getForceCollectTrueAnimes() {
-        List<AnimeEntity> result = animeRepository.findByForceCollect("Y");
-        return result.stream()
-                .map(AnimeResponse::from)
-                .collect(Collectors.toList());
-    }
-
     public List<AnimeResponse> getByYearAndSeason(int year, String season) {
         List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
         return mapToAnimeResponses(results);

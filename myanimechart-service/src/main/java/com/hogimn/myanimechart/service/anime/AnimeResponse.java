@@ -38,7 +38,6 @@ public class AnimeResponse {
     private String synopsis;
     private String rating;
     private String nsfw;
-    private String forceCollect;
 
     private List<PollResponse> polls;
 
@@ -70,7 +69,6 @@ public class AnimeResponse {
         anime.setSynopsis(animeEntity.getSynopsis());
         anime.setRating(animeEntity.getRating());
         anime.setNsfw(animeEntity.getNsfw());
-        anime.setForceCollect(animeEntity.getForceCollect());
         return anime;
     }
 
