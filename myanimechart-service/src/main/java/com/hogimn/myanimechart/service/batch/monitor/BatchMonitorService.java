@@ -34,19 +34,24 @@ public class BatchMonitorService {
     private void validateBatchExecution(BatchResponse batchResponse) {
         String cron = batchResponse.getCron();
         long period = CronUtil.getPeriodAsSeconds(cron);
+        String jobName = batchResponse.getName();
 
-        if (!batchHistoryService.checkBatchExecutedWithinPeriod(batchResponse.getName(), period)) {
-            String errorMessage = String.format(
-                    "batch not executed within period: %s %s.",
-                    batchResponse.getName(), period
-            );
-            log.error(errorMessage);
-            sendAlarm(errorMessage);
+        boolean isExecuted = batchHistoryService.checkBatchExecutedWithinPeriod(jobName, period);
+
+        if (!isExecuted) {
+            if (!batchHistoryService.checkAlarmSentWithinPeriod(jobName, period)) {
+                String errorMessage = String.format(
+                        "batch not executed within period: %s %s.", jobName, period
+                );
+                log.error(errorMessage);
+                sendAlarm(errorMessage);
+
+                batchHistoryService.saveAlarmHistory(jobName);
+            } else {
+                log.debug("이미 해당 주기에 알람이 발송되었습니다: {}", jobName);
+            }
         } else {
-            log.info(
-                    "batch executed within period: {} {}.",
-                    batchResponse.getName(), period
-            );
+            log.info("batch executed within period: {} {}.", jobName, period);
         }
     }
 

@@ -17,11 +17,21 @@ import java.util.List;
 public class BatchHistoryService {
     private final BatchHistoryRepository batchHistoryRepository;
     private final BatchService batchService;
+    private static final String ALARM_SUFFIX = ":ALARM";
 
     @Transactional
     public void save(String name) {
         BatchResponse batchResponse = batchService.findBatchByName(name);
         batchHistoryRepository.save(BatchHistoryEntity.from(batchResponse));
+    }
+
+    @Transactional
+    public void saveAlarmHistory(String name) {
+        BatchHistoryEntity alarmEntity = BatchHistoryEntity.builder()
+                .name(name + ALARM_SUFFIX)
+                .recordedAt(DateUtil.now())
+                .build();
+        batchHistoryRepository.save(alarmEntity);
     }
 
     public boolean checkBatchExecutedWithinPeriod(String name, long seconds) {
@@ -31,5 +41,9 @@ public class BatchHistoryService {
                 .findByNameAndRecordedAtBetween(name, beforePeriod, now);
 
         return !batchHistoryEntityList.isEmpty();
+    }
+
+    public boolean checkAlarmSentWithinPeriod(String name, long seconds) {
+        return checkBatchExecutedWithinPeriod(name + ALARM_SUFFIX, seconds);
     }
 }

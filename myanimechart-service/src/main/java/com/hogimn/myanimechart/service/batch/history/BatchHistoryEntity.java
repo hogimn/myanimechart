@@ -6,7 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +17,9 @@ import java.time.LocalDateTime;
 @Table(name = "batch_history")
 @Data
 @IdClass(BatchHistoryId.class)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BatchHistoryEntity {
     @Id
     private String name;
@@ -22,9 +28,9 @@ public class BatchHistoryEntity {
     private LocalDateTime recordedAt;
 
     public static BatchHistoryEntity from(BatchResponse batchResponse) {
-        BatchHistoryEntity batchHistoryEntity = new BatchHistoryEntity();
-        batchHistoryEntity.setName(batchResponse.getName());
-        batchHistoryEntity.setRecordedAt(DateUtil.now());
-        return batchHistoryEntity;
+        return BatchHistoryEntity.builder()
+                .name(batchResponse.getName())
+                .recordedAt(DateUtil.now())
+                .build();
     }
 }
