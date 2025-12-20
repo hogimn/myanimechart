@@ -37,3 +37,8 @@ build/
 
 ### Application Logs ###
 **/logs/
+*.log
+
+### Security & Privacy ###
+*.pfx
+*.crt

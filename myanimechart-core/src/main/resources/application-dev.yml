@@ -32,14 +32,10 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: ${myanimechart_mariadb_url}
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mariadb://${myanimechart_mariadb_url}
     username: ${myanimechart_mariadb_username}
     password: ${myanimechart_mariadb_password}
-  jpa:
-    hibernate:
-      show-sql: true
-      format-sql: true
   flyway:
     enabled: true
     locations: classpath:flyway-common
@@ -49,6 +45,6 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.stat=: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.SQL: OFF
+    org.hibernate.orm.jdbc.bind: OFF
+    p6spy: INFO
