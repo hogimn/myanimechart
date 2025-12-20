@@ -1,7 +1,9 @@
 # MyAnimeChart
 
-MyAnimeChart is a microservice-based application for collecting, analyzing, and visualizing anime data.
-It is built with Spring Boot (multi-module) and React, designed for scalability and clean separation of concerns.
+MyAnimeChart is a modular application for collecting, analyzing, and visualizing anime data.
+It is built with Spring Boot (multi-module) and React, following a clean separation of concerns.
+
+Note: While it incorporates microservice-inspired patterns like API Gateway and service discovery, the core application is currently a modular monolith..
 
 <img width="1888" height="934" alt="image" src="https://github.com/user-attachments/assets/0d11c074-3434-4507-ad5d-d1ae8a052d0f" />
 
