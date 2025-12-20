@@ -44,7 +44,7 @@ public class CustomJdbcEventListener extends JdbcEventListener {
                 getStackTrace(),
                 rows,
                 ms,
-                SqlFormatter.format(resultSetInformation.getStatementInformation().getSql())
+                SqlFormatter.format(resultSetInformation.getStatementInformation().getSqlWithValues())
         );
 
         QueryContext.clear();
@@ -64,7 +64,7 @@ public class CustomJdbcEventListener extends JdbcEventListener {
                 getStackTrace(),
                 rowCount,
                 ms,
-                SqlFormatter.format(statementInformation.getSql())
+                SqlFormatter.format(statementInformation.getSqlWithValues())
         );
     }
 
