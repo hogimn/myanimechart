@@ -12,13 +12,13 @@ public class ApiCallLogService {
     }
 
     public void save(String endpoint, String method, String ip, String country) {
-        ApiCallLog log = new ApiCallLog();
-        log.setEndpoint(endpoint);
-        log.setMethod(method);
-        log.setIp(ip);
-        log.setCountry(country);
-        log.setRecordedAt(DateUtil.now());
-
+        ApiCallLog log = ApiCallLog.builder()
+                .endpoint(endpoint)
+                .method(method)
+                .ip(ip)
+                .country(country)
+                .recordedAt(DateUtil.now())
+                .build();
         apiCallLogRepository.save(log);
     }
 }

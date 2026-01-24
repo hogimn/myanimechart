@@ -1,13 +1,13 @@
 package com.hogimn.myanimechart.service.anime;
 
 import com.hogimn.myanimechart.core.common.result.SaveResult;
+import com.hogimn.myanimechart.core.common.util.DateUtil;
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.domain.anime.AnimeRepository;
+import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
-import com.hogimn.myanimechart.core.common.util.DateUtil;
 import com.hogimn.myanimechart.service.exception.AnimeNotFoundException;
 import com.hogimn.myanimechart.service.poll.PollResponse;
-import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.service.poll.PollService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,12 +31,10 @@ public class AnimeService {
 
     @Transactional
     public SaveResult save(AnimeCreateRequest request) {
-        Optional<AnimeEntity> optional = animeRepository.findById(request.getId());
+        Optional<AnimeEntity> optional = animeRepository.findById(request.id());
         if (optional.isPresent()) {
             AnimeEntity animeEntity = optional.get();
-            animeEntity.setFrom(request.toEntity());
-            animeEntity.setUpdatedAt(DateUtil.now());
-            animeRepository.save(animeEntity);
+            animeEntity.update(request.toEntity());
             return SaveResult.UPDATED;
         }
 
@@ -88,7 +87,8 @@ public class AnimeService {
     }
 
     public List<AnimeResponse> getCurrentAiringAnimes() {
-        List<AnimeEntity> result = animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring("currently_airing", "finished_airing");
+        List<AnimeEntity> result = animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring(
+                "currently_airing", "finished_airing");
         return result.stream()
                 .map(AnimeResponse::from)
                 .collect(Collectors.toList());
@@ -105,33 +105,31 @@ public class AnimeService {
     }
 
     private List<AnimeResponse> mapToAnimeResponses(List<Object[]> results) {
-        Map<Long, AnimeResponse> animeDtoMap = new HashMap<>();
+        Map<Long, AnimeEntity> animeMap = new LinkedHashMap<>();
+        Map<Long, List<PollResponse>> pollListMap = new HashMap<>();
 
         for (var result : results) {
             AnimeEntity animeEntity = (AnimeEntity) result[0];
             PollEntity pollEntity = (PollEntity) result[1];
 
             long animeId = animeEntity.getId();
-            AnimeResponse animeResponse = animeDtoMap.computeIfAbsent(animeId,
-                    id -> AnimeResponse.from(animeEntity));
+            animeMap.putIfAbsent(animeId, animeEntity);
 
-            if (animeResponse.getPolls() == null) {
-                animeResponse.setPolls(new ArrayList<>());
-            }
             if (pollEntity != null) {
-                animeResponse.getPolls().add(PollResponse.from(pollEntity));
+                pollListMap.computeIfAbsent(animeId, k -> new ArrayList<>())
+                        .add(PollResponse.from(pollEntity));
             }
         }
 
-        animeDtoMap.values().forEach(animeResponse -> {
-            List<PollResponse> pollResponses = animeResponse.getPolls();
-            if (pollResponses != null && !pollResponses.isEmpty()) {
-                List<PollResponse> uniquePollResponses = pollService.filterByMaxTopicVotes(pollResponses);
-                animeResponse.setPolls(uniquePollResponses);
-            }
-        });
-
-        return new ArrayList<>(animeDtoMap.values());
+        return animeMap.values().stream()
+                .map(animeEntity -> {
+                    List<PollResponse> polls = pollListMap.getOrDefault(animeEntity.getId(), List.of());
+                    List<PollResponse> filteredPolls = (polls.isEmpty())
+                            ? polls
+                            : pollService.filterByMaxTopicVotes(polls);
+                    return AnimeResponse.from(animeEntity, filteredPolls);
+                })
+                .toList();
     }
 
     public List<AnimeResponse> getFailedCollectionAnimes() {

@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.service.batch.collector.poll;
 
-import com.hogimn.myanimechart.service.batch.collector.poll.status.BatchPollCollectionStatusService;
 import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.service.batch.BatchService;
+import com.hogimn.myanimechart.service.batch.collector.poll.status.BatchPollCollectionStatusService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,8 @@ public class PollCollectJob {
                 .findBatchByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> collectPoll(batchResponse.getName()),
-                new CronTrigger(batchResponse.getCron()));
+                () -> collectPoll(batchResponse.name()),
+                new CronTrigger(batchResponse.cron()));
     }
 
     public void collectPoll(String batchJobName) {

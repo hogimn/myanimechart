@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -57,7 +56,7 @@ public class UserService {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserResponse userResponse = UserResponse.from(myAnimeList.getAuthenticatedUser());
         List<AnimeListStatus> animeListStatuses =
-                fetchAllAnimeStatuses(myAnimeList, userResponse.getName());
+                fetchAllAnimeStatuses(myAnimeList, userResponse.name());
 
         return animeListStatuses
                 .stream()
@@ -69,7 +68,7 @@ public class UserService {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
         UserResponse userResponse = UserResponse.from(myAnimeList.getAuthenticatedUser());
         List<AnimeListStatus> allStatuses
-                = fetchAllAnimeStatuses(myAnimeList, userResponse.getName());
+                = fetchAllAnimeStatuses(myAnimeList, userResponse.name());
 
         return allStatuses.stream()
                 .filter(status -> status.getAnime().getID() == id)
@@ -80,19 +79,19 @@ public class UserService {
 
     public void updateAnimeStatus(AnimeListStatusRequest request) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(request.getAnimeId());
-        if (request.getStatus() != null) {
-            animeListUpdate.status(request.getStatus());
+        AnimeListUpdate animeListUpdate = myAnimeList.updateAnimeListing(request.animeId());
+        if (request.status() != null) {
+            animeListUpdate.status(request.status());
         }
-        if (request.getScore() != null) {
-            animeListUpdate.score(request.getScore());
+        if (request.score() != null) {
+            animeListUpdate.score(request.score());
         }
-        animeListUpdate.episodesWatched(request.getWatchedEpisodes());
+        animeListUpdate.episodesWatched(request.watchedEpisodes());
         animeListUpdate.update();
     }
 
     public void deleteAnimeStatus(AnimeListStatusRequest request) {
         MyAnimeList myAnimeList = myAnimeListProvider.getMyAnimeListWithToken();
-        myAnimeList.deleteAnimeListing(request.getAnimeId());
+        myAnimeList.deleteAnimeListing(request.animeId());
     }
 }

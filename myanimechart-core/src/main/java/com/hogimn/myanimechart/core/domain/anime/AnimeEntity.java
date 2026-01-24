@@ -1,16 +1,25 @@
 package com.hogimn.myanimechart.core.domain.anime;
 
+import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "anime")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AnimeEntity {
     @Id
     private Long id;
@@ -42,32 +51,31 @@ public class AnimeEntity {
     private String rating;
     private String nsfw;
 
-    public void setFrom(AnimeEntity entity) {
-        this.setId(entity.getId());
-        this.setTitle(entity.getTitle());
-        this.setSeason(entity.getSeason());
-        this.setImage(entity.getImage());
-        this.setLargeImage(entity.getLargeImage());
-        this.setLink(entity.getLink());
-        this.setScore(entity.getScore());
-        this.setMembers(entity.getMembers());
-        this.setYear(entity.getYear());
-        this.setSource(entity.getSource());
-        this.setGenre(entity.getGenre());
-        this.setStudios(entity.getStudios());
-        this.setRank(entity.getRank());
-        this.setPopularity(entity.getPopularity());
-        this.setScoringCount(entity.getScoringCount());
-        this.setEpisodes(entity.getEpisodes());
-        this.setAirStatus(entity.getAirStatus());
-        this.setTitle(entity.getTitle());
-        this.setType(entity.getType());
-        this.setStartDate(entity.getStartDate());
-        this.setEndDate(entity.getEndDate());
-        this.setEnglishTitle(entity.getEnglishTitle());
-        this.setJapaneseTitle(entity.getJapaneseTitle());
-        this.setSynopsis(entity.getSynopsis());
-        this.setRating(entity.getRating());
-        this.setNsfw(entity.getNsfw());
+    public void update(AnimeEntity other) {
+        this.title = other.title;
+        this.link = other.link;
+        this.image = other.image;
+        this.largeImage = other.largeImage;
+        this.score = other.score;
+        this.members = other.members;
+        this.genre = other.genre;
+        this.studios = other.studios;
+        this.source = other.source;
+        this.year = other.year;
+        this.season = other.season;
+        this.rank = other.rank;
+        this.popularity = other.popularity;
+        this.scoringCount = other.scoringCount;
+        this.episodes = other.episodes;
+        this.airStatus = other.airStatus;
+        this.type = other.type;
+        this.startDate = other.startDate;
+        this.endDate = other.endDate;
+        this.englishTitle = other.englishTitle;
+        this.japaneseTitle = other.japaneseTitle;
+        this.synopsis = other.synopsis;
+        this.rating = other.rating;
+        this.nsfw = other.nsfw;
+        this.updatedAt = DateUtil.now();
     }
 }

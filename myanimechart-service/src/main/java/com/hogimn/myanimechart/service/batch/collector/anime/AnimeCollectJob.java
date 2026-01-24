@@ -23,7 +23,7 @@ public class AnimeCollectJob {
                 .findBatchByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> animeCollectService.collectSeasonal(batchResponse.getName()),
-                new CronTrigger(batchResponse.getCron()));
+                () -> animeCollectService.collectSeasonal(batchResponse.name()),
+                new CronTrigger(batchResponse.cron()));
     }
 }

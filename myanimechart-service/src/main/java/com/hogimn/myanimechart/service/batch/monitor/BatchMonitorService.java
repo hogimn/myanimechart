@@ -1,11 +1,11 @@
 package com.hogimn.myanimechart.service.batch.monitor;
 
-import com.hogimn.myanimechart.service.batch.BatchResponse;
-import com.hogimn.myanimechart.service.batch.history.BatchHistoryService;
-import com.hogimn.myanimechart.service.batch.BatchService;
-import com.hogimn.myanimechart.service.batch.history.SaveBatchHistory;
 import com.hogimn.myanimechart.core.common.alarm.AlarmService;
 import com.hogimn.myanimechart.core.common.util.CronUtil;
+import com.hogimn.myanimechart.service.batch.BatchResponse;
+import com.hogimn.myanimechart.service.batch.BatchService;
+import com.hogimn.myanimechart.service.batch.history.BatchHistoryService;
+import com.hogimn.myanimechart.service.batch.history.SaveBatchHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -32,9 +32,9 @@ public class BatchMonitorService {
     }
 
     private void validateBatchExecution(BatchResponse batchResponse) {
-        String cron = batchResponse.getCron();
+        String cron = batchResponse.cron();
         long period = CronUtil.getPeriodAsSeconds(cron);
-        String jobName = batchResponse.getName();
+        String jobName = batchResponse.name();
 
         boolean isExecuted = batchHistoryService.checkBatchExecutedWithinPeriod(jobName, period);
 

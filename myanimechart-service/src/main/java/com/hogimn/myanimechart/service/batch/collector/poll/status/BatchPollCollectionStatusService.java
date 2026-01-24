@@ -1,13 +1,13 @@
 package com.hogimn.myanimechart.service.batch.collector.poll.status;
 
+import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
+import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
+import com.hogimn.myanimechart.core.common.util.DateUtil;
+import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusRepository;
-import com.hogimn.myanimechart.core.common.util.DateUtil;
 import com.hogimn.myanimechart.service.anime.AnimeResponse;
-import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
-import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
-import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -133,10 +133,8 @@ public class BatchPollCollectionStatusService {
                     PollCollectionStatusEntity pollCollectionStatusEntity =
                             (PollCollectionStatusEntity) objectList[0];
                     AnimeEntity animeEntity = (AnimeEntity) objectList[1];
-                    PollCollectionStatusResponse pollCollectionStatusResponse =
-                            PollCollectionStatusResponse.from(pollCollectionStatusEntity);
-                    pollCollectionStatusResponse.setAnimeResponse(AnimeResponse.from(animeEntity));
-                    return pollCollectionStatusResponse;
+                    return PollCollectionStatusResponse.from(
+                            pollCollectionStatusEntity, AnimeResponse.from(animeEntity));
                 })
                 .toList();
     }

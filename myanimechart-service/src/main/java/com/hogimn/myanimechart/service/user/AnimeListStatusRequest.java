@@ -1,25 +1,25 @@
 package com.hogimn.myanimechart.service.user;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
-public class AnimeListStatusRequest {
-    @NotBlank(message = "animeId is required.")
-    private Long animeId;
-    private String status;
-    private Integer score;
-    private Date startDate;
-    private Date finishDate;
-    private Integer priority;
-    private List<String> tags;
-    private String comments;
-    private Date updatedAt;
-    private Integer watchedEpisodes;
-    private Boolean rewatching;
-    private Integer timesRewatched;
-    private Integer rewatchValue;
+public record AnimeListStatusRequest(
+        @NotNull(message = "animeId is required.")
+        Long animeId,
+
+        String status,
+        Integer score,
+        Date startDate,
+        Date finishDate,
+        Integer priority,
+        List<String> tags,
+        String comments,
+        Date updatedAt,
+        Integer watchedEpisodes,
+        Boolean rewatching,
+        Integer timesRewatched,
+        Integer rewatchValue
+) {
 }

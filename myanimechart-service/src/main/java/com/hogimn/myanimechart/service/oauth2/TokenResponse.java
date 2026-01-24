@@ -1,21 +1,18 @@
 package com.hogimn.myanimechart.service.oauth2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-public class TokenResponse {
-    @JsonProperty("token_type")
-    private String tokenType;
+public record TokenResponse(
+        @JsonProperty("token_type")
+        String tokenType,
 
-    @JsonProperty("expires_in")
-    private int expiresIn;
+        @JsonProperty("expires_in")
+        int expiresIn,
 
-    @JsonProperty("access_token")
-    private String accessToken;
+        @JsonProperty("access_token")
+        String accessToken,
 
-    @JsonProperty("refresh_token")
-    private String refreshToken;
+        @JsonProperty("refresh_token")
+        String refreshToken
+) {
 }

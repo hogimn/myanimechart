@@ -1,8 +1,8 @@
 package com.hogimn.myanimechart.service.batch.history;
 
+import com.hogimn.myanimechart.core.common.util.DateUtil;
 import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.service.batch.BatchService;
-import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +27,8 @@ public class BatchHistoryService {
 
     @Transactional
     public void saveAlarmHistory(String name) {
-        BatchHistoryEntity alarmEntity = BatchHistoryEntity.builder()
-                .name(name + ALARM_SUFFIX)
-                .recordedAt(DateUtil.now())
-                .build();
+        BatchHistoryEntity alarmEntity = new BatchHistoryEntity(
+                name + ALARM_SUFFIX, DateUtil.now());
         batchHistoryRepository.save(alarmEntity);
     }
 

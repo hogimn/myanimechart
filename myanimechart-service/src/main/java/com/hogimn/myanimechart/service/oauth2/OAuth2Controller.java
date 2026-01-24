@@ -59,12 +59,16 @@ public class OAuth2Controller {
     }
 
     @GetMapping("/callback/myanimelist")
-    public void callback(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void callback(
+            @RequestParam("code") String code,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
         String codeVerifier = getCookieValue(request, CODE_VERIFIER_COOKIE).orElse("");
         deleteCookie(response, CODE_VERIFIER_COOKIE);
 
         TokenResponse token = exchangeCodeForToken(code, codeVerifier);
-        setCookie(response, ACCESS_TOKEN_COOKIE, token.getAccessToken(), token.getExpiresIn());
+        setCookie(response, ACCESS_TOKEN_COOKIE, token.accessToken(), token.expiresIn());
 
         response.sendRedirect(homeUrl);
     }

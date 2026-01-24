@@ -22,8 +22,8 @@ public class BatchMonitorJob {
         BatchResponse batchResponse = batchService.findBatchByName(this.getClass().getSimpleName());
 
         threadPoolTaskScheduler.schedule(
-                () -> checkNotExecutedBatches(batchResponse.getName()),
-                new CronTrigger(batchResponse.getCron()));
+                () -> checkNotExecutedBatches(batchResponse.name()),
+                new CronTrigger(batchResponse.cron()));
     }
 
     public void checkNotExecutedBatches(String batchJobName) {

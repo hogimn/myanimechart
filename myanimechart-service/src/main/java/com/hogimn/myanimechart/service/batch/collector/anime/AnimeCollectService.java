@@ -1,15 +1,14 @@
 package com.hogimn.myanimechart.service.batch.collector.anime;
 
-import com.hogimn.myanimechart.service.batch.history.SaveBatchHistory;
 import com.hogimn.myanimechart.core.common.myanimelist.MyAnimeListProvider;
 import com.hogimn.myanimechart.core.common.serviceregistry.RegisteredService;
 import com.hogimn.myanimechart.core.common.serviceregistry.ServiceRegistryService;
 import com.hogimn.myanimechart.core.common.util.AnimeDateUtil;
 import com.hogimn.myanimechart.core.common.util.SleepUtil;
-import com.hogimn.myanimechart.service.anime.AnimeResponse;
-import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
 import com.hogimn.myanimechart.core.domain.anime.AnimeSeason;
+import com.hogimn.myanimechart.service.anime.AnimeResponse;
 import com.hogimn.myanimechart.service.anime.AnimeService;
+import com.hogimn.myanimechart.service.batch.history.SaveBatchHistory;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.anime.property.time.Season;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +59,7 @@ public class AnimeCollectService {
                 AnimeDateUtil.getCurrentSeasonYear(), AnimeDateUtil.getCurrentSeason(),
                 AnimeDateUtil.getNextSeasonYear(), AnimeDateUtil.getNextSeason());
         for (AnimeResponse animeResponse : animeResponses) {
-            collectByAnimeId(animeResponse.getId());
+            collectByAnimeId(animeResponse.id());
             SleepUtil.sleepForMAL();
         }
     }
@@ -97,15 +96,15 @@ public class AnimeCollectService {
 
                     AnimeResponse animeResponse = AnimeResponse.from(anime);
 
-                    if (animeResponse.getScore() == 0.0) {
+                    if (animeResponse.score() == 0.0) {
                         log.info("Skipping anime '{}': Score {} (expected: > 0)",
-                                animeResponse.getTitle(), animeResponse.getScore());
+                                animeResponse.title(), animeResponse.score());
                         continue;
                     }
 
-                    if (!Objects.equals(animeResponse.getType(), "tv")) {
+                    if (!Objects.equals(animeResponse.type(), "tv")) {
                         log.info("Skipping anime '{}': Type {} (expected: tv)",
-                                animeResponse.getTitle(), animeResponse.getType());
+                                animeResponse.title(), animeResponse.type());
                         continue;
                     }
 

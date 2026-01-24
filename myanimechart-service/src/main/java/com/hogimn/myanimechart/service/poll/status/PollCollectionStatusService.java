@@ -17,7 +17,7 @@ public class PollCollectionStatusService {
     @Transactional
     public SaveResult save(PollCollectionStatusRequest request) {
         Optional<PollCollectionStatusEntity> optionalEntity = pollCollectionStatusRepository
-                .findById(request.getAnimeId());
+                .findById(request.animeId());
 
         final PollCollectionStatusEntity entity;
         final SaveResult result;
@@ -29,11 +29,11 @@ public class PollCollectionStatusService {
             entity = new PollCollectionStatusEntity();
             result = SaveResult.CREATED;
         }
-        entity.setAnimeId(request.getAnimeId());
-        entity.setStatus(request.getStatus());
-        entity.setUpdatedAt(request.getUpdatedAt());
-        entity.setFinishedAt(request.getFinishedAt());
-        entity.setStartedAt(request.getStartedAt());
+        entity.setAnimeId(request.animeId());
+        entity.setStatus(request.status());
+        entity.setUpdatedAt(request.updatedAt());
+        entity.setFinishedAt(request.finishedAt());
+        entity.setStartedAt(request.startedAt());
 
         pollCollectionStatusRepository.save(entity);
 

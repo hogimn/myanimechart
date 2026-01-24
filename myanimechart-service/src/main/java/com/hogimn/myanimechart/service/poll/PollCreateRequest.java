@@ -1,21 +1,23 @@
 package com.hogimn.myanimechart.service.poll;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-@Data
-public class PollCreateRequest {
-    @NotBlank(message = "animeId is required.")
-    private Long animeId;
-    @NotBlank(message = "pollOptionId is required.")
-    private Integer pollOptionId;
-    @NotBlank(message = "topicId is required.")
-    private Long topicId;
-    private Integer episode;
-    private String title;
-    private Integer votes;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+public record PollCreateRequest(
+        @NotNull(message = "animeId is required.")
+        Long animeId,
+
+        @NotNull(message = "pollOptionId is required.")
+        Integer pollOptionId,
+
+        @NotNull(message = "topicId is required.")
+        Long topicId,
+
+        Integer episode,
+        String title,
+        Integer votes,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
 }

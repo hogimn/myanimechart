@@ -3,11 +3,19 @@ package com.hogimn.myanimechart.service.batch;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "batch")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BatchEntity {
     @Id
     private String name;
@@ -15,9 +23,9 @@ public class BatchEntity {
     private String cron;
 
     public static BatchEntity from(BatchResponse batchResponse) {
-        BatchEntity batchEntity = new BatchEntity();
-        batchEntity.setName(batchResponse.getName());
-        batchEntity.setCron(batchResponse.getCron());
-        return batchEntity;
+        return new BatchEntity(
+                batchResponse.name(),
+                batchResponse.cron()
+        );
     }
 }

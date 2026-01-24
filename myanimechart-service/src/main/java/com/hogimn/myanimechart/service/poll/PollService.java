@@ -3,7 +3,6 @@ package com.hogimn.myanimechart.service.poll;
 import com.hogimn.myanimechart.core.common.result.SaveResult;
 import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.core.domain.poll.PollRepository;
-import com.hogimn.myanimechart.core.common.util.DateUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,43 +22,26 @@ public class PollService {
 
     @Transactional
     public SaveResult save(PollCreateRequest request) {
-        Optional<PollEntity> optional = pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(
-                request.getAnimeId(), request.getPollOptionId(), request.getTopicId());
-
-        LocalDateTime now = DateUtil.now();
-        SaveResult result;
-
-        if (optional.isPresent()) {
-            PollEntity found = optional.get();
-
-            found.setAnimeId(request.getAnimeId());
-            found.setPollOptionId(request.getPollOptionId());
-            found.setTopicId(request.getTopicId());
-            found.setTitle(request.getTitle());
-            found.setVotes(request.getVotes());
-            found.setEpisode(request.getEpisode());
-            found.setUpdatedAt(now);
-
-            pollRepository.save(found);
-            result = SaveResult.UPDATED;
-
-        } else {
-            PollEntity newPoll = new PollEntity();
-
-            newPoll.setAnimeId(request.getAnimeId());
-            newPoll.setPollOptionId(request.getPollOptionId());
-            newPoll.setTopicId(request.getTopicId());
-            newPoll.setTitle(request.getTitle());
-            newPoll.setVotes(request.getVotes());
-            newPoll.setEpisode(request.getEpisode());
-            newPoll.setCreatedAt(now);
-            newPoll.setUpdatedAt(now);
-
-            pollRepository.save(newPoll);
-            result = SaveResult.CREATED;
-        }
-
-        return result;
+        return pollRepository.findByAnimeIdAndPollOptionIdAndTopicId(
+                        request.animeId(), request.pollOptionId(), request.topicId())
+                .map(found -> {
+                    found.update(request.title(), request.votes(), request.episode());
+                    return SaveResult.UPDATED;
+                })
+                .orElseGet(() -> {
+                    PollEntity newPoll = PollEntity.builder()
+                            .animeId(request.animeId())
+                            .pollOptionId(request.pollOptionId())
+                            .topicId(request.topicId())
+                            .title(request.title())
+                            .votes(request.votes())
+                            .episode(request.episode())
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
+                            .build();
+                    pollRepository.save(newPoll);
+                    return SaveResult.CREATED;
+                });
     }
 
     public List<PollResponse> filterByMaxTopicVotes(List<PollResponse> pollResponses) {
@@ -71,10 +52,10 @@ public class PollService {
         Map<String, Long> maxTopicMap = pollResponses.stream()
                 .collect(
                         Collectors.groupingBy(
-                                poll -> poll.getEpisode() + "-" + poll.getPollOptionId(),
+                                poll -> poll.episode() + "-" + poll.pollOptionId(),
                                 Collectors.groupingBy(
-                                        PollResponse::getTopicId,
-                                        Collectors.summingInt(PollResponse::getVotes)
+                                        PollResponse::topicId,
+                                        Collectors.summingInt(PollResponse::votes)
                                 )
                         )
                 ).entrySet().stream()
@@ -90,8 +71,8 @@ public class PollService {
 
         return pollResponses.stream()
                 .filter(poll -> {
-                    String key = poll.getEpisode() + "-" + poll.getPollOptionId();
-                    return maxTopicMap.get(key).equals(poll.getTopicId());
+                    String key = poll.episode() + "-" + poll.pollOptionId();
+                    return maxTopicMap.get(key).equals(poll.topicId());
                 })
                 .toList();
     }

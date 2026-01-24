@@ -1,25 +1,27 @@
 package com.hogimn.myanimechart.service.batch.history;
 
-import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
+import com.hogimn.myanimechart.service.batch.BatchResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "batch_history")
-@Data
 @IdClass(BatchHistoryId.class)
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BatchHistoryEntity {
     @Id
     private String name;
@@ -28,9 +30,9 @@ public class BatchHistoryEntity {
     private LocalDateTime recordedAt;
 
     public static BatchHistoryEntity from(BatchResponse batchResponse) {
-        return BatchHistoryEntity.builder()
-                .name(batchResponse.getName())
-                .recordedAt(DateUtil.now())
-                .build();
+        return new BatchHistoryEntity(
+                batchResponse.name(),
+                DateUtil.now()
+        );
     }
 }
