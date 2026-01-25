@@ -1,4 +1,4 @@
-package com.hogimn.myanimechart.core.common.scheduler;
+package com.hogimn.myanimechart.core.common.task;
 
 import org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,7 @@ public class SchedulerConfig {
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(ThreadPoolTaskSchedulerBuilder builder) {
         return builder
                 .threadNamePrefix("scheduler-")
+                .poolSize(5)
                 .build();
     }
 }
