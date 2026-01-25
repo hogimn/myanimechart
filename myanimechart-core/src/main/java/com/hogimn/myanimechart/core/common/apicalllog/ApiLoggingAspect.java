@@ -15,9 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class ApiLoggingAspect {
     private final ApiCallLogService apiCallLogService;
 
-    @Around("@within(com.hogimn.myanimechart.core.apicalllog.ApiLoggable) || " +
-            "@annotation(com.hogimn.myanimechart.core.apicalllog.ApiLoggable)")
-    public Object logApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@within(apiLoggable) || @annotation(apiLoggable)")
+    public Object logApiCall(ProceedingJoinPoint joinPoint, ApiLoggable apiLoggable) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (attributes != null) {
