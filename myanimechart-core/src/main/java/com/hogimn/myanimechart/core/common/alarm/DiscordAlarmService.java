@@ -1,13 +1,18 @@
 package com.hogimn.myanimechart.core.common.alarm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
+@Slf4j
 @Component
 @ConditionalOnProperty(name = "discord.webhookUrl")
 public class DiscordAlarmService implements AlarmService {
@@ -21,16 +26,21 @@ public class DiscordAlarmService implements AlarmService {
         this.webhookUrl = webhookUrl;
     }
 
+    @Async
     @Override
     public void send(String message) {
-        String jsonPayload = String.format("{\"content\": \"%s\"}", message);
+        try {
+            Map<String, String> body = Map.of("content", message);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entity = new HttpEntity<>(jsonPayload, headers);
+            HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
 
-        restTemplate.postForObject(webhookUrl, entity, String.class);
+            restTemplate.postForLocation(webhookUrl, entity);
+        } catch (Exception e) {
+            log.error("Discord 알람 전송 중 오류 발생: {}", e.getMessage());
+        }
     }
 
     @Override
