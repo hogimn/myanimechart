@@ -1,11 +1,6 @@
 spring:
   application:
     name: application
-  devtools:
-    restart:
-      poll-interval: 1s
-    livereload:
-      enabled: true
   config:
     import: file:../myanimechart-core/src/main/resources/application-dev.yml,file:../myanimechart-service/src/main/resources/application-dev.yml
 
