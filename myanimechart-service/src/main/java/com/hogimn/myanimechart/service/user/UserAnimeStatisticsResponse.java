@@ -20,6 +20,9 @@ public record UserAnimeStatisticsResponse(
         Float meanScore
 ) {
     public static UserAnimeStatisticsResponse from(UserAnimeStatistics stats) {
+        if (stats == null) {
+            return null;
+        }
         return new UserAnimeStatisticsResponse(
                 stats.getItemsWatching(),
                 stats.getItemsCompleted(),

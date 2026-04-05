@@ -3,13 +3,14 @@ package com.hogimn.myanimechart.service.oauth2;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/oauth2")
-@Slf4j
+@Validated
 public class OAuth2Controller {
     private final String clientId;
     private final String clientSecret;
@@ -60,7 +61,7 @@ public class OAuth2Controller {
 
     @GetMapping("/callback/myanimelist")
     public void callback(
-            @RequestParam("code") String code,
+            @RequestParam("code") @NotBlank String code,
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
@@ -79,34 +80,37 @@ public class OAuth2Controller {
         setCookie(response, CODE_VERIFIER_COOKIE, codeChallenge, 30);
 
         String authorizationUrl = String.format(
-                "https://myanimelist.net/v1/oauth2/authorize?" +
-                        "response_type=code" +
-                        "&client_id=%s" +
-                        "&redirect_uri=%s" +
-                        "&scope=write:users" +
-                        "&code_challenge=%s" +
-                        "&code_challenge_method=plain",
+                "https://myanimelist.net/v1/oauth2/authorize?"
+                        + "response_type=code"
+                        + "&client_id=%s"
+                        + "&redirect_uri=%s"
+                        + "&scope=write:users"
+                        + "&code_challenge=%s"
+                        + "&code_challenge_method=plain",
                 clientId, redirectUri, codeChallenge);
 
         response.sendRedirect(authorizationUrl);
     }
 
     private TokenResponse exchangeCodeForToken(String code, String codeVerifier) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
-            add("client_id", clientId);
-            add("client_secret", clientSecret);
-            add("grant_type", "authorization_code");
-            add("code", code);
-            add("redirect_uri", redirectUri);
-            add("code_verifier", codeVerifier);
-        }};
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("grant_type", "authorization_code");
+        params.add("code", code);
+        params.add("redirect_uri", redirectUri);
+        params.add("code_verifier", codeVerifier);
 
         ResponseEntity<TokenResponse> response = restTemplate.postForEntity(
                 "https://myanimelist.net/v1/oauth2/token",
                 new HttpEntity<>(params, new HttpHeaders()),
                 TokenResponse.class);
 
-        return response.getBody();
+        TokenResponse body = response.getBody();
+        if (body == null || body.accessToken() == null || body.accessToken().isBlank()) {
+            throw new IllegalStateException("Token response from MyAnimeList was empty or missing access_token.");
+        }
+        return body;
     }
 
     private Optional<String> getCookieValue(HttpServletRequest request, String name) {

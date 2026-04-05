@@ -5,14 +5,12 @@ import com.hogimn.myanimechart.service.batch.BatchResponse;
 import com.hogimn.myanimechart.service.batch.BatchService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class BatchHistoryService {
     private final BatchHistoryRepository batchHistoryRepository;
@@ -21,6 +19,9 @@ public class BatchHistoryService {
 
     @Transactional
     public void save(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Batch job name is required.");
+        }
         BatchResponse batchResponse = batchService.findBatchByName(name);
         batchHistoryRepository.save(BatchHistoryEntity.from(batchResponse));
     }

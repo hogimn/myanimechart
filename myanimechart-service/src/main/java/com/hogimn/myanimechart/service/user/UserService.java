@@ -71,7 +71,7 @@ public class UserService {
                 = fetchAllAnimeStatuses(myAnimeList, userResponse.name());
 
         return allStatuses.stream()
-                .filter(status -> status.getAnime().getID() == id)
+                .filter(status -> status.getAnime() != null && status.getAnime().getID() == id)
                 .findFirst()
                 .map(AnimeListStatusResponse::from)
                 .orElseThrow(() -> new AnimeStatusNotFoundException(id));
