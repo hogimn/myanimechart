@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     @Query("""
-             SELECT a, b
+             SELECT NEW com.hogimn.myanimechart.core.domain.anime.AnimePollRow(a, b)
              FROM AnimeEntity a
                LEFT JOIN PollEntity b ON a.id = b.animeId
              WHERE
@@ -19,7 +19,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
                b.topicId,
                b.pollOptionId
             """)
-    List<Object[]> findWithPollsByYearAndSeason(Integer year, String season);
+    List<AnimePollRow> findWithPollsByYearAndSeason(Integer year, String season);
 
     List<AnimeEntity> findByYearAndSeasonOrderByScoreDesc(Integer year, String season);
 
@@ -110,7 +110,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
     List<AnimeEntity> findAnimeEntitiesAllSeasonCurrentlyAiring(String currentlyAiring, String finishedAiring);
 
     @Query("""
-            SELECT a, b
+            SELECT NEW com.hogimn.myanimechart.core.domain.anime.AnimePollRow(a, b)
             FROM AnimeEntity a
               LEFT JOIN PollEntity b ON a.id = b.animeId
             WHERE
@@ -121,7 +121,7 @@ public interface AnimeRepository extends JpaRepository<AnimeEntity, Long> {
               b.topicId,
               b.pollOptionId
             """)
-    List<Object[]> findAllWithPollsByTitleContaining(String title);
+    List<AnimePollRow> findAllWithPollsByTitleContaining(String title);
 
     @Query("""
              SELECT a

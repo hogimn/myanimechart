@@ -1,6 +1,7 @@
 package com.hogimn.myanimechart.service.anime;
 
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ public record AnimeCreateRequest(
         @NotNull(message = "id is required.")
         Long id,
 
+        @NotBlank(message = "title is required.")
         String title,
         String link,
         String image,

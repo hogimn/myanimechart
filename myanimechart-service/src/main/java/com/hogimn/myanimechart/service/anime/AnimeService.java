@@ -2,7 +2,9 @@ package com.hogimn.myanimechart.service.anime;
 
 import com.hogimn.myanimechart.core.common.result.SaveResult;
 import com.hogimn.myanimechart.core.common.util.DateUtil;
+import com.hogimn.myanimechart.core.domain.anime.AnimeAirStatusCode;
 import com.hogimn.myanimechart.core.domain.anime.AnimeEntity;
+import com.hogimn.myanimechart.core.domain.anime.AnimePollRow;
 import com.hogimn.myanimechart.core.domain.anime.AnimeRepository;
 import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.core.domain.poll.collectionstatus.CollectionStatus;
@@ -11,7 +13,6 @@ import com.hogimn.myanimechart.service.poll.PollResponse;
 import com.hogimn.myanimechart.service.poll.PollService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,10 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class AnimeService {
     private final AnimeRepository animeRepository;
@@ -54,7 +53,7 @@ public class AnimeService {
         List<AnimeEntity> result = animeRepository.findByYearAndSeasonOrderByScoreDesc(year, season);
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getFailedCollectionAnimesByYearAndSeason(int year, String season) {
@@ -65,7 +64,7 @@ public class AnimeService {
         );
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getOldSeasonCurrentlyAiringAnimes(
@@ -78,39 +77,39 @@ public class AnimeService {
                 season,
                 nextYear,
                 nextSeason,
-                "currently_airing",
-                "finished_airing"
-        );
+                AnimeAirStatusCode.CURRENTLY_AIRING.code(),
+                AnimeAirStatusCode.FINISHED_AIRING.code());
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getCurrentAiringAnimes() {
         List<AnimeEntity> result = animeRepository.findAnimeEntitiesAllSeasonCurrentlyAiring(
-                "currently_airing", "finished_airing");
+                AnimeAirStatusCode.CURRENTLY_AIRING.code(),
+                AnimeAirStatusCode.FINISHED_AIRING.code());
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getByYearAndSeason(int year, String season) {
-        List<Object[]> results = animeRepository.findWithPollsByYearAndSeason(year, season);
+        List<AnimePollRow> results = animeRepository.findWithPollsByYearAndSeason(year, season);
         return mapToAnimeResponses(results);
     }
 
     public List<AnimeResponse> getByKeyword(String keyword) {
-        List<Object[]> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
+        List<AnimePollRow> results = animeRepository.findAllWithPollsByTitleContaining(keyword);
         return mapToAnimeResponses(results);
     }
 
-    private List<AnimeResponse> mapToAnimeResponses(List<Object[]> results) {
+    private List<AnimeResponse> mapToAnimeResponses(List<AnimePollRow> results) {
         Map<Long, AnimeEntity> animeMap = new LinkedHashMap<>();
         Map<Long, List<PollResponse>> pollListMap = new HashMap<>();
 
-        for (var result : results) {
-            AnimeEntity animeEntity = (AnimeEntity) result[0];
-            PollEntity pollEntity = (PollEntity) result[1];
+        for (AnimePollRow row : results) {
+            AnimeEntity animeEntity = row.anime();
+            PollEntity pollEntity = row.poll();
 
             long animeId = animeEntity.getId();
             animeMap.putIfAbsent(animeId, animeEntity);
@@ -124,7 +123,7 @@ public class AnimeService {
         return animeMap.values().stream()
                 .map(animeEntity -> {
                     List<PollResponse> polls = pollListMap.getOrDefault(animeEntity.getId(), List.of());
-                    List<PollResponse> filteredPolls = (polls.isEmpty())
+                    List<PollResponse> filteredPolls = polls.isEmpty()
                             ? polls
                             : pollService.filterByMaxTopicVotes(polls);
                     return AnimeResponse.from(animeEntity, filteredPolls);
@@ -136,20 +135,20 @@ public class AnimeService {
         List<AnimeEntity> result = animeRepository.findAnimesByCollectionStatus(CollectionStatus.FAILED);
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getAnimesWithEmptyPoll() {
         List<AnimeEntity> result = animeRepository.findAnimesWithEmptyPoll();
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<AnimeResponse> getAllAnimes() {
         List<AnimeEntity> result = animeRepository.findAll();
         return result.stream()
                 .map(AnimeResponse::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -5,10 +5,12 @@ import com.hogimn.myanimechart.service.poll.PollResponse;
 import dev.katsute.mal4j.anime.Anime;
 import dev.katsute.mal4j.property.Genre;
 import dev.katsute.mal4j.property.IDN;
+import dev.katsute.mal4j.property.Picture;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.hogimn.myanimechart.core.common.util.StringUtil.safeSplit;
 
@@ -76,19 +78,44 @@ public record AnimeResponse(
     }
 
     public static AnimeResponse from(Anime anime) {
+        Picture picture = anime.getMainPicture();
+        String mediumUrl = picture != null ? picture.getMediumURL() : null;
+        String largeUrl = picture != null ? picture.getLargeURL() : null;
+
+        var startSeason = anime.getStartSeason();
+        Integer year = null;
+        String season = null;
+        if (startSeason != null) {
+            year = startSeason.getYear();
+            var malSeason = startSeason.getSeason();
+            season = malSeason != null ? malSeason.field() : null;
+        }
+
+        Genre[] genres = anime.getGenres();
+        List<String> genreNames = genres == null
+                ? List.of()
+                : Arrays.stream(genres).map(Genre::getName).filter(Objects::nonNull).toList();
+
+        var studios = anime.getStudios();
+        List<String> studioNames = studios == null
+                ? List.of()
+                : Arrays.stream(studios).map(IDN::getName).filter(Objects::nonNull).toList();
+
+        var altTitles = anime.getAlternativeTitles();
+
         return new AnimeResponse(
                 anime.getID(),
                 anime.getTitle(),
                 "https://myanimelist.net/anime/" + anime.getID(),
-                anime.getMainPicture().getMediumURL(),
-                anime.getMainPicture().getLargeURL(),
+                mediumUrl,
+                largeUrl,
                 anime.getMeanRating() != null ? anime.getMeanRating().doubleValue() : 0.0,
                 anime.getUserListingCount(),
-                Arrays.stream(anime.getGenres()).map(Genre::getName).toList(),
-                Arrays.stream(anime.getStudios()).map(IDN::getName).toList(),
+                genreNames,
+                studioNames,
                 anime.getSource() != null ? anime.getSource().field() : anime.getRawSource(),
-                anime.getStartSeason().getYear(),
-                anime.getStartSeason().getSeason().field(),
+                year,
+                season,
                 anime.getRank(),
                 anime.getPopularity(),
                 anime.getUserScoringCount(),
@@ -97,8 +124,8 @@ public record AnimeResponse(
                 anime.getType() != null ? anime.getType().field() : anime.getRawType(),
                 anime.getStartDate() != null ? anime.getStartDate().getDate() : null,
                 anime.getEndDate() != null ? anime.getEndDate().getDate() : null,
-                anime.getAlternativeTitles().getEnglish(),
-                anime.getAlternativeTitles().getJapanese(),
+                altTitles != null ? altTitles.getEnglish() : null,
+                altTitles != null ? altTitles.getJapanese() : null,
                 anime.getSynopsis(),
                 anime.getRating() != null ? anime.getRating().field() : anime.getRawRating(),
                 anime.getNSFW() != null ? anime.getNSFW().field() : anime.getRawNSFW(),
