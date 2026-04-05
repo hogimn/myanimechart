@@ -129,12 +129,11 @@ public class BatchPollCollectionStatusService {
         return pollCollectionStatusRepository
                 .findAllWithAnimeOrderByYearAndSeasonAndScore()
                 .stream()
-                .map(objectList -> {
-                    PollCollectionStatusEntity pollCollectionStatusEntity =
-                            (PollCollectionStatusEntity) objectList[0];
-                    AnimeEntity animeEntity = (AnimeEntity) objectList[1];
-                    return PollCollectionStatusResponse.from(
-                            pollCollectionStatusEntity, AnimeResponse.from(animeEntity));
+                .map(row -> {
+                    PollCollectionStatusEntity status = row.status();
+                    AnimeEntity anime = row.anime();
+                    AnimeResponse animeResponse = anime != null ? AnimeResponse.from(anime) : null;
+                    return PollCollectionStatusResponse.from(status, animeResponse);
                 })
                 .toList();
     }

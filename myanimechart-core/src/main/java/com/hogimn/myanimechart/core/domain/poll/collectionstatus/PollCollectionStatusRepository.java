@@ -25,7 +25,7 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
     List<PollCollectionStatusEntity> findByStatusWithLock(CollectionStatus collectionStatus);
 
     @Query("""
-            SELECT a, b
+            SELECT NEW com.hogimn.myanimechart.core.domain.poll.collectionstatus.PollCollectionStatusAnimeRow(a, b)
             FROM PollCollectionStatusEntity a
               LEFT JOIN AnimeEntity b ON a.animeId = b.id
             ORDER BY
@@ -40,5 +40,5 @@ public interface PollCollectionStatusRepository extends JpaRepository<PollCollec
               b.score DESC,
               b.rank
             """)
-    List<Object[]> findAllWithAnimeOrderByYearAndSeasonAndScore();
+    List<PollCollectionStatusAnimeRow> findAllWithAnimeOrderByYearAndSeasonAndScore();
 }

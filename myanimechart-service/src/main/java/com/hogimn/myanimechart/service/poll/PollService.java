@@ -5,7 +5,6 @@ import com.hogimn.myanimechart.core.domain.poll.PollEntity;
 import com.hogimn.myanimechart.core.domain.poll.PollRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class PollService {
     private final PollRepository pollRepository;
@@ -44,36 +42,34 @@ public class PollService {
                 });
     }
 
+    /**
+     * For each (episode, pollOption) group, keeps only rows whose topic has the highest total vote sum
+     * (ties: one arbitrary winning topic id, same as {@link Comparator} max behavior).
+     */
     public List<PollResponse> filterByMaxTopicVotes(List<PollResponse> pollResponses) {
         if (pollResponses == null || pollResponses.isEmpty()) {
             return List.of();
         }
 
-        Map<String, Long> maxTopicMap = pollResponses.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                poll -> poll.episode() + "-" + poll.pollOptionId(),
-                                Collectors.groupingBy(
-                                        PollResponse::topicId,
-                                        Collectors.summingInt(PollResponse::votes)
-                                )
-                        )
-                ).entrySet().stream()
-                .collect(
-                        Collectors.toMap(
-                                Map.Entry::getKey,
-                                entry -> entry.getValue().entrySet().stream()
-                                        .max(Comparator.comparingInt(Map.Entry::getValue))
-                                        .map(Map.Entry::getKey)
-                                        .orElseThrow(() -> new IllegalStateException("Max topic not found"))
-                        )
-                );
+        Map<String, Long> winningTopicByEpisodeOption = pollResponses.stream()
+                .collect(Collectors.groupingBy(
+                        PollService::episodeOptionKey,
+                        Collectors.groupingBy(PollResponse::topicId, Collectors.summingInt(PollResponse::votes))))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .max(Comparator.comparingInt(Map.Entry::getValue))
+                                .map(Map.Entry::getKey)
+                                .orElseThrow(() -> new IllegalStateException("No topic votes for " + entry.getKey()))));
 
         return pollResponses.stream()
-                .filter(poll -> {
-                    String key = poll.episode() + "-" + poll.pollOptionId();
-                    return maxTopicMap.get(key).equals(poll.topicId());
-                })
+                .filter(poll -> winningTopicByEpisodeOption.get(episodeOptionKey(poll)).equals(poll.topicId()))
                 .toList();
+    }
+
+    private static String episodeOptionKey(PollResponse poll) {
+        return poll.episode() + "-" + poll.pollOptionId();
     }
 }

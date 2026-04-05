@@ -6,7 +6,6 @@ import com.hogimn.myanimechart.service.poll.status.PollCollectionStatusRequest;
 import com.hogimn.myanimechart.service.poll.status.PollCollectionStatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/poll")
-@Slf4j
 @RequiredArgsConstructor
 public class PollController {
     private final PollService pollService;
