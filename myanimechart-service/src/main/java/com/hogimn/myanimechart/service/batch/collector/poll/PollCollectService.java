@@ -135,8 +135,8 @@ public class PollCollectService {
             List<ForumTopic> forumTopics = fetchForumTopics(searchKeyword);
             SleepUtil.sleepForMAL();
 
-            if (!findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle)
-                    || forumTopics.size() != animeResponse.episodes()) {
+            if (findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle)
+                    != animeResponse.episodes()) {
                 animeTitle = animeResponse.englishTitle();
                 if (!animeTitle.isEmpty()) {
                     searchKeyword = animeTitle + " Poll Episode Discussion";
@@ -168,12 +168,12 @@ public class PollCollectService {
         log.info("End of collecting poll for anime: {}", animeResponse.id());
     }
 
-    private boolean findMatchingTopicAndSavePollResult(
+    private int findMatchingTopicAndSavePollResult(
             AnimeResponse animeResponse, List<ForumTopic> forumTopics, String animeTitle) {
-        boolean found = false;
+        int result = 0;
 
         if (forumTopics == null) {
-            return false;
+            return result;
         }
 
         for (ForumTopic forumTopic : forumTopics) {
@@ -210,11 +210,11 @@ public class PollCollectService {
             }
 
             savePoll(topicId, episode, animeResponse.id());
-            found = true;
+            result++;
             SleepUtil.sleepForMAL();
         }
 
-        return found;
+        return result;
     }
 
     private boolean isFirstWordMatching(String topicTitle, String animeTitle) {
