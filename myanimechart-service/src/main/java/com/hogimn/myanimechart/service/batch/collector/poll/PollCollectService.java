@@ -143,6 +143,13 @@ public class PollCollectService {
                     SleepUtil.sleepForMAL();
                     findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle);
                 }
+                animeTitle = animeResponse.title();
+                if (!animeTitle.isEmpty()) {
+                    searchKeyword = animeTitle + " Poll Episode Discussion";
+                    forumTopics = fetchForumTopics(searchKeyword);
+                    SleepUtil.sleepForMAL();
+                    findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle);
+                }
             }
 
             collectPollByAnimeEpisodeTopicMapping(animeResponse);
