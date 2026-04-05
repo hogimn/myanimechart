@@ -135,7 +135,8 @@ public class PollCollectService {
             List<ForumTopic> forumTopics = fetchForumTopics(searchKeyword);
             SleepUtil.sleepForMAL();
 
-            if (!findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle)) {
+            if (!findMatchingTopicAndSavePollResult(animeResponse, forumTopics, animeTitle)
+                    || forumTopics.size() != animeResponse.episodes()) {
                 animeTitle = animeResponse.englishTitle();
                 if (!animeTitle.isEmpty()) {
                     searchKeyword = animeTitle + " Poll Episode Discussion";
